@@ -45,12 +45,4 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
-    /**
-     * Relación: Un usuario tiene muchas valoraciones
-     */
-    public function valoraciones()
-    {
-        return $this->hasMany(Valoracion::class, 'usuario_id');
-    }
 }
