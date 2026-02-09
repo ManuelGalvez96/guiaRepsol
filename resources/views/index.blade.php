@@ -60,7 +60,7 @@
   </div>
 
   <div class="hero-img">
-    <img src="https://picsum.photos/900/700?cocktail">
+    <img src="{{ asset('images/imagen1.png') }}">
   </div>
 </section>
 
@@ -76,7 +76,7 @@
 
       <article class="momento-card">
         <div class="momento-img">
-          <img src="https://picsum.photos/700/900?churros">
+          <img src="{{ asset('images/imagen2.png') }}">
           <div class="momento-icons">♡ ⤴ 🔖</div>
           <div class="momento-overlay">
             <div class="momento-tag">Reportaje gastronómico</div>
@@ -88,7 +88,7 @@
 
       <article class="momento-card">
         <div class="momento-img">
-          <img src="https://picsum.photos/700/900?bar">
+          <img src="{{ asset('images/imagen3.png') }}">
           <div class="momento-icons">♡ ⤴ 🔖</div>
           <div class="momento-overlay">
             <div class="momento-tag">Reportaje gastronómico</div>
@@ -100,7 +100,7 @@
 
       <article class="momento-card">
         <div class="momento-img">
-          <img src="https://picsum.photos/700/900?ramen">
+          <img src="{{ asset('images/imagen4.png') }}">
           <div class="momento-icons">♡ ⤴ 🔖</div>
           <div class="momento-overlay">
             <div class="momento-tag">Reportaje gastronómico</div>
@@ -197,7 +197,7 @@
     <div class="cercanos-cards">
 
       <article class="local-card">
-        <img src="https://picsum.photos/500/350?food1">
+        <img src="{{ asset('images/imagen5.png') }}">
         <div class="local-info">
           <h3>Miga Cana</h3>
           <p>Bar · Madrid, España</p>
@@ -206,7 +206,7 @@
       </article>
 
       <article class="local-card">
-        <img src="https://picsum.photos/500/350?food2">
+        <img src="{{ asset('images/imagen6.png') }}">
         <div class="local-info">
           <h3>Kitchen 154</h3>
           <p>Restaurante · Madrid, España</p>
@@ -215,7 +215,7 @@
       </article>
 
       <article class="local-card">
-        <img src="https://picsum.photos/500/350?food3">
+        <img src="{{ asset('images/imagen7.png') }}">
         <div class="local-info">
           <h3>Batch</h3>
           <p>Bar · Madrid, España</p>
@@ -224,7 +224,7 @@
       </article>
 
       <article class="local-card">
-        <img src="https://picsum.photos/500/350?food4">
+        <img src="{{ asset('images/imagen8.png') }}">
         <div class="local-info">
           <h3>Tori Key</h3>
           <p>Restaurante · Madrid, España</p>
@@ -258,7 +258,7 @@
     <!-- FEATURED -->
     <article class="ultimo-featured">
       <div class="featured-img">
-        <img src="https://picsum.photos/900/600?coffee">
+        <img src="{{ asset('images/imagen9.png') }}">
       </div>
 
       <div class="featured-content">
@@ -276,7 +276,7 @@
     <div class="ultimo-grid">
 
       <article class="ultimo-card">
-        <img src="https://picsum.photos/400/300?bar">
+        <img src="{{ asset('images/imagen10.png') }}">
         <div class="card-content">
           <span class="card-tag">ψ Reportaje gastronómico</span>
           <h4>El bar donde los actores toman el vermú con la gente del barrio</h4>
@@ -286,7 +286,7 @@
       </article>
 
       <article class="ultimo-card">
-        <img src="https://picsum.photos/400/300?books">
+        <img src="{{ asset('images/imagen11.png') }}">
         <div class="card-content">
           <span class="card-tag">ψ Reportaje gastronómico</span>
           <h4>Soletes para celebrar la Feria del libro a cualquier hora del día</h4>
@@ -296,7 +296,7 @@
       </article>
 
       <article class="ultimo-card">
-        <img src="https://picsum.photos/400/300?dog">
+        <img src="{{ asset('images/imagen12.png') }}">
         <div class="card-content">
           <span class="card-tag">ψ Reportaje gastronómico</span>
           <h4>Seis mesas cántabras en la mejor compañía</h4>
@@ -306,7 +306,7 @@
       </article>
 
       <article class="ultimo-card">
-        <img src="https://picsum.photos/400/300?galicia">
+        <img src="{{ asset('images/imagen13.png') }}">
         <div class="card-content">
           <span class="card-tag">ψ Reportaje gastronómico</span>
           <h4>Soletes en Galicia para no dejar a tu perro en casa</h4>
@@ -370,22 +370,22 @@
     <div class="destacado-grid">
 
       <article class="destacado-item">
-        <img src="https://picsum.photos/600/800?cafe">
+        <img src="{{ asset('images/imagen14.png') }}">
         <h3>Cafeterías</h3>
       </article>
 
       <article class="destacado-item">
-        <img src="https://picsum.photos/600/800?bar">
+        <img src="{{ asset('images/imagen15.png') }}">
         <h3>Bares</h3>
       </article>
 
       <article class="destacado-item">
-        <img src="https://picsum.photos/600/800?pizza">
+        <img src="{{ asset('images/imagen16.png') }}">
         <h3>Fast Good</h3>
       </article>
 
       <article class="destacado-item">
-        <img src="https://picsum.photos/600/800?wine">
+        <img src="{{ asset('images/imagen17.png') }}">
         <h3>Vinotecas</h3>
       </article>
 
@@ -410,7 +410,7 @@
 
       <article class="frio-card">
         <div class="frio-img">
-          <img src="https://picsum.photos/700/900?soup">
+          <img src="{{ asset('images/imagen18.png') }}">
           <div class="frio-icons">♡ ⤴ 🔖</div>
           <div class="frio-overlay">
             <span class="frio-tag">ψ Reportaje gastronómico</span>
@@ -422,7 +422,7 @@
 
       <article class="frio-card">
         <div class="frio-img">
-          <img src="https://picsum.photos/700/900?chocolate">
+          <img src="{{ asset('images/imagen19.png') }}">
           <div class="frio-icons">♡ ⤴ 🔖</div>
           <div class="frio-overlay">
             <span class="frio-tag">ψ Reportaje gastronómico</span>
@@ -434,7 +434,7 @@
 
       <article class="frio-card">
         <div class="frio-img">
-          <img src="https://picsum.photos/700/900?people">
+          <img src="{{ asset('images/imagen20.png') }}">
           <div class="frio-icons">♡ ⤴ 🔖</div>
           <div class="frio-overlay">
             <span class="frio-tag">ψ Reportaje gastronómico</span>
@@ -459,27 +459,27 @@
     <div class="comunidades-grid">
 
       <article class="comunidad">
-        <img src="https://picsum.photos/500/650?madrid">
+        <img src="{{ asset('images/imagen22.png') }}">
         <h3>Madrid</h3>
       </article>
 
       <article class="comunidad">
-        <img src="https://picsum.photos/500/650?catalunya">
+        <img src="{{ asset('images/imagen23.png') }}">
         <h3>Catalunya</h3>
       </article>
 
       <article class="comunidad">
-        <img src="https://picsum.photos/500/650?valencia">
+        <img src="{{ asset('images/imagen24.png') }}">
         <h3>Comunitat Valenciana</h3>
       </article>
 
       <article class="comunidad">
-        <img src="https://picsum.photos/500/650?extremadura">
+        <img src="{{ asset('images/imagen25.png') }}">
         <h3>Extremadura</h3>
       </article>
 
       <article class="comunidad">
-        <img src="https://picsum.photos/500/650?euskadi">
+        <img src="{{ asset('images/imagen26.png') }}">
         <h3>Euskadi</h3>
       </article>
 
