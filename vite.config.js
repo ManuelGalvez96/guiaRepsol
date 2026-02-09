@@ -9,7 +9,8 @@ export default defineConfig({
                 'resources/css/app.css', 
                 'resources/js/app.js',
                 'resources/js/login.js',
-                'resources/js/registro.js'
+                'resources/js/registro.js',
+                'resources/js/restaurantes.js'
             ],
             refresh: true,
         }),
