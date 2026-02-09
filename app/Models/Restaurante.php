@@ -51,4 +51,9 @@ class Restaurante extends Model
     {
         return $this->hasMany(Resena::class);
     }
+
+    public function gerente()
+    {
+        return $this->hasOne(User::class);
+    }
 }
