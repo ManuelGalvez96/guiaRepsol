@@ -13,7 +13,7 @@ class AdminController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Restaurante::with(['categoria', 'ubicacion']);
+        $query = Restaurante::with(['categoria', 'ubicacion', 'imagenes']);
 
         // Filtros
         if ($request->filled('tipo_cocina')) {
