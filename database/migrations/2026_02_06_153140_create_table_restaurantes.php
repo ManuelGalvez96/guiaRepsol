@@ -15,11 +15,16 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->text('descripcion')->nullable();
+            $table->foreignId('categoria_id')->constrained('categorias')->onDelete('cascade');
+            $table->foreignId('ubicacion_id')->constrained('ubicaciones')->onDelete('cascade');
             $table->string('direccion');
             $table->string('telefono')->nullable();
             $table->string('email')->unique();
+            $table->string('web')->nullable();
+            $table->decimal('precio', 8, 2);
+            $table->integer('soles')->default(0); // 0 = Solete, 1-3 = Soles Repsol
             $table->decimal('valoracion_promedio', 3, 2)->default(0);
-
+            $table->boolean('activo')->default(true);
             $table->timestamps();
         });
     }
