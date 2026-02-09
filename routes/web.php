@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthUser;
 use App\Http\Controllers\RestauranteController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 })->name('home');
 
 // Rutas de autenticación
