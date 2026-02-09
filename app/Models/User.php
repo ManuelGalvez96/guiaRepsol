@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'rol',
+        'restaurante_id',
     ];
 
     /**
@@ -44,5 +46,13 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the restaurante that the user is associated with.
+     */
+    public function restaurante()
+    {
+        return $this->belongsTo(Restaurante::class);
     }
 }
