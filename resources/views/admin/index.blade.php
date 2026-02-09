@@ -256,10 +256,11 @@
             <div class="filters">
                 <select name="tipo_cocina" class="filter-select" onchange="this.form.submit()">
                     <option value="">Tipo de cocina</option>
-                    <option value="1">Mediterránea</option>
-                    <option value="2">Italiana</option>
-                    <option value="3">Española</option>
-                    <option value="4">Asiática</option>
+                    @foreach($categorias as $categoria)
+                        <option value="{{ $categoria->id }}" {{ request('tipo_cocina') == $categoria->id ? 'selected' : '' }}>
+                            {{ $categoria->nombre }}
+                        </option>
+                    @endforeach
                 </select>
 
                 <select name="valoracion" class="filter-select" onchange="this.form.submit()">
@@ -296,14 +297,14 @@
                     @forelse($restaurantes as $restaurante)
                     <tr>
                         <td>
-                            @if($restaurante->imagen)
-                                <img src="{{ asset('storage/' . $restaurante->imagen) }}" alt="{{ $restaurante->nombre }}" class="restaurant-img">
+                            @if($restaurante->imagenes->first())
+                                <img src="{{ asset('storage/' . $restaurante->imagenes->first()->ruta_imagen) }}" alt="{{ $restaurante->nombre }}" class="restaurant-img">
                             @else
                                 <div class="restaurant-img"></div>
                             @endif
                         </td>
                         <td>{{ $restaurante->nombre }}</td>
-                        <td>{{ $restaurante->direccion }}</td>
+                        <td>{{ $restaurante->direccion }}, {{ $restaurante->ubicacion->ciudad ?? '' }}</td>
                         <td>{{ $restaurante->telefono ?? '-' }}</td>
                         <td>{{ number_format($restaurante->precio, 2) }}€</td>
                         <td>{{ number_format($restaurante->valoracion_promedio, 1) }} ⭐</td>

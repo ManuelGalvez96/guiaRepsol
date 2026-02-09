@@ -21,8 +21,7 @@ class Restaurante extends Model
         'precio',
         'soles',
         'valoracion_promedio',
-        'activo',
-        'imagen'
+        'activo'
     ];
 
     protected $casts = [
@@ -30,4 +29,40 @@ class Restaurante extends Model
         'valoracion_promedio' => 'decimal:2',
         'activo' => 'boolean',
     ];
+
+    // Relaciones
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class);
+    }
+
+    public function ubicacion()
+    {
+        return $this->belongsTo(Ubicacion::class);
+    }
+
+    public function valoraciones()
+    {
+        return $this->hasMany(Valoracion::class);
+    }
+
+    public function imagenes()
+    {
+        return $this->hasMany(ImagenRestaurante::class);
+    }
+
+    public function horarios()
+    {
+        return $this->hasMany(Horario::class);
+    }
+
+    public function tiposComida()
+    {
+        return $this->belongsToMany(TipoComida::class, 'restaurante_tipo_comida');
+    }
+
+    public function resenas()
+    {
+        return $this->hasMany(Resena::class);
+    }
 }

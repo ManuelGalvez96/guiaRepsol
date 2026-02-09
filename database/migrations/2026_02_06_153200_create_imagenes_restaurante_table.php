@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('imagenes_restaurante', function (Blueprint $table) {
             $table->id();
             $table->foreignId('restaurante_id')->constrained('restaurantes')->onDelete('cascade');
-            $table->string('url'); // URL de la imagen
-            $table->string('alt')->nullable(); // Texto alternativo
-            $table->boolean('principal')->default(false); // Si es la imagen principal
-            $table->integer('orden')->default(0); // Orden de presentación
+            $table->string('url');
+            $table->string('alt')->nullable();
+            $table->boolean('principal')->default(false);
+            $table->integer('orden')->default(0);
             $table->timestamps();
         });
     }

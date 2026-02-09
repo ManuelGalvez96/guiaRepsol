@@ -16,8 +16,6 @@ return new class extends Migration
             $table->foreignId('restaurante_id')->constrained('restaurantes')->onDelete('cascade');
             $table->foreignId('tipo_comida_id')->constrained('tipo_comida')->onDelete('cascade');
             $table->timestamps();
-            
-            // Evitar duplicados
             $table->unique(['restaurante_id', 'tipo_comida_id']);
         });
     }

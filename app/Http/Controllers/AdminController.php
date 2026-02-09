@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Restaurante;
+use App\Models\Categoria;
+use App\Models\Ubicacion;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Restaurante::query();
+        $query = Restaurante::with(['categoria', 'ubicacion']);
 
         // Filtros
         if ($request->filled('tipo_cocina')) {
@@ -25,13 +27,16 @@ class AdminController extends Controller
         }
 
         $restaurantes = $query->paginate(10);
+        $categorias = Categoria::all();
 
-        return view('admin.index', compact('restaurantes'));
+        return view('admin.index', compact('restaurantes', 'categorias'));
     }
 
     public function create()
     {
-        return view('admin.create');
+        $categorias = Categoria::all();
+        $ubicaciones = Ubicacion::all();
+        return view('admin.create', compact('categorias', 'ubicaciones'));
     }
 
     public function store(Request $request)
@@ -39,17 +44,16 @@ class AdminController extends Controller
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
+            'categoria_id' => 'required|exists:categorias,id',
+            'ubicacion_id' => 'required|exists:ubicaciones,id',
             'direccion' => 'required|string',
             'telefono' => 'nullable|string',
             'email' => 'required|email|unique:restaurantes,email',
+            'web' => 'nullable|url',
             'precio' => 'required|numeric',
+            'soles' => 'nullable|integer|min:0|max:3',
             'valoracion_promedio' => 'nullable|numeric|min:0|max:5',
-            'imagen' => 'nullable|image|max:2048'
         ]);
-
-        if ($request->hasFile('imagen')) {
-            $validated['imagen'] = $request->file('imagen')->store('restaurantes', 'public');
-        }
 
         Restaurante::create($validated);
 
@@ -58,7 +62,9 @@ class AdminController extends Controller
 
     public function edit(Restaurante $restaurante)
     {
-        return view('admin.edit', compact('restaurante'));
+        $categorias = Categoria::all();
+        $ubicaciones = Ubicacion::all();
+        return view('admin.edit', compact('restaurante', 'categorias', 'ubicaciones'));
     }
 
     public function update(Request $request, Restaurante $restaurante)
@@ -66,17 +72,16 @@ class AdminController extends Controller
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
+            'categoria_id' => 'required|exists:categorias,id',
+            'ubicacion_id' => 'required|exists:ubicaciones,id',
             'direccion' => 'required|string',
             'telefono' => 'nullable|string',
             'email' => 'required|email|unique:restaurantes,email,' . $restaurante->id,
+            'web' => 'nullable|url',
             'precio' => 'required|numeric',
+            'soles' => 'nullable|integer|min:0|max:3',
             'valoracion_promedio' => 'nullable|numeric|min:0|max:5',
-            'imagen' => 'nullable|image|max:2048'
         ]);
-
-        if ($request->hasFile('imagen')) {
-            $validated['imagen'] = $request->file('imagen')->store('restaurantes', 'public');
-        }
 
         $restaurante->update($validated);
 
