@@ -15,20 +15,26 @@
 <body>
     <!-- Header Principal -->
     <header class="header-main">
-        <div class="container-fluid">
+        <div class="container">
             <div class="row align-items-center">
                 <div class="col-auto">
                     <button class="btn-menu">
                         <i class="bi bi-list"></i>
                     </button>
                 </div>
-                <div class="col">
-                    <h1 class="logo">guía repsol</h1>
-                </div>
                 <div class="col-auto">
-                    <button class="btn-search">
-                        <i class="bi bi-search"></i>
-                    </button>
+                    <img src="{{ asset('img/Guia_Repsol.png') }}" alt="Guía Repsol" class="logo-img">
+                </div>
+                <div class="col">
+                    <div class="search-bar">
+                        <button class="btn-close-search">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                        <input type="text" class="search-input" placeholder="Buscar">
+                        <button class="btn-search-submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="col-auto">
                     <button class="btn-acceso">
@@ -41,7 +47,7 @@
 
     <!-- Tabs Navigation -->
     <div class="tabs-nav">
-        <div class="container-fluid">
+        <div class="container">
             <ul class="nav nav-tabs border-0">
                 <li class="nav-item">
                     <a class="nav-link active" href="#"><i class="bi bi-list-ul"></i> Listado</a>
@@ -55,7 +61,7 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <div class="container-fluid">
+        <div class="container">
             <div class="row">
                 <!-- Columna Izquierda - Contenido Relacionado -->
                 <div class="col-lg-4">
