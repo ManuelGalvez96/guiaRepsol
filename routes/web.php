@@ -1,12 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthUser;
 use App\Http\Controllers\RestauranteController;
 
 Route::get('/', function () {
-    return view('index');
-});
+    return view('welcome');
+})->name('home');
 
+// Rutas de autenticación
+Route::get('/login', [AuthUser::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthUser::class, 'login'])->name('login.post');
+Route::post('/logout', [AuthUser::class, 'logout'])->name('logout');
+
+Route::get('/register', [AuthUser::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthUser::class, 'register'])->name('register.post');
 Route::view('/login', 'log.login')->name('login');
 
 // Ruta protegida - Solo accesible para usuarios autenticados (Descomentar cuando se implemente autenticación)

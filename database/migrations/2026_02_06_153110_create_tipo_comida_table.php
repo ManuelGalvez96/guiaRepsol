@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('tipo_comida', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre'); // Asiática, Mediterránea, Italiana, etc.
+            $table->string('nombre');
             $table->string('slug')->unique();
-            $table->string('icono')->nullable(); // URL del icono
+            $table->string('icono')->nullable();
             $table->timestamps();
         });
     }
