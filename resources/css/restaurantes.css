@@ -299,9 +299,11 @@ body {
     line-height: 1.5;
     margin: 0;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* Limita el texto a 2 líneas */
+    line-clamp: 2;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Restaurant Cards */
