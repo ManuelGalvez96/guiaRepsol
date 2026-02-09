@@ -24,9 +24,7 @@
         <a href="#" class="active">Soletes</a>
       </nav>
     </div>
-    <div class="top-right">
-      🔍 Acceso
-    </div>
+    <div class="top-right">🔍 Acceso</div>
   </div>
 </div>
 
