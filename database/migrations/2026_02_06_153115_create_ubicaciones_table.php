@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('ubicaciones', function (Blueprint $table) {
             $table->id();
-            $table->string('comunidad_autonoma'); // Madrid, Catalunya, etc.
+            $table->string('comunidad_autonoma');
             $table->string('provincia');
             $table->string('ciudad');
             $table->string('codigo_postal')->nullable();

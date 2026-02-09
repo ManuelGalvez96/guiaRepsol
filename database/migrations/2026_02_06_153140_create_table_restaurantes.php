@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('web')->nullable();
             $table->decimal('precio', 8, 2);
-            $table->integer('soles')->default(0); // 0 = Solete, 1-3 = Soles Repsol
+            $table->integer('soles')->default(0);
             $table->decimal('valoracion_promedio', 3, 2)->default(0);
             $table->boolean('activo')->default(true);
             $table->timestamps();
