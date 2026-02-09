@@ -2,28 +2,45 @@
 
 namespace Database\Seeders;
 
+use App\Models\Categoria;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Categoria;
 
 class CategoriaSeeder extends Seeder
 {
+    use WithoutModelEvents;
+
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $categorias = [
-            ['nombre' => 'Restaurante', 'slug' => 'restaurante', 'descripcion' => 'Restaurantes tradicionales'],
-            ['nombre' => 'Cafetería', 'slug' => 'cafeteria', 'descripcion' => 'Cafeterías y establecimientos de café'],
-            ['nombre' => 'Bar', 'slug' => 'bar', 'descripcion' => 'Bares y tabernas'],
-            ['nombre' => 'Gastrobar', 'slug' => 'gastrobar', 'descripcion' => 'Gastrobares modernos'],
-            ['nombre' => 'Pizzería', 'slug' => 'pizzeria', 'descripcion' => 'Pizzerías italianas'],
-            ['nombre' => 'Asador', 'slug' => 'asador', 'descripcion' => 'Asadores y parrillas'],
-        ];
+        Categoria::create([
+            'nombre' => 'Restaurante',
+            'slug' => 'restaurante',
+            'descripcion' => 'Establecimientos gastronómicos de alta cocina',
+            'icono' => 'bi-shop',
+        ]);
 
-        foreach ($categorias as $categoria) {
-            Categoria::create($categoria);
-        }
+        Categoria::create([
+            'nombre' => 'Bar',
+            'slug' => 'bar',
+            'descripcion' => 'Bares y tabernas con oferta gastronómica',
+            'icono' => 'bi-cup-straw',
+        ]);
+
+        Categoria::create([
+            'nombre' => 'Cafetería',
+            'slug' => 'cafeteria',
+            'descripcion' => 'Cafeterías y locales de desayunos',
+            'icono' => 'bi-cup-hot',
+        ]);
+
+        Categoria::create([
+            'nombre' => 'Gastrobar',
+            'slug' => 'gastrobar',
+            'descripcion' => 'Espacios modernos con propuesta gastronómica innovadora',
+            'icono' => 'bi-moisture',
+        ]);
     }
 }

@@ -20,6 +20,11 @@ class Ubicacion extends Model
         'longitud'
     ];
 
+    protected $casts = [
+        'latitud' => 'decimal:7',
+        'longitud' => 'decimal:7',
+    ];
+
     public function restaurantes()
     {
         return $this->hasMany(Restaurante::class);

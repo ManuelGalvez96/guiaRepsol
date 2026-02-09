@@ -66,3 +66,4 @@ class Restaurante extends Model
         return $this->hasMany(Resena::class);
     }
 }
+

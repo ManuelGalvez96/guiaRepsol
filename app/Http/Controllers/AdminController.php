@@ -6,6 +6,8 @@ use App\Models\Restaurante;
 use App\Models\Categoria;
 use App\Models\Ubicacion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+
 
 class AdminController extends Controller
 {
@@ -57,7 +59,7 @@ class AdminController extends Controller
 
         Restaurante::create($validated);
 
-        return redirect()->route('admin.index')->with('success', 'Restaurante creado exitosamente');
+        return Redirect::route('admin.index')->with('success', 'Restaurante creado exitosamente');
     }
 
     public function edit(Restaurante $restaurante)
@@ -85,13 +87,13 @@ class AdminController extends Controller
 
         $restaurante->update($validated);
 
-        return redirect()->route('admin.index')->with('success', 'Restaurante actualizado exitosamente');
+        return Redirect::route('admin.index')->with('success', 'Restaurante actualizado exitosamente');
     }
 
     public function destroy(Restaurante $restaurante)
     {
         $restaurante->delete();
 
-        return redirect()->route('admin.index')->with('success', 'Restaurante eliminado exitosamente');
+        return Redirect::route('admin.index')->with('success', 'Restaurante eliminado exitosamente');
     }
 }
