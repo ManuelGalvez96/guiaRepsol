@@ -182,65 +182,61 @@
                         <div class="section-header">
                             <div>
                                 <h2>Establecimientos gastronómicos</h2>
-                                <span class="result-count">2971 resultados para *</span>
+                                <span class="result-count">{{ $restaurantes->count() }} resultados para *</span>
                             </div>
                             <div>
-                                <button class="btn btn-sm btn-outline-secondary">
-                                    Ordenar por <i class="bi bi-chevron-down"></i>
-                                </button>
-                                <a href="#" class="link-mapa">Ver más en mapa</a>
+                                <form method="GET" action="{{ route('restaurantes') }}" id="formOrdenar">
+                                    <select name="ordenar" class="btn btn-sm btn-outline-secondary" onchange="document.getElementById('formOrdenar').submit()">
+                                        <option value="nombre" {{ request('ordenar') == 'nombre' ? 'selected' : '' }}>Nombre A-Z</option>
+                                        <option value="valoracion" {{ request('ordenar') == 'valoracion' ? 'selected' : '' }}>Mejor valorados</option>
+                                        <option value="soles" {{ request('ordenar') == 'soles' ? 'selected' : '' }}>Más Soles Repsol</option>
+                                        <option value="precio_asc" {{ request('ordenar') == 'precio_asc' ? 'selected' : '' }}>Precio: Menor a Mayor</option>
+                                        <option value="precio_desc" {{ request('ordenar') == 'precio_desc' ? 'selected' : '' }}>Precio: Mayor a Menor</option>
+                                    </select>
+                                </form>
                             </div>
                         </div>
 
                         <div class="row g-4 mb-5">
+                            @forelse($restaurantes as $restaurante)
                             <div class="col-md-4">
                                 <div class="card restaurant-card">
-                                    <img src="https://picsum.photos/400/300?random=11" class="card-img-top" alt="Tripea">
+                                    <img src="https://picsum.photos/400/300?random={{ $restaurante->id }}" class="card-img-top" alt="{{ $restaurante->nombre }}">
                                     <div class="card-body">
-                                        <h5 class="card-title">Tripea</h5>
+                                        <h5 class="card-title">{{ $restaurante->nombre }}</h5>
                                         <p class="card-text">
-                                            <i class="bi bi-geo-alt"></i> Restaurante · Madrid, España
+                                            <i class="bi bi-geo-alt"></i> {{ $restaurante->categoria->nombre }} · {{ $restaurante->ubicacion->ciudad }}, {{ $restaurante->ubicacion->provincia }}
                                         </p>
                                         <div class="rating">
-                                            <i class="bi bi-star-fill"></i>
-                                            <span>1 Sol</span>
-                                            <span class="badge-stars">€€€</span>
+                                            @if($restaurante->soles > 0)
+                                                @for($i = 0; $i < $restaurante->soles; $i++)
+                                                    <i class="bi bi-sun-fill sun-icon"></i>
+                                                @endfor
+                                                <span>{{ $restaurante->soles }} {{ $restaurante->soles == 1 ? 'Sol' : 'Soles' }}</span>
+                                            @else
+                                                <i class="bi bi-star-fill"></i>
+                                                <span>{{ number_format($restaurante->valoracion_promedio, 1) }}</span>
+                                            @endif
+                                            <span class="badge-stars">
+                                                @if($restaurante->precio < 30)
+                                                    €
+                                                @elseif($restaurante->precio < 60)
+                                                    €€
+                                                @elseif($restaurante->precio < 100)
+                                                    €€€
+                                                @else
+                                                    €€€€
+                                                @endif
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="col-md-4">
-                                <div class="card restaurant-card">
-                                    <img src="https://picsum.photos/400/300?random=12" class="card-img-top" alt="Mija Cana">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Mija Cana</h5>
-                                        <p class="card-text">
-                                            <i class="bi bi-geo-alt"></i> Bar · Madrid, España
-                                        </p>
-                                        <div class="rating">
-                                            <i class="bi bi-sun-fill sun-icon"></i>
-                                            <span>Soles: 1</span>
-                                        </div>
-                                    </div>
-                                </div>
+                            @empty
+                            <div class="col-12">
+                                <p class="text-center text-muted">No se encontraron restaurantes.</p>
                             </div>
-
-                            <div class="col-md-4">
-                                <div class="card restaurant-card">
-                                    <img src="https://picsum.photos/400/300?random=13" class="card-img-top" alt="Kitchen 154">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Kitchen 154</h5>
-                                        <p class="card-text">
-                                            <i class="bi bi-geo-alt"></i> Restaurante · Madrid, España
-                                        </p>
-                                        <div class="rating">
-                                            <i class="bi bi-sun-fill sun-icon"></i>
-                                            <span>Soles: 1</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            @endforelse
                         </div>
                     </div>
 
