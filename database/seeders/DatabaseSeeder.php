@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             RestauranteTipoComidaSeeder::class,
             ValoracionSeeder::class,
             ResenaSeeder::class,
+            LikeRestauranteSeeder::class,
+            GuardarRestauranteSeeder::class,
         ]);
     }
 }

@@ -54,4 +54,22 @@ class User extends Authenticatable
     {
         return $this->hasMany(Restaurante::class);
     }
+
+    /**
+     * Restaurantes que el usuario ha dado like.
+     */
+    public function restaurantesLiked()
+    {
+        return $this->belongsToMany(Restaurante::class, 'tbl_likes_restaurantes')
+            ->withTimestamps();
+    }
+
+    /**
+     * Restaurantes guardados por el usuario.
+     */
+    public function restaurantesGuardados()
+    {
+        return $this->belongsToMany(Restaurante::class, 'tbl_guardar_restaurante')
+            ->withTimestamps();
+    }
 }
