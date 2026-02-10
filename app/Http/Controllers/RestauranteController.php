@@ -49,7 +49,7 @@ class RestauranteController extends Controller
         $categorias = Categoria::all();
         $tiposComida = TipoComida::all();
         
-        return view('gerente.formulario', compact('categorias', 'tiposComida'));
+        return view('formulario', compact('categorias', 'tiposComida'));
     }
 
     public function store(Request $request)
