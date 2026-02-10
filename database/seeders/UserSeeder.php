@@ -49,7 +49,6 @@ class UserSeeder extends Seeder
             'email' => 'juan.martinez@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
-            'restaurante_id' => 1,
             'password' => $password,
         ]);
 
@@ -58,7 +57,6 @@ class UserSeeder extends Seeder
             'email' => 'ana.lopez@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
-            'restaurante_id' => 2,
             'password' => $password,
         ]);
 
@@ -67,7 +65,6 @@ class UserSeeder extends Seeder
             'email' => 'carlos.fernandez@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
-            'restaurante_id' => 3,
             'password' => $password,
         ]);
 
@@ -76,7 +73,6 @@ class UserSeeder extends Seeder
             'email' => 'laura.sanchez@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
-            'restaurante_id' => 4,
             'password' => $password,
         ]);
 
@@ -85,7 +81,6 @@ class UserSeeder extends Seeder
             'email' => 'andres.martin@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
-            'restaurante_id' => 5,
             'password' => $password,
         ]);
 
@@ -94,7 +89,6 @@ class UserSeeder extends Seeder
             'email' => 'isabel.rodriguez@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
-            'restaurante_id' => 6,
             'password' => $password,
         ]);
 
@@ -103,7 +97,6 @@ class UserSeeder extends Seeder
             'email' => 'pedro.jimenez@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
-            'restaurante_id' => 7,
             'password' => $password,
         ]);
 
@@ -112,7 +105,6 @@ class UserSeeder extends Seeder
             'email' => 'maria.perez@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
-            'restaurante_id' => 8,
             'password' => $password,
         ]);
 
@@ -121,7 +113,6 @@ class UserSeeder extends Seeder
             'email' => 'miguel.torres@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
-            'restaurante_id' => 9,
             'password' => $password,
         ]);
 
@@ -130,7 +121,6 @@ class UserSeeder extends Seeder
             'email' => 'sofia.gonzalez@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
-            'restaurante_id' => 10,
             'password' => $password,
         ]);
 
@@ -139,7 +129,6 @@ class UserSeeder extends Seeder
             'email' => 'ricardo.lopez@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
-            'restaurante_id' => 11,
             'password' => $password,
         ]);
 
@@ -148,7 +137,6 @@ class UserSeeder extends Seeder
             'email' => 'elena.garcia@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
-            'restaurante_id' => 12,
             'password' => $password,
         ]);
 
@@ -157,7 +145,6 @@ class UserSeeder extends Seeder
             'email' => 'francisco.sanchez@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
-            'restaurante_id' => 13,
             'password' => $password,
         ]);
 
@@ -166,7 +153,6 @@ class UserSeeder extends Seeder
             'email' => 'beatriz.ruiz@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
-            'restaurante_id' => 14,
             'password' => $password,
         ]);
 
@@ -175,7 +161,6 @@ class UserSeeder extends Seeder
             'email' => 'javier.moreno@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
-            'restaurante_id' => 15,
             'password' => $password,
         ]);
 

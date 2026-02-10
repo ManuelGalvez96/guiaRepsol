@@ -49,11 +49,28 @@ body {
     justify-content: center;
     transition: color .2s ease;
     margin-right: 140px;
-    text-decoration: none;
+}
+
+.btn-close-modal {
+    background-color: #016f7f;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
 }
 
 .btn-close-header:hover {
     color: #333;
+}
+
+.signup-link {
+    margin-top: 20px;
+    font-size: 17px;
+    color: #000000;
+    text-align: center;
 }
 
 /* ======================================
@@ -212,7 +229,7 @@ body {
    ====================================== */
 
 .btn-login {
-    background-color: #d8d8d8;
+    background-color: #016a7f;
     color: #fff;
     border: none;
     padding: 14px;
@@ -223,9 +240,6 @@ body {
     transition: background-color .2s;
 }
 
-.btn-login:hover {
-    background-color: #d8d8d8;
-}
 
 /* ======================================
    DIVISOR - Separador "o" entre opciones
@@ -281,11 +295,6 @@ body {
     transition: all .2s;
 }
 
-.btn-social:hover {
-    background-color: #f8f8f8;
-    border-color: #d0d0d0;
-}
-
 .social-icon {
     width: 20px;
     height: 20px;
@@ -299,10 +308,6 @@ body {
    FACEBOOK BUTTON - Estilos específicos
    ====================================== */
 
-.btn-facebook {
-    color: #1877f2;
-}
-
 .btn-facebook .social-icon {
     background-color: #1877f2;
     color: #fff;
@@ -314,14 +319,11 @@ body {
    GOOGLE BUTTON - Estilos específicos
    ====================================== */
 
-.btn-google {
-    color: #333;
-}
-
 .btn-google .social-icon {
     font-size: 18px;
     font-weight: 700;
     color: #4285f4;
+
 }
 
 /* ======================================
@@ -406,25 +408,4 @@ body {
     color: #dc3545;
     display: block;
     margin-top: 4px;
-}
-
-/* ======================================
-   SIGNUP LINK - Link para ir a login/registro
-   ====================================== */
-
-.signup-link {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #666;
-}
-
-.signup-link a {
-    color: #06c;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.signup-link a:hover {
-    text-decoration: underline;
 }

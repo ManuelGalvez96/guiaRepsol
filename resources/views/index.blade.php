@@ -24,7 +24,7 @@
         <a href="#" class="active">Soletes</a>
       </nav>
     </div>
-    <a href="{{ route('login') }}" class="login-link">Iniciar sesión</a>
+    <a href="{{ route('login') }}" class="btn-login">Iniciar sesión</a>
   </div>
 </div>
 

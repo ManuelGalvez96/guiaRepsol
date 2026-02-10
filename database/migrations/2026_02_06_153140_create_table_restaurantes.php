@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->text('descripcion')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('categoria_id')->constrained('categorias')->onDelete('cascade');
             $table->foreignId('ubicacion_id')->constrained('ubicaciones')->onDelete('cascade');
             $table->string('direccion');
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->decimal('precio', 8, 2);
             $table->integer('soles')->default(0);
             $table->decimal('valoracion_promedio', 3, 2)->default(0);
+            $table->boolean('patrocinados')->default(false);
             $table->boolean('activo')->default(true);
             $table->timestamps();
         });
