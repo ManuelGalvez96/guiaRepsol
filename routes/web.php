@@ -1,28 +1,31 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthUser;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RestauranteController;
 
 Route::get('/', function () {
     return view('index');
-})->name('home');
+});
 
-// Rutas de autenticación
-Route::get('/login', [AuthUser::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthUser::class, 'login'])->name('login.post');
-Route::get('/register', [AuthUser::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthUser::class, 'register'])->name('register.post');
-Route::post('/logout', [AuthUser::class, 'logout'])->name('logout');
+Route::view('/login', 'log.login')->name('login');
+Route::view('/register', 'log.register')->name('register');
 
-// Ruta protegida - Solo accesible para usuarios autenticados (Descomentar cuando se implemente autenticación)
-// Route::middleware('auth')->group(function () {
-//     Route::get('/restaurantes', [RestauranteController::class, 'index'])->name('restaurantes');
-// });
+// Ruta temporal para login (redirecciona al admin por ahora)
+Route::post('/login', function () {
+    return redirect()->route('admin.index');
+})->name('login.post');
 
-// Ruta temporal sin protección para desarrollo (Eliminar después de implementar autenticación)
-Route::get('/restaurantes', [RestauranteController::class, 'index'])->name('restaurantes');
+// Rutas del panel de administración
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'index'])->name('index');
+    Route::get('/create', [AdminController::class, 'create'])->name('create');
+    Route::post('/', [AdminController::class, 'store'])->name('store');
+    Route::get('/{restaurante}/edit', [AdminController::class, 'edit'])->name('edit');
+    Route::put('/{restaurante}', [AdminController::class, 'update'])->name('update');
+    Route::delete('/{restaurante}', [AdminController::class, 'destroy'])->name('destroy');
+});
 
-// Rutas del formulario de registro de restaurantes
+// Rutas para formulario de registro de restaurantes
 Route::get('/formulario', [RestauranteController::class, 'create'])->name('formulario');
 Route::post('/restaurantes', [RestauranteController::class, 'store'])->name('restaurantes.store');

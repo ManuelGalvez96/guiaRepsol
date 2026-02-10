@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Restaurante extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'nombre',
         'descripcion',
@@ -28,6 +34,7 @@ class Restaurante extends Model
         'activo' => 'boolean',
     ];
 
+    // Relaciones
     public function categoria()
     {
         return $this->belongsTo(Categoria::class);
@@ -38,9 +45,9 @@ class Restaurante extends Model
         return $this->belongsTo(Ubicacion::class);
     }
 
-    public function tiposComida()
+    public function valoraciones()
     {
-        return $this->belongsToMany(TipoComida::class, 'restaurante_tipo_comida');
+        return $this->hasMany(Valoracion::class);
     }
 
     public function imagenes()
@@ -48,9 +55,14 @@ class Restaurante extends Model
         return $this->hasMany(ImagenRestaurante::class);
     }
 
-    public function valoraciones()
+    public function horarios()
     {
-        return $this->hasMany(Valoracion::class);
+        return $this->hasMany(Horario::class);
+    }
+
+    public function tiposComida()
+    {
+        return $this->belongsToMany(TipoComida::class, 'restaurante_tipo_comida');
     }
 
     public function resenas()
@@ -81,3 +93,4 @@ class Restaurante extends Model
             ->withTimestamps();
     }
 }
+

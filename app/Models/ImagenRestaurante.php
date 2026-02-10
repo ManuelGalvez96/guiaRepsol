@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ImagenRestaurante extends Model
 {
@@ -21,7 +22,7 @@ class ImagenRestaurante extends Model
         'orden' => 'integer'
     ];
 
-    public function restaurante()
+    public function restaurante(): BelongsTo
     {
         return $this->belongsTo(Restaurante::class);
     }
