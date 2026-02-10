@@ -24,4 +24,5 @@ Route::view('/login', 'log.login')->name('login');
 
 // Ruta temporal sin protección para desarrollo (Eliminar después de implementar autenticación)
 Route::get('/restaurantes', [RestauranteController::class, 'index'])->name('restaurantes');
+Route::get('/restaurante/{id}', [RestauranteController::class, 'show'])->name('restaurante.detalle');
 

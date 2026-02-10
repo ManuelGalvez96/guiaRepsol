@@ -38,7 +38,7 @@
                 </div>
                 <div class="col-auto">
                     <button class="btn-acceso">
-                        <i class="bi bi-person"></i> Acceso
+                        <i class="bi bi-person"></i> Cerrar Sessión
                     </button>
                 </div>
             </div>
@@ -200,24 +200,25 @@
                         <div class="row g-4 mb-5">
                             @forelse($restaurantes as $restaurante)
                             <div class="col-md-4">
-                                <div class="card restaurant-card">
-                                    <img src="https://picsum.photos/400/300?random={{ $restaurante->id }}" class="card-img-top" alt="{{ $restaurante->nombre }}">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ $restaurante->nombre }}</h5>
-                                        <p class="card-text">
-                                            <i class="bi bi-geo-alt"></i> {{ $restaurante->categoria->nombre }} · {{ $restaurante->ubicacion->ciudad }}, {{ $restaurante->ubicacion->provincia }}
-                                        </p>
-                                        <div class="rating">
-                                            @if($restaurante->soles > 0)
-                                                @for($i = 0; $i < $restaurante->soles; $i++)
-                                                    <i class="bi bi-sun-fill sun-icon"></i>
-                                                @endfor
-                                                <span>{{ $restaurante->soles }} {{ $restaurante->soles == 1 ? 'Sol' : 'Soles' }}</span>
-                                            @else
-                                                <i class="bi bi-star-fill"></i>
-                                                <span>{{ number_format($restaurante->valoracion_promedio, 1) }}</span>
-                                            @endif
-                                            <span class="badge-stars">
+                                <a href="{{ route('restaurante.detalle', $restaurante->id) }}" class="text-decoration-none">
+                                    <div class="card restaurant-card">
+                                        <img src="https://picsum.photos/400/300?random={{ $restaurante->id }}" class="card-img-top" alt="{{ $restaurante->nombre }}">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ $restaurante->nombre }}</h5>
+                                            <p class="card-text">
+                                                <i class="bi bi-geo-alt"></i> {{ $restaurante->categoria->nombre }} · {{ $restaurante->ubicacion->ciudad }}, {{ $restaurante->ubicacion->provincia }}
+                                            </p>
+                                            <div class="rating">
+                                                @if($restaurante->soles > 0)
+                                                    @for($i = 0; $i < $restaurante->soles; $i++)
+                                                        <i class="bi bi-sun-fill sun-icon"></i>
+                                                    @endfor
+                                                    <span>{{ $restaurante->soles }} {{ $restaurante->soles == 1 ? 'Sol' : 'Soles' }}</span>
+                                                @else
+                                                    <i class="bi bi-star-fill"></i>
+                                                    <span>{{ number_format($restaurante->valoracion_promedio, 1) }}</span>
+                                                @endif
+                                                <span class="badge-stars">
                                                 @if($restaurante->precio < 30)
                                                     €
                                                 @elseif($restaurante->precio < 60)
@@ -231,6 +232,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                </a>
                             </div>
                             @empty
                             <div class="col-12">
