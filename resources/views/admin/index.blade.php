@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Panel de Administración - Guía Repsol</title>
     <style>
         * {
@@ -230,6 +231,8 @@
             border: 1px solid #c3e6cb;
         }
     </style>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <!-- Header -->
@@ -313,11 +316,7 @@
                                 <a href="{{ route('admin.edit', $restaurante) }}">
                                     <button class="btn-edit">Editar</button>
                                 </a>
-                                <form action="{{ route('admin.destroy', $restaurante) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este restaurante?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-delete">Eliminar</button>
-                                </form>
+                                <button type="button" class="btn-delete" onclick="deleteRestaurante({{ $restaurante->id }})">Eliminar</button>
                             </div>
                         </td>
                     </tr>
@@ -351,5 +350,92 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Configurar CSRF token para todas las peticiones AJAX
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // Función para eliminar restaurante con AJAX
+        function deleteRestaurante(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e74c3c',
+                cancelButtonColor: '#95a5a6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Mostrar loading
+                    Swal.fire({
+                        title: 'Eliminando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    fetch(`/admin/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '¡Eliminado!',
+                                text: data.message,
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'No se pudo eliminar el restaurante'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Error al eliminar el restaurante'
+                        });
+                    });
+                }
+            });
+        }
+
+        // Función para mostrar alertas con SweetAlert
+        function showAlert(message, type) {
+            Swal.fire({
+                icon: type === 'success' ? 'success' : 'error',
+                title: type === 'success' ? '¡Éxito!' : 'Error',
+                text: message,
+                timer: 3000,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end'
+            });
+        }
+
+        // Aplicar filtros con AJAX (opcional)
+        document.querySelectorAll('.filter-select').forEach(select => {
+            select.addEventListener('change', function() {
+                this.form.submit();
+            });
+        });
+    </script>
 </body>
 </html>

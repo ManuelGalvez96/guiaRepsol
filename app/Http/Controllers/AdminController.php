@@ -57,7 +57,15 @@ class AdminController extends Controller
             'valoracion_promedio' => 'nullable|numeric|min:0|max:5',
         ]);
 
-        Restaurante::create($validated);
+        $restaurante = Restaurante::create($validated);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Restaurante creado exitosamente',
+                'restaurante' => $restaurante->load(['categoria', 'ubicacion', 'imagenes'])
+            ], 201);
+        }
 
         return Redirect::route('admin.index')->with('success', 'Restaurante creado exitosamente');
     }
@@ -87,12 +95,27 @@ class AdminController extends Controller
 
         $restaurante->update($validated);
 
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Restaurante actualizado exitosamente',
+                'restaurante' => $restaurante->load(['categoria', 'ubicacion', 'imagenes'])
+            ]);
+        }
+
         return Redirect::route('admin.index')->with('success', 'Restaurante actualizado exitosamente');
     }
 
-    public function destroy(Restaurante $restaurante)
+    public function destroy(Request $request, Restaurante $restaurante)
     {
         $restaurante->delete();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Restaurante eliminado exitosamente'
+            ]);
+        }
 
         return Redirect::route('admin.index')->with('success', 'Restaurante eliminado exitosamente');
     }
