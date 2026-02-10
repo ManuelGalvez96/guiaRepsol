@@ -147,5 +147,146 @@ class LikeRestauranteSeeder extends Seeder
             'user_id' => $usuarios[7],
             'restaurante_id' => $restaurantes[10],
         ]);
+
+        // Additional likes to reach 50+
+        if (count($usuarios) > 8) {
+            LikeRestaurante::create([
+                'user_id' => $usuarios[8],
+                'restaurante_id' => $restaurantes[15],
+            ]);
+            LikeRestaurante::create([
+                'user_id' => $usuarios[8],
+                'restaurante_id' => $restaurantes[18],
+            ]);
+            LikeRestaurante::create([
+                'user_id' => $usuarios[8],
+                'restaurante_id' => $restaurantes[22],
+            ]);
+
+            LikeRestaurante::create([
+                'user_id' => $usuarios[9],
+                'restaurante_id' => $restaurantes[16],
+            ]);
+            LikeRestaurante::create([
+                'user_id' => $usuarios[9],
+                'restaurante_id' => $restaurantes[19],
+            ]);
+            LikeRestaurante::create([
+                'user_id' => $usuarios[9],
+                'restaurante_id' => $restaurantes[25],
+            ]);
+
+            LikeRestaurante::create([
+                'user_id' => $usuarios[10],
+                'restaurante_id' => $restaurantes[17],
+            ]);
+            LikeRestaurante::create([
+                'user_id' => $usuarios[10],
+                'restaurante_id' => $restaurantes[20],
+            ]);
+            LikeRestaurante::create([
+                'user_id' => $usuarios[10],
+                'restaurante_id' => $restaurantes[21],
+            ]);
+
+            LikeRestaurante::create([
+                'user_id' => $usuarios[11],
+                'restaurante_id' => $restaurantes[23],
+            ]);
+            LikeRestaurante::create([
+                'user_id' => $usuarios[11],
+                'restaurante_id' => $restaurantes[24],
+            ]);
+
+            LikeRestaurante::create([
+                'user_id' => $usuarios[12],
+                'restaurante_id' => $restaurantes[26],
+            ]);
+            LikeRestaurante::create([
+                'user_id' => $usuarios[12],
+                'restaurante_id' => $restaurantes[27],
+            ]);
+            LikeRestaurante::create([
+                'user_id' => $usuarios[12],
+                'restaurante_id' => $restaurantes[28],
+            ]);
+
+            LikeRestaurante::create([
+                'user_id' => $usuarios[13],
+                'restaurante_id' => $restaurantes[29],
+            ]);
+            LikeRestaurante::create([
+                'user_id' => $usuarios[13],
+                'restaurante_id' => $restaurantes[30],
+            ]);
+
+            LikeRestaurante::create([
+                'user_id' => $usuarios[14],
+                'restaurante_id' => $restaurantes[31],
+            ]);
+            LikeRestaurante::create([
+                'user_id' => $usuarios[14],
+                'restaurante_id' => $restaurantes[32],
+            ]);
+            LikeRestaurante::create([
+                'user_id' => $usuarios[14],
+                'restaurante_id' => $restaurantes[33],
+            ]);
+
+            LikeRestaurante::create([
+                'user_id' => $usuarios[15],
+                'restaurante_id' => $restaurantes[34],
+            ]);
+            LikeRestaurante::create([
+                'user_id' => $usuarios[15],
+                'restaurante_id' => $restaurantes[35],
+            ]);
+
+            if (count($usuarios) > 16) {
+                LikeRestaurante::create([
+                    'user_id' => $usuarios[16],
+                    'restaurante_id' => $restaurantes[36],
+                ]);
+                LikeRestaurante::create([
+                    'user_id' => $usuarios[16],
+                    'restaurante_id' => $restaurantes[37],
+                ]);
+                LikeRestaurante::create([
+                    'user_id' => $usuarios[16],
+                    'restaurante_id' => $restaurantes[38],
+                ]);
+
+                LikeRestaurante::create([
+                    'user_id' => $usuarios[17],
+                    'restaurante_id' => $restaurantes[39],
+                ]);
+                LikeRestaurante::create([
+                    'user_id' => $usuarios[17],
+                    'restaurante_id' => $restaurantes[40],
+                ]);
+
+                LikeRestaurante::create([
+                    'user_id' => $usuarios[18],
+                    'restaurante_id' => $restaurantes[41],
+                ]);
+                LikeRestaurante::create([
+                    'user_id' => $usuarios[18],
+                    'restaurante_id' => $restaurantes[42],
+                ]);
+                LikeRestaurante::create([
+                    'user_id' => $usuarios[18],
+                    'restaurante_id' => $restaurantes[43],
+                ]);
+
+                LikeRestaurante::create([
+                    'user_id' => $usuarios[19],
+                    'restaurante_id' => $restaurantes[44],
+                ]);
+                LikeRestaurante::create([
+                    'user_id' => $usuarios[19],
+                    'restaurante_id' => $restaurantes[45],
+                ]);
+            }
+        }
     }
 }
