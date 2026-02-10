@@ -11,7 +11,6 @@ Route::get('/', function () {
 Route::view('/login', 'log.login')->name('login');
 Route::view('/register', 'log.register')->name('register');
 
-<<<<<<< HEAD
 // Ruta temporal para login (redirecciona al admin por ahora)
 Route::post('/login', function () {
     return redirect()->route('admin.index');
@@ -25,12 +24,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/{restaurante}/edit', [AdminController::class, 'edit'])->name('edit');
     Route::put('/{restaurante}', [AdminController::class, 'update'])->name('update');
     Route::delete('/{restaurante}', [AdminController::class, 'destroy'])->name('destroy');
-=======
+});
+
 // Rutas protegidas - Solo accesibles para usuarios autenticados
 Route::middleware('auth')->group(function () {
     Route::get('/restaurantes', [RestauranteController::class, 'index'])->name('restaurantes');
     Route::get('/restaurante/{id}', [RestauranteController::class, 'show'])->name('restaurante.detalle');
->>>>>>> 2f67ab647dcac0975f6facda47090743018609a9
 });
 
 // Rutas para formulario de registro de restaurantes
