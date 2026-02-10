@@ -23,7 +23,6 @@ Route::post('/logout', [AuthUser::class, 'logout'])->name('logout');
 // Ruta temporal sin protección para desarrollo (Eliminar después de implementar autenticación)
 Route::get('/restaurantes', [RestauranteController::class, 'index'])->name('restaurantes');
 
-// Ruta de darte a conocer
-Route::get('/formulario', function (){
-    return view('gerente.formulario');
-})->name('formulario');
+// Rutas del formulario de registro de restaurantes
+Route::get('/formulario', [RestauranteController::class, 'create'])->name('formulario');
+Route::post('/restaurantes', [RestauranteController::class, 'store'])->name('restaurantes.store');

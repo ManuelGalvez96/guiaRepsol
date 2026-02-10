@@ -43,6 +43,11 @@ class Restaurante extends Model
         return $this->belongsToMany(TipoComida::class, 'restaurante_tipo_comida');
     }
 
+    public function imagenes()
+    {
+        return $this->hasMany(ImagenRestaurante::class);
+    }
+
     public function valoraciones()
     {
         return $this->hasMany(Valoracion::class);

@@ -35,7 +35,7 @@
         <p>Completa el formulario para que tu establecimiento forme parte de la Guía Repsol Soletes</p>
     </div>
 
-    <form action="#" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('restaurantes.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <!-- INFORMACIÓN BÁSICA -->
@@ -44,39 +44,32 @@
 
             <div class="form-group">
                 <label>Nombre del negocio <span class="required">*</span></label>
-                <input type="text" name="nombre" required placeholder="Ej: Mesón El Rincón">
+                <input type="text" name="nombre" required placeholder="Ej: Mesón El Rincón" value="{{ old('nombre') }}">
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Tipo de establecimiento <span class="required">*</span></label>
-                    <select name="tipo" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="restaurante">Restaurante</option>
-                        <option value="bar">Bar</option>
-                        <option value="cafeteria">Cafetería</option>
-                        <option value="vinoteca">Vinoteca</option>
-                        <option value="heladeria">Heladería</option>
-                        <option value="terraza">Terraza / Chiringuito</option>
-                        <option value="fast_good">Fast Good</option>
+                    <label>Categoría <span class="required">*</span></label>
+                    <select name="categoria_id" required>
+                        <option value="">Selecciona una categoría</option>
+                        @foreach($categorias ?? [] as $categoria)
+                            <option value="{{ $categoria->id }}" {{ old('categoria_id') == $categoria->id ? 'selected' : '' }}>
+                                {{ $categoria->nombre }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Rango de precio <span class="required">*</span></label>
-                    <select name="precio" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="€">€ (0-15€)</option>
-                        <option value="€€">€€ (15-30€)</option>
-                        <option value="€€€">€€€ (30-50€)</option>
-                        <option value="€€€€">€€€€ (+50€)</option>
-                    </select>
+                    <label>Precio promedio <span class="required">*</span></label>
+                    <input type="number" name="precio" required placeholder="Ej: 25.00" step="0.01" min="0" value="{{ old('precio') }}">
+                    <small>Precio promedio por persona en euros</small>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Descripción del negocio <span class="required">*</span></label>
-                <textarea name="descripcion" required placeholder="Describe tu negocio, su ambiente, especialidades, historia..."></textarea>
+                <textarea name="descripcion" required placeholder="Describe tu negocio, su ambiente, especialidades, historia...">{{ old('descripcion') }}</textarea>
                 <small>Mínimo 100 caracteres</small>
             </div>
         </div>
@@ -87,36 +80,31 @@
 
             <div class="form-group">
                 <label>Dirección completa <span class="required">*</span></label>
-                <input type="text" name="direccion" required placeholder="Calle, número, piso">
+                <input type="text" name="direccion" required placeholder="Calle, número, piso" value="{{ old('direccion') }}">
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label>Ciudad <span class="required">*</span></label>
-                    <input type="text" name="ciudad" required placeholder="Ej: Madrid">
+                    <input type="text" name="ciudad" required placeholder="Ej: Madrid" value="{{ old('ciudad') }}">
                 </div>
 
                 <div class="form-group">
-                    <label>Código postal <span class="required">*</span></label>
-                    <input type="text" name="codigo_postal" required placeholder="Ej: 28001">
+                    <label>Provincia <span class="required">*</span></label>
+                    <input type="text" name="provincia" required placeholder="Ej: Madrid" value="{{ old('provincia') }}">
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>Comunidad Autónoma <span class="required">*</span></label>
-                <select name="comunidad" required>
-                    <option value="">Selecciona una opción</option>
-                    <option value="madrid">Madrid</option>
-                    <option value="catalunya">Catalunya</option>
-                    <option value="comunitat_valenciana">Comunitat Valenciana</option>
-                    <option value="euskadi">Euskadi</option>
-                    <option value="andalucia">Andalucía</option>
-                    <option value="galicia">Galicia</option>
-                    <option value="castilla_leon">Castilla y León</option>
-                    <option value="extremadura">Extremadura</option>
-                    <option value="cantabria">Cantabria</option>
-                    <option value="otras">Otras</option>
-                </select>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Código postal <span class="required">*</span></label>
+                    <input type="text" name="codigo_postal" required placeholder="Ej: 28001" value="{{ old('codigo_postal') }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Comunidad Autónoma <span class="required">*</span></label>
+                    <input type="text" name="comunidad_autonoma" required placeholder="Ej: Comunidad de Madrid" value="{{ old('comunidad_autonoma') }}">
+                </div>
             </div>
         </div>
 
@@ -126,72 +114,36 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Teléfono <span class="required">*</span></label>
-                    <input type="tel" name="telefono" required placeholder="Ej: 912345678">
+                    <label>Teléfono</label>
+                    <input type="tel" name="telefono" placeholder="Ej: 912345678" value="{{ old('telefono') }}">
                 </div>
 
                 <div class="form-group">
                     <label>Email <span class="required">*</span></label>
-                    <input type="email" name="email" required placeholder="contacto@tunegocio.com">
+                    <input type="email" name="email" required placeholder="contacto@tunegocio.com" value="{{ old('email') }}">
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Sitio web</label>
-                <input type="url" name="web" placeholder="https://www.tunegocio.com">
+                <input type="url" name="web" placeholder="https://www.tunegocio.com" value="{{ old('web') }}">
             </div>
         </div>
 
-        <!-- HORARIOS Y DETALLES -->
+        <!-- TIPOS DE COMIDA -->
         <div class="form-section">
-            <h2>Horarios y características</h2>
+            <h2>Tipos de cocina</h2>
 
             <div class="form-group">
-                <label>Horario</label>
-                <textarea name="horario" placeholder="Ej: Lunes a Viernes: 13:00 - 16:00 y 20:00 - 23:00&#10;Sábado y Domingo: 13:00 - 00:00" rows="3"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Especialidades culinarias</label>
-                <input type="text" name="especialidades" placeholder="Ej: Cocina mediterránea, Arroces, Pescados">
-                <small>Separa las especialidades con comas</small>
-            </div>
-
-            <div class="form-group">
-                <label>Características especiales</label>
+                <label>Selecciona los tipos de cocina que ofreces</label>
                 <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="caracteristicas[]" value="pet_friendly" id="pet_friendly">
-                        <label for="pet_friendly">Pet Friendly</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="caracteristicas[]" value="terraza" id="terraza">
-                        <label for="terraza">Terraza</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="caracteristicas[]" value="wifi" id="wifi">
-                        <label for="wifi">WiFi gratis</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="caracteristicas[]" value="parking" id="parking">
-                        <label for="parking">Parking</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="caracteristicas[]" value="accesible" id="accesible">
-                        <label for="accesible">Accesible</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="caracteristicas[]" value="reservas" id="reservas">
-                        <label for="reservas">Acepta reservas</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="caracteristicas[]" value="vegetariano" id="vegetariano">
-                        <label for="vegetariano">Opciones vegetarianas</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="caracteristicas[]" value="celiacos" id="celiacos">
-                        <label for="celiacos">Apto para celíacos</label>
-                    </div>
+                    @foreach($tiposComida ?? [] as $tipo)
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="tipos_comida[]" value="{{ $tipo->id }}" id="tipo_{{ $tipo->id }}"
+                                {{ in_array($tipo->id, old('tipos_comida', [])) ? 'checked' : '' }}>
+                            <label for="tipo_{{ $tipo->id }}">{{ $tipo->nombre }}</label>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
