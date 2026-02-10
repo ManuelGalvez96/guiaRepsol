@@ -228,5 +228,198 @@ class UserSeeder extends Seeder
             'rol' => 'usuario',
             'password' => $password,
         ]);
+
+        // Additional 24 usuarios
+        User::create([
+            'name' => 'Luis Navarro',
+            'email' => 'luis.navarro@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Carmen Ortiz',
+            'email' => 'carmen.ortiz@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Sergio Ramírez',
+            'email' => 'sergio.ramirez@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Alicia Herrera',
+            'email' => 'alicia.herrera@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Pablo Castro',
+            'email' => 'pablo.castro@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Silvia Romero',
+            'email' => 'silvia.romero@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Alberto Suárez',
+            'email' => 'alberto.suarez@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Rosa Iglesias',
+            'email' => 'rosa.iglesias@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Rubén Gil',
+            'email' => 'ruben.gil@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Nuria Serrano',
+            'email' => 'nuria.serrano@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Adrián Molina',
+            'email' => 'adrian.molina@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Mónica Vargas',
+            'email' => 'monica.vargas@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Álvaro Mendoza',
+            'email' => 'alvaro.mendoza@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Teresa Campos',
+            'email' => 'teresa.campos@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Gonzalo Ramos',
+            'email' => 'gonzalo.ramos@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Sandra Flores',
+            'email' => 'sandra.flores@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Marcos Ortega',
+            'email' => 'marcos.ortega@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Pilar Santos',
+            'email' => 'pilar.santos@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Diego Prieto',
+            'email' => 'diego.prieto@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Verónica Cabrera',
+            'email' => 'veronica.cabrera@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Ignacio Vidal',
+            'email' => 'ignacio.vidal@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Gloria Reyes',
+            'email' => 'gloria.reyes@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Óscar Aguilar',
+            'email' => 'oscar.aguilar@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Irene Medina',
+            'email' => 'irene.medina@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
     }
 }

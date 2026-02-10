@@ -55,6 +55,7 @@ body {
     align-items: center;
     gap: 6px;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .btn-acceso-detalle:hover {

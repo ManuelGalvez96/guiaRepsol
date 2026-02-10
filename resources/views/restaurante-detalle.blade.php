@@ -26,9 +26,18 @@
                     </a>
                 </div>
                 <div class="col-auto">
-                    <a href="{{ route('login') }}" class="btn-acceso-detalle">
-                        <i class="bi bi-person"></i> Acceso
-                    </a>
+                    @auth
+                        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                            @csrf
+                            <button type="submit" class="btn-acceso-detalle">
+                                <i class="bi bi-person"></i> Cerrar Sesión
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="btn-acceso-detalle">
+                            <i class="bi bi-person"></i> Acceso
+                        </a>
+                    @endauth
                 </div>
             </div>
         </div>
