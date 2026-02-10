@@ -6,8 +6,10 @@ use App\Models\Restaurante;
 use App\Models\Categoria;
 use App\Models\TipoComida;
 use App\Models\Ubicacion;
+use App\Models\ImagenRestaurante;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 
 
 class AdminController extends Controller
@@ -24,11 +26,25 @@ class AdminController extends Controller
         }
 
         if ($request->filled('valoracion')) {
-            $query->where('valoracion_promedio', '>=', $request->valoracion);
+            $valoracion = (int) $request->valoracion;
+            // Filtrar por estrellas exactas (ej: 4 = entre 4.0 y 4.9)
+            $query->where('valoracion_promedio', '>=', $valoracion)
+                  ->where('valoracion_promedio', '<', $valoracion + 1);
         }
 
         if ($request->filled('precio')) {
-            $query->where('precio', '<=', $request->precio);
+            // El formato es "min-max" o "max+" para precios mayores
+            $precioRango = $request->precio;
+            
+            if (strpos($precioRango, '-') !== false) {
+                // Rango: "0-10", "10-20", etc.
+                list($min, $max) = explode('-', $precioRango);
+                $query->whereBetween('precio', [(float)$min, (float)$max]);
+            } elseif (strpos($precioRango, '+') !== false) {
+                // Mayor que: "50+"
+                $min = (float) str_replace('+', '', $precioRango);
+                $query->where('precio', '>=', $min);
+            }
         }
 
         $restaurantes = $query->paginate(10);
@@ -62,6 +78,7 @@ class AdminController extends Controller
             'valoracion_promedio' => 'nullable|numeric|min:0|max:5',
             'tipos_comida' => 'nullable|array',
             'tipos_comida.*' => 'exists:tipo_comida,id',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $restaurante = Restaurante::create($validated);
@@ -69,6 +86,20 @@ class AdminController extends Controller
         // Sincronizar tipos de comida
         if ($request->has('tipos_comida')) {
             $restaurante->tiposComida()->sync($request->tipos_comida);
+        }
+
+        // Guardar imagen si se subió
+        if ($request->hasFile('imagen')) {
+            $imagen = $request->file('imagen');
+            $path = $imagen->store('restaurantes', 'public');
+            
+            ImagenRestaurante::create([
+                'restaurante_id' => $restaurante->id,
+                'url' => $path,
+                'alt' => $restaurante->nombre,
+                'principal' => true,
+                'orden' => 0
+            ]);
         }
 
         if ($request->ajax() || $request->wantsJson()) {
@@ -106,6 +137,7 @@ class AdminController extends Controller
             'valoracion_promedio' => 'nullable|numeric|min:0|max:5',
             'tipos_comida' => 'nullable|array',
             'tipos_comida.*' => 'exists:tipo_comida,id',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $restaurante->update($validated);
@@ -115,6 +147,28 @@ class AdminController extends Controller
             $restaurante->tiposComida()->sync($request->tipos_comida);
         } else {
             $restaurante->tiposComida()->detach();
+        }
+
+        // Actualizar imagen si se subió una nueva
+        if ($request->hasFile('imagen')) {
+            // Eliminar imagen anterior si existe
+            $imagenAnterior = $restaurante->imagenes->first();
+            if ($imagenAnterior) {
+                Storage::disk('public')->delete($imagenAnterior->url);
+                $imagenAnterior->delete();
+            }
+
+            // Guardar nueva imagen
+            $imagen = $request->file('imagen');
+            $path = $imagen->store('restaurantes', 'public');
+            
+            ImagenRestaurante::create([
+                'restaurante_id' => $restaurante->id,
+                'url' => $path,
+                'alt' => $restaurante->nombre,
+                'principal' => true,
+                'orden' => 0
+            ]);
         }
 
         if ($request->ajax() || $request->wantsJson()) {
