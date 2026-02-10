@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'rol',
     ];
 
     /**
@@ -44,5 +45,31 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the restaurantes owned by the user.
+     */
+    public function restaurantes()
+    {
+        return $this->hasMany(Restaurante::class);
+    }
+
+    /**
+     * Restaurantes que el usuario ha dado like.
+     */
+    public function restaurantesLiked()
+    {
+        return $this->belongsToMany(Restaurante::class, 'tbl_likes_restaurantes')
+            ->withTimestamps();
+    }
+
+    /**
+     * Restaurantes guardados por el usuario.
+     */
+    public function restaurantesGuardados()
+    {
+        return $this->belongsToMany(Restaurante::class, 'tbl_guardar_restaurante')
+            ->withTimestamps();
     }
 }

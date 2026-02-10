@@ -19,6 +19,18 @@ body{
   background:#fff;
 }
 
+.login-link{
+  position:absolute;
+  top:16px;
+  right:32px;
+  background:var(--teal);
+  color:#fff;
+  padding:8px 16px;
+  border-radius:20px;
+  font-weight:500;
+  text-decoration:none;
+}
+
 .topbar-inner{
   max-width:1440px;
   margin:0 auto;

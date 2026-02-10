@@ -11,11 +11,9 @@ Route::get('/', function () {
 // Rutas de autenticación
 Route::get('/login', [AuthUser::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthUser::class, 'login'])->name('login.post');
-Route::post('/logout', [AuthUser::class, 'logout'])->name('logout');
-
 Route::get('/register', [AuthUser::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthUser::class, 'register'])->name('register.post');
-Route::view('/login', 'log.login')->name('login');
+Route::post('/logout', [AuthUser::class, 'logout'])->name('logout');
 
 // Ruta protegida - Solo accesible para usuarios autenticados (Descomentar cuando se implemente autenticación)
 // Route::middleware('auth')->group(function () {

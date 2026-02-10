@@ -19,11 +19,13 @@ class DatabaseSeeder extends Seeder
             CategoriaSeeder::class,
             TipoComidaSeeder::class,
             UbicacionSeeder::class,
-            RestauranteSeeder::class,
             UserSeeder::class,
+            RestauranteSeeder::class,
             RestauranteTipoComidaSeeder::class,
             ValoracionSeeder::class,
             ResenaSeeder::class,
+            LikeRestauranteSeeder::class,
+            GuardarRestauranteSeeder::class,
         ]);
     }
 }

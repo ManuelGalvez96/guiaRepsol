@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use App\Models\Restaurante;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,9 +16,14 @@ class RestauranteSeeder extends Seeder
      */
     public function run(): void
     {
+        $gerenteIds = User::where('rol', 'gerente')->orderBy('id')->pluck('id')->all();
+        $defaultGerenteId = $gerenteIds[0] ?? null;
+        $index = 0;
+
         Restaurante::create([
             'nombre' => 'Tripea',
             'descripcion' => 'Cocina de fusión con toques mediterráneos dirigida por el chef Marcos González. Especialidad en carnes premium y productos de temporada.',
+            'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 1,
             'direccion' => 'Calle de Jose Ortega y Gasset, 22',
@@ -33,6 +39,7 @@ class RestauranteSeeder extends Seeder
         Restaurante::create([
             'nombre' => 'Miga Cana',
             'descripcion' => 'Bar de cocina tradicional española con toques modernos. Famoso por sus arroces y carnes a la brasa.',
+            'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 2,
             'ubicacion_id' => 1,
             'direccion' => 'Calle Jorge Juan, 14',
@@ -48,6 +55,7 @@ class RestauranteSeeder extends Seeder
         Restaurante::create([
             'nombre' => 'Kitchen 154',
             'descripcion' => 'Restaurante de alta cocina con propuestas innovadoras. Menú degustación con productos locales.',
+            'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 1,
             'direccion' => 'Calle de Hermosilla, 154',
@@ -63,6 +71,7 @@ class RestauranteSeeder extends Seeder
         Restaurante::create([
             'nombre' => 'Martín Berasategui',
             'descripcion' => 'Tres soles Repsol. Templo de la alta gastronomía vasca con creaciones del maestro Martín Berasategui.',
+            'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 2,
             'direccion' => 'Loidi Kalea, 4, Lasarte-Oria',
@@ -78,6 +87,7 @@ class RestauranteSeeder extends Seeder
         Restaurante::create([
             'nombre' => 'Akelarre',
             'descripcion' => 'Tres soles Repsol. Cocina vasca de vanguardia con vistas espectaculares al Cantábrico.',
+            'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 2,
             'direccion' => 'Paseo Padre Orcolaga, 56',
@@ -93,6 +103,7 @@ class RestauranteSeeder extends Seeder
         Restaurante::create([
             'nombre' => 'Disfrutar',
             'descripcion' => 'Dos soles Repsol. Propuesta gastronómica innovadora de Oriol Castro, Eduard Xatruch y Mateu Casañas.',
+            'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 3,
             'direccion' => 'Carrer de Villarroel, 163',
@@ -108,6 +119,7 @@ class RestauranteSeeder extends Seeder
         Restaurante::create([
             'nombre' => 'Ricard Camarena',
             'descripcion' => 'Dos soles Repsol. Cocina mediterránea contemporánea con producto valenciano de máxima calidad.',
+            'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 4,
             'direccion' => 'Carrer del Dr. Sumsi, 4',
@@ -123,6 +135,7 @@ class RestauranteSeeder extends Seeder
         Restaurante::create([
             'nombre' => 'Skina',
             'descripcion' => 'Dos soles Repsol. Alta cocina en pleno centro de Marbella con propuestas creativas.',
+            'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 5,
             'direccion' => 'Calle Aduar, 12',
@@ -138,6 +151,7 @@ class RestauranteSeeder extends Seeder
         Restaurante::create([
             'nombre' => 'Casa Marcelo',
             'descripcion' => 'Un sol Repsol. Cocina gallega de fusión con influencias asiáticas en el corazón de Santiago.',
+            'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 6,
             'direccion' => 'Rúa das Hortas, 1',
@@ -153,6 +167,7 @@ class RestauranteSeeder extends Seeder
         Restaurante::create([
             'nombre' => 'Casa Gerardo',
             'descripcion' => 'Un sol Repsol. Cocina asturiana tradicional reinventada con productos de proximidad.',
+            'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 7,
             'direccion' => 'Carretera AS-19, Km 9',
@@ -168,6 +183,7 @@ class RestauranteSeeder extends Seeder
         Restaurante::create([
             'nombre' => 'Nerua',
             'descripcion' => 'Un sol Repsol. Restaurante del Guggenheim Bilbao con cocina vasca contemporánea.',
+            'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 8,
             'direccion' => 'Abandoibarra Etorbidea, 2',
@@ -183,6 +199,7 @@ class RestauranteSeeder extends Seeder
         Restaurante::create([
             'nombre' => 'La Botica',
             'descripcion' => 'Un sol Repsol. Propuesta gastronómica creativa en Matapozuelos con productos castellanos.',
+            'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 9,
             'direccion' => 'Plaza de San Joaquín, 4, Matapozuelos',
@@ -198,6 +215,7 @@ class RestauranteSeeder extends Seeder
         Restaurante::create([
             'nombre' => 'Abantal',
             'descripcion' => 'Un sol Repsol. Cocina andaluza de autor con toques modernos en Sevilla.',
+            'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 10,
             'direccion' => 'Calle Alcalde José de la Bandera, 7',
@@ -213,6 +231,7 @@ class RestauranteSeeder extends Seeder
         Restaurante::create([
             'nombre' => 'El Club Allard',
             'descripcion' => 'Dos soles Repsol. Alta cocina de vanguardia en un palacete modernista madrileño.',
+            'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 1,
             'direccion' => 'Calle de Ferraz, 2',
@@ -228,6 +247,7 @@ class RestauranteSeeder extends Seeder
         Restaurante::create([
             'nombre' => 'DiverXO',
             'descripcion' => 'Tres soles Repsol. El primer y único tres soles de Madrid. Cocina fusión de Dabiz Muñoz.',
+            'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 1,
             'direccion' => 'Calle de Padre Damián, 23',
