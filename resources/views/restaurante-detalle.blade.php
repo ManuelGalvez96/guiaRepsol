@@ -175,8 +175,42 @@
                         <h3 class="section-title">Información de contacto</h3>
                         
                         <div class="contacto-item">
-                            <div class="contacto-label">Horario:</div>
-                            <div class="contacto-valor">Abierto · Cierra a las 16:00h</div>
+                            <div class="contacto-label">Horario</div>
+                            <div class="horario-toggle" onclick="toggleHorario()">
+                                <div class="horario-status">Abierto <span class="horario-separator">·</span> Cierra a las 16:00h.</div>
+                                <i class="bi bi-chevron-down horario-icon"></i>
+                            </div>
+                            
+                            <div class="horario-detalle-list" id="horarioDetalle" style="display: none;">
+                                <div class="horario-dia-item">
+                                    <div class="horario-dia">Lunes</div>
+                                    <div class="horario-horas cerrado">Cerrado</div>
+                                </div>
+                                <div class="horario-dia-item">
+                                    <div class="horario-dia">Martes</div>
+                                    <div class="horario-horas">13:00 - 16:00, 20:00 - 00:00</div>
+                                </div>
+                                <div class="horario-dia-item">
+                                    <div class="horario-dia">Miércoles</div>
+                                    <div class="horario-horas">13:00 - 16:00, 20:00 - 00:00</div>
+                                </div>
+                                <div class="horario-dia-item">
+                                    <div class="horario-dia">Jueves</div>
+                                    <div class="horario-horas">13:00 - 16:00, 20:00 - 00:00</div>
+                                </div>
+                                <div class="horario-dia-item">
+                                    <div class="horario-dia">Viernes</div>
+                                    <div class="horario-horas">13:00 - 16:00, 20:00 - 00:00</div>
+                                </div>
+                                <div class="horario-dia-item">
+                                    <div class="horario-dia">Sábado</div>
+                                    <div class="horario-horas">13:00 - 16:30, 20:00 - 00:00</div>
+                                </div>
+                                <div class="horario-dia-item">
+                                    <div class="horario-dia">Domingo</div>
+                                    <div class="horario-horas">13:00 - 16:00</div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="contacto-item">
@@ -284,34 +318,33 @@
 
                     <!-- Reportajes Relacionados -->
                     <div class="section-box">
-                        <h3 class="section-title">Reportajes relacionados</h3>
+                        <h3 class="section-title">Valoraciones de usuarios</h3>
                         
+                        @forelse($restaurante->valoraciones as $valoracion)
                         <div class="reportaje-item">
-                            <img src="https://picsum.photos/120/90?random=101" alt="Reportaje" class="reportaje-image">
-                            <div class="reportaje-content">
-                                <p class="reportaje-tipo">📰 Reportaje gastronómico</p>
-                                <h4 class="reportaje-titulo">Sabores para celebrar con los amigos</h4>
-                                <p class="reportaje-subtitulo">10 destinos, 100 sabores - {{ $restaurante->ubicacion->ciudad }}</p>
+                            <div class="reportaje-content" style="width: 100%;">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-person-circle" style="font-size: 40px; color: #00a3e0; margin-right: 15px;"></i>
+                                    <div>
+                                        <h4 class="reportaje-titulo mb-0">{{ $valoracion->usuario->name }}</h4>
+                                        <div class="mt-1">
+                                            @for($i = 0; $i < $valoracion->puntuacion; $i++)
+                                                <i class="bi bi-star-fill" style="color: #ffc107; font-size: 14px;"></i>
+                                            @endfor
+                                            @for($i = $valoracion->puntuacion; $i < 5; $i++)
+                                                <i class="bi bi-star" style="color: #ffc107; font-size: 14px;"></i>
+                                            @endfor
+                                            <span style="font-size: 12px; color: #666; margin-left: 5px;">{{ $valoracion->puntuacion }}/5</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="reportaje-subtitulo mb-0">{{ $valoracion->comentario }}</p>
+                                <p style="font-size: 11px; color: #999; margin-top: 8px;">{{ $valoracion->created_at->format('d/m/Y') }}</p>
                             </div>
                         </div>
-
-                        <div class="reportaje-item">
-                            <img src="https://picsum.photos/120/90?random=102" alt="Reportaje" class="reportaje-image">
-                            <div class="reportaje-content">
-                                <p class="reportaje-tipo">📰 Reportaje gastronómico</p>
-                                <h4 class="reportaje-titulo">Buscando Solex: Guía de {{ $restaurante->ubicacion->ciudad }} para el invierno</h4>
-                                <p class="reportaje-subtitulo">{{ ucfirst($restaurante->categoria->nombre) }}, Guía de Solex en {{ $restaurante->ubicacion->ciudad }}</p>
-                            </div>
-                        </div>
-
-                        <div class="reportaje-item">
-                            <img src="https://picsum.photos/120/90?random=103" alt="Reportaje" class="reportaje-image">
-                            <div class="reportaje-content">
-                                <p class="reportaje-tipo">📰 Reportaje gastronómico</p>
-                                <h4 class="reportaje-titulo">Los tesoros de Ricardo Sanz para el invierno</h4>
-                                <p class="reportaje-subtitulo">La estrella, Un Cuber Travel en {{ $restaurante->ubicacion->ciudad }}</p>
-                            </div>
-                        </div>
+                        @empty
+                        <p class="text-muted text-center">No hay valoraciones aún.</p>
+                        @endforelse
                     </div>
                 </div>
             </div>
@@ -321,5 +354,21 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+    <script>
+        function toggleHorario() {
+            const detalle = document.getElementById('horarioDetalle');
+            const icon = document.querySelector('.horario-icon');
+            
+            if (detalle.style.display === 'none') {
+                detalle.style.display = 'block';
+                icon.classList.remove('bi-chevron-down');
+                icon.classList.add('bi-chevron-up');
+            } else {
+                detalle.style.display = 'none';
+                icon.classList.remove('bi-chevron-up');
+                icon.classList.add('bi-chevron-down');
+            }
+        }
+    </script>
 </body>
 </html>

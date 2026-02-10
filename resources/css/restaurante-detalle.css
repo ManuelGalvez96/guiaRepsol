@@ -310,6 +310,70 @@ body {
     color: var(--color-text-light);
 }
 
+/* Horario toggle */
+.horario-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px 0;
+    user-select: none;
+}
+
+.horario-toggle:hover {
+    opacity: 0.8;
+}
+
+.horario-status {
+    font-size: 14px;
+    color: var(--color-green);
+}
+
+.horario-separator {
+    margin: 0 5px;
+}
+
+.horario-icon {
+    color: var(--color-text-light);
+    font-size: 16px;
+    transition: transform 0.3s ease;
+}
+
+/* Horario detallado */
+.horario-detalle-list {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--color-border);
+}
+
+.horario-dia-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.horario-dia-item:last-child {
+    border-bottom: none;
+}
+
+.horario-dia {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--color-text);
+}
+
+.horario-horas {
+    font-size: 14px;
+    color: var(--color-text-light);
+    text-align: right;
+}
+
+.horario-horas.cerrado {
+    color: var(--color-red);
+}
+
 .btn-contacto {
     background-color: var(--color-cyan);
     color: var(--color-secondary);
