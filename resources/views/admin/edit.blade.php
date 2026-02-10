@@ -219,6 +219,28 @@
             </div>
 
             <div class="form-group">
+                <label>Tipos de Comida</label>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
+                    @foreach($tiposComida as $tipo)
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input 
+                                type="checkbox" 
+                                name="tipos_comida[]" 
+                                value="{{ $tipo->id }}"
+                                {{ (is_array(old('tipos_comida')) && in_array($tipo->id, old('tipos_comida'))) || 
+                                   (!old('tipos_comida') && $restaurante->tiposComida->contains($tipo->id)) ? 'checked' : '' }}
+                                style="cursor: pointer;"
+                            >
+                            <span style="font-size: 14px; font-weight: normal;">{{ $tipo->nombre }}</span>
+                        </label>
+                    @endforeach
+                </div>
+                @error('tipos_comida')
+                    <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
                 <label for="telefono">Teléfono</label>
                 <input type="text" id="telefono" name="telefono" value="{{ old('telefono', $restaurante->telefono) }}">
                 @error('telefono')

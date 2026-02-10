@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Restaurante;
 use App\Models\Categoria;
+use App\Models\TipoComida;
 use App\Models\Ubicacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -13,11 +14,13 @@ class AdminController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Restaurante::with(['categoria', 'ubicacion', 'imagenes']);
+        $query = Restaurante::with(['categoria', 'ubicacion', 'imagenes', 'tiposComida']);
 
         // Filtros
-        if ($request->filled('tipo_cocina')) {
-            $query->where('categoria_id', $request->tipo_cocina);
+        if ($request->filled('tipo_comida')) {
+            $query->whereHas('tiposComida', function($q) use ($request) {
+                $q->where('tipo_comida.id', $request->tipo_comida);
+            });
         }
 
         if ($request->filled('valoracion')) {
@@ -30,15 +33,17 @@ class AdminController extends Controller
 
         $restaurantes = $query->paginate(10);
         $categorias = Categoria::all();
+        $tiposComida = TipoComida::all();
 
-        return view('admin.index', compact('restaurantes', 'categorias'));
+        return view('admin.index', compact('restaurantes', 'categorias', 'tiposComida'));
     }
 
     public function create()
     {
         $categorias = Categoria::all();
         $ubicaciones = Ubicacion::all();
-        return view('admin.create', compact('categorias', 'ubicaciones'));
+        $tiposComida = TipoComida::all();
+        return view('admin.create', compact('categorias', 'ubicaciones', 'tiposComida'));
     }
 
     public function store(Request $request)
@@ -55,15 +60,22 @@ class AdminController extends Controller
             'precio' => 'required|numeric',
             'soles' => 'nullable|integer|min:0|max:3',
             'valoracion_promedio' => 'nullable|numeric|min:0|max:5',
+            'tipos_comida' => 'nullable|array',
+            'tipos_comida.*' => 'exists:tipo_comida,id',
         ]);
 
         $restaurante = Restaurante::create($validated);
+
+        // Sincronizar tipos de comida
+        if ($request->has('tipos_comida')) {
+            $restaurante->tiposComida()->sync($request->tipos_comida);
+        }
 
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Restaurante creado exitosamente',
-                'restaurante' => $restaurante->load(['categoria', 'ubicacion', 'imagenes'])
+                'restaurante' => $restaurante->load(['categoria', 'ubicacion', 'imagenes', 'tiposComida'])
             ], 201);
         }
 
@@ -74,7 +86,8 @@ class AdminController extends Controller
     {
         $categorias = Categoria::all();
         $ubicaciones = Ubicacion::all();
-        return view('admin.edit', compact('restaurante', 'categorias', 'ubicaciones'));
+        $tiposComida = TipoComida::all();
+        return view('admin.edit', compact('restaurante', 'categorias', 'ubicaciones', 'tiposComida'));
     }
 
     public function update(Request $request, Restaurante $restaurante)
@@ -91,15 +104,24 @@ class AdminController extends Controller
             'precio' => 'required|numeric',
             'soles' => 'nullable|integer|min:0|max:3',
             'valoracion_promedio' => 'nullable|numeric|min:0|max:5',
+            'tipos_comida' => 'nullable|array',
+            'tipos_comida.*' => 'exists:tipo_comida,id',
         ]);
 
         $restaurante->update($validated);
+
+        // Sincronizar tipos de comida
+        if ($request->has('tipos_comida')) {
+            $restaurante->tiposComida()->sync($request->tipos_comida);
+        } else {
+            $restaurante->tiposComida()->detach();
+        }
 
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Restaurante actualizado exitosamente',
-                'restaurante' => $restaurante->load(['categoria', 'ubicacion', 'imagenes'])
+                'restaurante' => $restaurante->load(['categoria', 'ubicacion', 'imagenes', 'tiposComida'])
             ]);
         }
 

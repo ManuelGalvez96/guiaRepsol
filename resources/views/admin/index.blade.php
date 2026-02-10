@@ -257,11 +257,11 @@
         <!-- Filters -->
         <form method="GET" action="{{ route('admin.index') }}">
             <div class="filters">
-                <select name="tipo_cocina" class="filter-select" onchange="this.form.submit()">
-                    <option value="">Tipo de cocina</option>
-                    @foreach($categorias as $categoria)
-                        <option value="{{ $categoria->id }}" {{ request('tipo_cocina') == $categoria->id ? 'selected' : '' }}>
-                            {{ $categoria->nombre }}
+                <select name="tipo_comida" class="filter-select" onchange="this.form.submit()">
+                    <option value="">Tipo de comida</option>
+                    @foreach($tiposComida as $tipo)
+                        <option value="{{ $tipo->id }}" {{ request('tipo_comida') == $tipo->id ? 'selected' : '' }}>
+                            {{ $tipo->nombre }}
                         </option>
                     @endforeach
                 </select>
@@ -290,6 +290,7 @@
                         <th>Imagen</th>
                         <th>Nombre</th>
                         <th>Direccion</th>
+                        <th>Tipo de Comida</th>
                         <th>Telefono</th>
                         <th>Precio</th>
                         <th>Varacion</th>
@@ -308,6 +309,13 @@
                         </td>
                         <td>{{ $restaurante->nombre }}</td>
                         <td>{{ $restaurante->direccion }}, {{ $restaurante->ubicacion->ciudad ?? '' }}</td>
+                        <td>
+                            @if($restaurante->tiposComida->count() > 0)
+                                {{ $restaurante->tiposComida->pluck('nombre')->join(', ') }}
+                            @else
+                                -
+                            @endif
+                        </td>
                         <td>{{ $restaurante->telefono ?? '-' }}</td>
                         <td>{{ number_format($restaurante->precio, 2) }}€</td>
                         <td>{{ number_format($restaurante->valoracion_promedio, 1) }} ⭐</td>
@@ -322,7 +330,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" style="text-align: center; padding: 40px;">
+                        <td colspan="8" style="text-align: center; padding: 40px;">
                             No hay restaurantes disponibles
                         </td>
                     </tr>
