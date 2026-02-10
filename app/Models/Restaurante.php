@@ -9,6 +9,7 @@ class Restaurante extends Model
     protected $fillable = [
         'nombre',
         'descripcion',
+        'user_id',
         'categoria_id',
         'ubicacion_id',
         'direccion',
@@ -54,6 +55,6 @@ class Restaurante extends Model
 
     public function gerente()
     {
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

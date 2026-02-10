@@ -16,8 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->enum('rol', ['administrador', 'usuario', 'gerente'])->default('usuario'); 
-            $table->unsignedBigInteger('restaurante_id')->nullable();
+            $table->enum('rol', ['administrador', 'usuario', 'gerente'])->default('usuario');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
