@@ -5,148 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Editar Restaurante - Guía Repsol</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background: #f5f5f5;
-        }
-
-        .header {
-            background: #fff;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 20px;
-            font-weight: 500;
-        }
-
-        .logo::before {
-            content: "☀️";
-            font-size: 24px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="url"],
-        input[type="number"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 30px;
-        }
-
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .btn-primary {
-            background: #ffd500;
-            color: #000;
-        }
-
-        .btn-primary:hover {
-            background: #e6c000;
-        }
-
-        .btn-secondary {
-            background: #fff;
-            border: 1px solid #ddd;
-            color: #000;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-secondary:hover {
-            background: #f5f5f5;
-        }
-
-        .error {
-            color: #e74c3c;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -160,7 +19,7 @@
 
         <div id="alertContainer"></div>
 
-        <form id="editRestauranteForm" action="{{ route('admin.update', $restaurante) }}" method="POST">
+        <form id="editRestauranteForm" action="{{ route('admin.update', $restaurante) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -288,6 +147,23 @@
                 @enderror
             </div>
 
+            <div class="form-group">
+                <label for="imagen">Imagen del Restaurante</label>
+                @if($restaurante->imagenes->first())
+                    <div class="current-image">
+                        <p style="font-size: 12px; margin-bottom: 8px; color: #666;">Imagen actual:</p>
+                        <img src="{{ asset('storage/' . $restaurante->imagenes->first()->url) }}" alt="{{ $restaurante->nombre }}">
+                    </div>
+                @endif
+                <input type="file" id="imagen" name="imagen" accept="image/*" onchange="previewImage(event)" style="margin-top: 10px;">
+                @error('imagen')
+                    <div class="error">{{ $message }}</div>
+                @enderror
+                <div class="image-preview" id="imagePreview">
+                    <img id="preview" src="" alt="Vista previa">
+                </div>
+            </div>
+
             <div class="button-group">
                 <button type="submit" class="btn btn-primary" id="submitBtn">Actualizar Restaurante</button>
                 <a href="{{ route('admin.index') }}" class="btn btn-secondary">Cancelar</a>
@@ -300,6 +176,20 @@
         const submitBtn = document.getElementById('submitBtn');
         const alertContainer = document.getElementById('alertContainer');
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // Función para previsualizar imagen
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview').src = e.target.result;
+                    document.getElementById('imagePreview').classList.add('active');
+                    document.getElementById('imagePreview').style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();

@@ -13,13 +13,14 @@ class ImagenRestaurante extends Model
 
     protected $fillable = [
         'restaurante_id',
-        'ruta_imagen',
+        'url',
+        'alt',
+        'principal',
         'orden',
-        'es_principal'
     ];
 
     protected $casts = [
-        'es_principal' => 'boolean',
+        'principal' => 'boolean',
     ];
 
     public function restaurante()
