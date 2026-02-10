@@ -3,18 +3,18 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RestauranteController;
+use App\Http\Controllers\AuthUser;
 
 Route::get('/', function () {
     return view('index');
 });
 
-Route::view('/login', 'log.login')->name('login');
-Route::view('/register', 'log.register')->name('register');
-
-// Ruta temporal para login (redirecciona al admin por ahora)
-Route::post('/login', function () {
-    return redirect()->route('admin.index');
-})->name('login.post');
+// Rutas de autenticación
+Route::get('/login', [AuthUser::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthUser::class, 'login'])->name('login.post');
+Route::get('/register', [AuthUser::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthUser::class, 'register'])->name('register.post');
+Route::post('/logout', [AuthUser::class, 'logout'])->name('logout');
 
 // Rutas del panel de administración
 Route::prefix('admin')->name('admin.')->group(function () {

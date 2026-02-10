@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class AuthUser extends Controller
 {
@@ -31,7 +30,16 @@ class AuthUser extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/restaurantes');
+            
+            // Redirigir según el rol del usuario
+            $user = Auth::user();
+            
+            return match($user->rol) {
+                'administrador' => redirect()->route('admin.index'),
+                'gerente' => redirect()->route('restaurantes'),
+                'usuario' => redirect()->route('restaurantes'),
+                default => redirect()->route('restaurantes'),
+            };
         }
 
         return back()->withErrors([
@@ -75,7 +83,7 @@ class AuthUser extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'email_verified_at' => now(),
-            'password' => Hash::make($validated['password_confirmation']),
+            'password' => $validated['password_confirmation'],
         ]);
 
         Auth::login($user);
