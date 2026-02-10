@@ -24,6 +24,7 @@ return new class extends Migration
             $table->decimal('precio', 8, 2);
             $table->integer('soles')->default(0);
             $table->decimal('valoracion_promedio', 3, 2)->default(0);
+            $table->boolean('patrocinados')->default(false);
             $table->boolean('activo')->default(true);
             $table->timestamps();
         });

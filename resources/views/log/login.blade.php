@@ -61,7 +61,6 @@
                     <div class="password-input">
                         <input type="password" id="password" name="password"
                             class="form-control @error('password') is-invalid @enderror" required>
-                        <button type="button" class="toggle-password">👁</button>
                     </div>
                     @error('password')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>

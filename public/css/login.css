@@ -50,8 +50,9 @@ body {
     transition: color .2s ease;
     margin-right: 140px;
 }
-.btn-close-modal{
-background-color: #016f7f;
+
+.btn-close-modal {
+    background-color: #016f7f;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -321,7 +322,8 @@ background-color: #016f7f;
 .btn-google .social-icon {
     font-size: 18px;
     font-weight: 700;
-    color: #db4437;
+    color: #4285f4;
+
 }
 
 /* ======================================
