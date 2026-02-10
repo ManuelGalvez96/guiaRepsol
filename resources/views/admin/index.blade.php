@@ -5,232 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Panel de Administración - Guía Repsol</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background: #f5f5f5;
-        }
-
-        /* Header */
-        .header {
-            background: #fff;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 20px;
-            font-weight: 500;
-        }
-
-        .logo::before {
-            content: "☀️";
-            font-size: 24px;
-        }
-
-        .logout-btn {
-            background: #fff;
-            border: 1px solid #ddd;
-            padding: 8px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .logout-btn:hover {
-            background: #f5f5f5;
-        }
-
-        /* Container */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 30px;
-        }
-
-        /* Title and Create Button */
-        .top-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-size: 24px;
-            font-weight: 600;
-        }
-
-        .create-btn {
-            background: #fff;
-            border: 1px solid #ddd;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            text-decoration: none;
-            color: #000;
-            display: inline-block;
-        }
-
-        .create-btn:hover {
-            background: #f5f5f5;
-        }
-
-        /* Filters */
-        .filters {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .filter-select {
-            min-width: 150px;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background: #fff;
-            font-size: 14px;
-        }
-
-        /* Table */
-        .table-container {
-            background: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background: #f8f9fa;
-        }
-
-        th {
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 14px;
-            border-bottom: 2px solid #dee2e6;
-        }
-
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        tbody tr:hover {
-            background: #f8f9fa;
-        }
-
-        /* Image */
-        .restaurant-img {
-            width: 60px;
-            height: 60px;
-            background: #e0e0e0;
-            border-radius: 4px;
-            object-fit: cover;
-        }
-
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .btn-edit {
-            background: #ffd500;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .btn-edit:hover {
-            background: #e6c000;
-        }
-
-        .btn-delete {
-            background: #e74c3c;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            color: #fff;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .btn-delete:hover {
-            background: #c0392b;
-        }
-
-        /* Pagination */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            padding: 20px;
-            background: #fff;
-        }
-
-        .page-link {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            text-decoration: none;
-            color: #000;
-            min-width: 35px;
-            text-align: center;
-        }
-
-        .page-link:hover {
-            background: #f5f5f5;
-        }
-
-        .page-link.active {
-            background: #000;
-            color: #fff;
-            border-color: #000;
-        }
-
-        .page-dots {
-            padding: 8px;
-        }
-
-        /* Alert Messages */
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -268,16 +43,20 @@
 
                 <select name="valoracion" class="filter-select" onchange="this.form.submit()">
                     <option value="">⭐ Valoración</option>
-                    <option value="4">4+ estrellas</option>
-                    <option value="3">3+ estrellas</option>
-                    <option value="2">2+ estrellas</option>
+                    <option value="5" {{ request('valoracion') == '5' ? 'selected' : '' }}>5 estrellas</option>
+                    <option value="4" {{ request('valoracion') == '4' ? 'selected' : '' }}>4 estrellas</option>
+                    <option value="3" {{ request('valoracion') == '3' ? 'selected' : '' }}>3 estrellas</option>
+                    <option value="2" {{ request('valoracion') == '2' ? 'selected' : '' }}>2 estrellas</option>
+                    <option value="1" {{ request('valoracion') == '1' ? 'selected' : '' }}>1 estrella</option>
                 </select>
 
                 <select name="precio" class="filter-select" onchange="this.form.submit()">
                     <option value="">💰 Precio</option>
-                    <option value="20">Hasta 20€</option>
-                    <option value="50">Hasta 50€</option>
-                    <option value="100">Hasta 100€</option>
+                    <option value="0-10" {{ request('precio') == '0-10' ? 'selected' : '' }}>0-10€</option>
+                    <option value="10-20" {{ request('precio') == '10-20' ? 'selected' : '' }}>10-20€</option>
+                    <option value="20-30" {{ request('precio') == '20-30' ? 'selected' : '' }}>20-30€</option>
+                    <option value="30-50" {{ request('precio') == '30-50' ? 'selected' : '' }}>30-50€</option>
+                    <option value="50+" {{ request('precio') == '50+' ? 'selected' : '' }}>50€+</option>
                 </select>
             </div>
         </form>
@@ -302,7 +81,7 @@
                     <tr>
                         <td>
                             @if($restaurante->imagenes->first())
-                                <img src="{{ asset('storage/' . $restaurante->imagenes->first()->ruta_imagen) }}" alt="{{ $restaurante->nombre }}" class="restaurant-img">
+                                <img src="{{ asset('storage/' . $restaurante->imagenes->first()->url) }}" alt="{{ $restaurante->nombre }}" class="restaurant-img">
                             @else
                                 <div class="restaurant-img"></div>
                             @endif
@@ -322,9 +101,9 @@
                         <td>
                             <div class="action-buttons">
                                 <a href="{{ route('admin.edit', $restaurante) }}">
-                                    <button class="btn-edit">Editar</button>
+                                    <button class="btn-edit">✏️</button>
                                 </a>
-                                <button type="button" class="btn-delete" onclick="deleteRestaurante({{ $restaurante->id }})">Eliminar</button>
+                                <button type="button" class="btn-delete" onclick="deleteRestaurante({{ $restaurante->id }})">🗑️</button>
                             </div>
                         </td>
                     </tr>
@@ -340,20 +119,43 @@
 
             <!-- Pagination -->
             <div class="pagination">
+                {{-- Botón Anterior --}}
                 @if($restaurantes->onFirstPage())
-                    <span class="page-link" style="opacity: 0.5;">1</span>
+                    <span class="page-link" style="opacity: 0.5; cursor: not-allowed;">«</span>
                 @else
+                    <a href="{{ $restaurantes->previousPageUrl() }}" class="page-link">«</a>
+                @endif
+
+                {{-- Primera página --}}
+                @if($restaurantes->currentPage() > 3)
                     <a href="{{ $restaurantes->url(1) }}" class="page-link">1</a>
+                    @if($restaurantes->currentPage() > 4)
+                        <span class="page-dots">...</span>
+                    @endif
                 @endif
 
-                @if($restaurantes->currentPage() > 1)
-                    <a href="{{ $restaurantes->previousPageUrl() }}" class="page-link">{{ $restaurantes->currentPage() - 1 }}</a>
-                @endif
+                {{-- Páginas alrededor de la actual --}}
+                @for($i = max(1, $restaurantes->currentPage() - 2); $i <= min($restaurantes->lastPage(), $restaurantes->currentPage() + 2); $i++)
+                    @if($i == $restaurantes->currentPage())
+                        <span class="page-link active">{{ $i }}</span>
+                    @else
+                        <a href="{{ $restaurantes->url($i) }}" class="page-link">{{ $i }}</a>
+                    @endif
+                @endfor
 
-                @if($restaurantes->hasMorePages())
-                    <span class="page-dots">...</span>
-                    <a href="{{ $restaurantes->url($restaurantes->lastPage() - 1) }}" class="page-link">{{ $restaurantes->lastPage() - 1 }}</a>
+                {{-- Última página --}}
+                @if($restaurantes->currentPage() < $restaurantes->lastPage() - 2)
+                    @if($restaurantes->currentPage() < $restaurantes->lastPage() - 3)
+                        <span class="page-dots">...</span>
+                    @endif
                     <a href="{{ $restaurantes->url($restaurantes->lastPage()) }}" class="page-link">{{ $restaurantes->lastPage() }}</a>
+                @endif
+
+                {{-- Botón Siguiente --}}
+                @if($restaurantes->hasMorePages())
+                    <a href="{{ $restaurantes->nextPageUrl() }}" class="page-link">»</a>
+                @else
+                    <span class="page-link" style="opacity: 0.5; cursor: not-allowed;">»</span>
                 @endif
             </div>
         </div>

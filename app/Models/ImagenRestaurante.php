@@ -14,12 +14,11 @@ class ImagenRestaurante extends Model
         'url',
         'alt',
         'principal',
-        'orden'
+        'orden',
     ];
 
     protected $casts = [
         'principal' => 'boolean',
-        'orden' => 'integer'
     ];
 
     public function restaurante(): BelongsTo
