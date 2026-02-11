@@ -20,7 +20,10 @@
     <div class="container">
         <div class="top-section">
             <h1>Gestión de restaurantes</h1>
-            <a href="{{ route('admin.create') }}" class="create-btn">Crear Restaurante</a>
+            <div style="display: flex; gap: 10px;">
+                <a href="{{ route('admin.solicitudes') }}" class="create-btn" style="background-color: #f39c12;">Solicitudes de negocio</a>
+                <a href="{{ route('admin.create') }}" class="create-btn">Crear Restaurante</a>
+            </div>
         </div>
 
         @if(session('success'))

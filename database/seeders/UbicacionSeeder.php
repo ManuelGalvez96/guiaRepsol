@@ -104,5 +104,96 @@ class UbicacionSeeder extends Seeder
             'latitud' => 37.3886,
             'longitud' => -5.9823,
         ]);
+
+        // Additional 10 ubicaciones
+        Ubicacion::create([
+            'comunidad_autonoma' => 'Cataluña',
+            'provincia' => 'Girona',
+            'ciudad' => 'Girona',
+            'codigo_postal' => '17001',
+            'latitud' => 41.9794,
+            'longitud' => 2.8214,
+        ]);
+
+        Ubicacion::create([
+            'comunidad_autonoma' => 'Comunidad Valenciana',
+            'provincia' => 'Alicante',
+            'ciudad' => 'Alicante',
+            'codigo_postal' => '03001',
+            'latitud' => 38.3453,
+            'longitud' => -0.4831,
+        ]);
+
+        Ubicacion::create([
+            'comunidad_autonoma' => 'Andalucía',
+            'provincia' => 'Granada',
+            'ciudad' => 'Granada',
+            'codigo_postal' => '18001',
+            'latitud' => 37.1773,
+            'longitud' => -3.5986,
+        ]);
+
+        Ubicacion::create([
+            'comunidad_autonoma' => 'Aragón',
+            'provincia' => 'Zaragoza',
+            'ciudad' => 'Zaragoza',
+            'codigo_postal' => '50001',
+            'latitud' => 41.6488,
+            'longitud' => -0.8891,
+        ]);
+
+        Ubicacion::create([
+            'comunidad_autonoma' => 'Extremadura',
+            'provincia' => 'Cáceres',
+            'ciudad' => 'Cáceres',
+            'codigo_postal' => '10001',
+            'latitud' => 39.4753,
+            'longitud' => -6.3724,
+        ]);
+
+        Ubicacion::create([
+            'comunidad_autonoma' => 'Castilla y León',
+            'provincia' => 'Salamanca',
+            'ciudad' => 'Salamanca',
+            'codigo_postal' => '37001',
+            'latitud' => 40.9701,
+            'longitud' => -5.6635,
+        ]);
+
+        Ubicacion::create([
+            'comunidad_autonoma' => 'Cantabria',
+            'provincia' => 'Cantabria',
+            'ciudad' => 'Santander',
+            'codigo_postal' => '39001',
+            'latitud' => 43.4623,
+            'longitud' => -3.8100,
+        ]);
+
+        Ubicacion::create([
+            'comunidad_autonoma' => 'Región de Murcia',
+            'provincia' => 'Murcia',
+            'ciudad' => 'Murcia',
+            'codigo_postal' => '30001',
+            'latitud' => 37.9922,
+            'longitud' => -1.1307,
+        ]);
+
+        Ubicacion::create([
+            'comunidad_autonoma' => 'Castilla-La Mancha',
+            'provincia' => 'Toledo',
+            'ciudad' => 'Toledo',
+            'codigo_postal' => '45001',
+            'latitud' => 39.8628,
+            'longitud' => -4.0273,
+        ]);
+
+        Ubicacion::create([
+            'comunidad_autonoma' => 'Andalucía',
+            'provincia' => 'Cádiz',
+            'ciudad' => 'Cádiz',
+            'codigo_postal' => '11001',
+            'latitud' => 36.5271,
+            'longitud' => -6.2886,
+        ]);
     }
 }

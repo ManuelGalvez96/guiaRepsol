@@ -37,9 +37,12 @@
                     </div>
                 </div>
                 <div class="col-auto">
-                    <button class="btn-acceso">
-                        <i class="bi bi-person"></i> Acceso
-                    </button>
+                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="btn-acceso">
+                            <i class="bi bi-person"></i> Cerrar Sesión
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -55,6 +58,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#"><i class="bi bi-map"></i> Mapa</a>
                 </li>
+                <li class="nav-item ms-auto">
+                    <a class="nav-link" href="{{ route('formulario') }}"><i class="bi bi-shop"></i> Da a conocer tu negocio</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -68,110 +74,84 @@
                     <div class="content-section">
                         <div class="section-header">
                             <h2>Contenido relacionado</h2>
-                            <span class="result-count">75 resultados cerca de tú</span>
+                            <span class="result-count">{{ $restaurantesPatrocinados->count() }} restaurantes patrocinados</span>
                         </div>
 
                         <div class="filters mb-3">
                             <button class="btn btn-sm btn-outline-secondary me-2">
-                                Todos los reportajes <i class="bi bi-chevron-down"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-funnel"></i> Recetas
+                                <i class="bi bi-star-fill text-warning"></i> Patrocinados
                             </button>
                         </div>
 
-                        <!-- Lista de Artículos -->
+                        <!-- Lista de Restaurantes Patrocinados -->
                         <div class="articles-list">
+                            @forelse($restaurantesPatrocinados as $patrocinado)
+                            <a href="{{ route('restaurante.detalle', $patrocinado->id) }}" style="text-decoration: none; color: inherit;">
                             <article class="article-item">
-                                <img src="https://picsum.photos/100/80?random=1" alt="Artículo">
+                                <img src="https://picsum.photos/100/80?random={{ $patrocinado->id }}" alt="{{ $patrocinado->nombre }}">
                                 <div class="article-content">
-                                    <h3>Guía práctica para distinguir el verdadero pinxo donostiarra</h3>
-                                    <p class="article-meta">Reportajes gastronómicas</p>
-                                    <p class="article-excerpt">De Bilbao a Donosti, la cultura del pintxo, muy presente en la gastronomía vasca, se hace especialmente fuerte en San Sebastián y no ha dejado de ir a más desde que a finales de los...</p>
+                                    <h3>{{ $patrocinado->nombre }}</h3>
+                                    <p class="article-meta">
+                                        <i class="bi bi-geo-alt"></i> {{ $patrocinado->ubicacion->ciudad }}, {{ $patrocinado->ubicacion->provincia }}
+                                        @if($patrocinado->soles > 0)
+                                            | 
+                                            @for($i = 0; $i < $patrocinado->soles; $i++)
+                                                <i class="bi bi-sun-fill" style="color: #f7931e;"></i>
+                                            @endfor
+                                        @endif
+                                    </p>
+                                    <p class="article-excerpt">{{ Str::limit($patrocinado->descripcion, 150) }}</p>
+                                    <div class="mt-2">
+                                        <span class="badge bg-primary">{{ $patrocinado->categoria->nombre }}</span>
+                                        <span class="badge bg-info text-dark">Precio medio: {{ number_format($patrocinado->precio, 0) }}€</span>
+                                    </div>
                                 </div>
                             </article>
-
-                            <article class="article-item">
-                                <img src="https://picsum.photos/100/80?random=2" alt="Artículo">
-                                <div class="article-content">
-                                    <h3>20 rutas pintxo-pote para maridar con Jazz</h3>
-                                    <p class="article-meta">Reportajes gastronómicas</p>
-                                    <p class="article-excerpt">El Heineken Jazzaldia es, casi cuarenta años después de su nacimiento, mucho más que música...</p>
-                                </div>
-                            </article>
-
-                            <article class="article-item">
-                                <img src="https://picsum.photos/100/80?random=3" alt="Artículo">
-                                <div class="article-content">
-                                    <h3>Tras la huella del pintor de la luz</h3>
-                                    <p class="article-meta">Reportajes región</p>
-                                    <p class="article-excerpt">Por caminos mediterráneos sin asfaltar, vibrante y pasear temporadas por una localidad...</p>
-                                </div>
-                            </article>
-
-                            <article class="article-item">
-                                <img src="https://picsum.photos/100/80?random=4" alt="Artículo">
-                                <div class="article-content">
-                                    <h3>El magisterismo del Pindo y la polenta de Ézaro en la Costa da Morte</h3>
-                                    <p class="article-meta">Reportajes gastronómicas</p>
-                                    <p class="article-excerpt">Repasamos esa sabiduría y saberes, con el generoso monte Pindo custodiando...</p>
-                                </div>
-                            </article>
-
-                            <article class="article-item">
-                                <img src="https://picsum.photos/100/80?random=5" alt="Artículo">
-                                <div class="article-content">
-                                    <h3>La reina de las olas, las bixkotxorras y el 'pintxo-pote'</h3>
-                                    <p class="article-meta">Reportajes región</p>
-                                    <p class="article-excerpt">Zarauz se haya que las características bahías del Cantábrico atraen en verano...</p>
-                                </div>
-                            </article>
-
-                            <article class="article-item">
-                                <img src="https://picsum.photos/100/80?random=6" alt="Artículo">
-                                <div class="article-content">
-                                    <h3>El bancalillo 'de toma' en marisco que vale merece un monumento</h3>
-                                    <p class="article-meta">Reportajes gastronómicas</p>
-                                    <p class="article-excerpt">El caso se puede ver de tan rico: un manojo de cañas y la moneda a las 14h...</p>
-                                </div>
-                            </article>
-
-                            <article class="article-item">
-                                <img src="https://picsum.photos/100/80?random=7" alt="Artículo">
-                                <div class="article-content">
-                                    <h3>El kiosco refrito de un pintor</h3>
-                                    <p class="article-meta">Reportajes región</p>
-                                    <p class="article-excerpt">La vieja taberna de Joaquín Sorolla, nacida en 1922 en una caseta...</p>
-                                </div>
-                            </article>
-
-                            <article class="article-item">
-                                <img src="https://picsum.photos/100/80?random=8" alt="Artículo">
-                                <div class="article-content">
-                                    <h3>'El biaro en mariscos de 'Venita Pinky', en Barca de Vejer, es brutal'</h3>
-                                    <p class="article-meta">Reportajes gastronómicas</p>
-                                    <p class="article-excerpt">Como toma de contacto con el chef, dice, Juan Valdés confirma ser un fijo...</p>
-                                </div>
-                            </article>
-
-                            <article class="article-item">
-                                <img src="https://picsum.photos/100/80?random=9" alt="Artículo">
-                                <div class="article-content">
-                                    <h3>Sevilla se postra ante Murillo</h3>
-                                    <p class="article-meta">Reportajes región</p>
-                                    <p class="article-excerpt">Los tesoros de biblioteca Estaban Murillo, el que escribía de los pintores...</p>
-                                </div>
-                            </article>
-
-                            <article class="article-item">
-                                <img src="https://picsum.photos/100/80?random=10" alt="Artículo">
-                                <div class="article-content">
-                                    <h3>Subirse a las carretas de Colón</h3>
-                                    <p class="article-meta">Reportajes región</p>
-                                    <p class="article-excerpt">La figura de Cristóbal Colón y el Descubrimiento de América a través de...</p>
-                                </div>
-                            </article>
+                            </a>
+                            @empty
+                            <p class="text-muted">No hay restaurantes patrocinados en este momento.</p>
+                            @endforelse
                         </div>
+
+                        <!-- Paginación Patrocinados -->
+                        @if($restaurantesPatrocinados->hasPages())
+                        <div class="pagination-section mt-4">
+                            <div class="d-flex justify-content-center align-items-center gap-2">
+                                <!-- Flecha Anterior -->
+                                @if($restaurantesPatrocinados->onFirstPage())
+                                    <span class="pagination-arrow-small disabled">
+                                        <i class="bi bi-chevron-left" style="font-size: 30px; color: #ccc;"></i>
+                                    </span>
+                                @else
+                                    <a href="{{ $restaurantesPatrocinados->appends(request()->except('patrocinados_page'))->previousPageUrl('patrocinados_page') }}" class="pagination-arrow-small">
+                                        <i class="bi bi-chevron-left" style="font-size: 30px; color: #333;"></i>
+                                    </a>
+                                @endif
+
+                                <!-- Números de página -->
+                                <div class="d-flex gap-1">
+                                    @foreach ($restaurantesPatrocinados->getUrlRange(1, $restaurantesPatrocinados->lastPage()) as $page => $url)
+                                        @if($page == $restaurantesPatrocinados->currentPage())
+                                            <span class="page-number-small active">{{ $page }}</span>
+                                        @else
+                                            <a href="{{ $restaurantesPatrocinados->appends(request()->except('patrocinados_page'))->url($page) }}" class="page-number-small">{{ $page }}</a>
+                                        @endif
+                                    @endforeach
+                                </div>
+
+                                <!-- Flecha Siguiente -->
+                                @if($restaurantesPatrocinados->hasMorePages())
+                                    <a href="{{ $restaurantesPatrocinados->appends(request()->except('patrocinados_page'))->nextPageUrl('patrocinados_page') }}" class="pagination-arrow-small">
+                                        <i class="bi bi-chevron-right" style="font-size: 30px; color: #00a3e0;"></i>
+                                    </a>
+                                @else
+                                    <span class="pagination-arrow-small disabled">
+                                        <i class="bi bi-chevron-right" style="font-size: 30px; color: #ccc;"></i>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 </div>
 
@@ -182,7 +162,7 @@
                         <div class="section-header">
                             <div>
                                 <h2>Establecimientos gastronómicos</h2>
-                                <span class="result-count">{{ $restaurantes->count() }} resultados para *</span>
+                                <span class="result-count">{{ $restaurantes->total() }} resultados para *</span>
                             </div>
                             <div>
                                 <form method="GET" action="{{ route('restaurantes') }}" id="formOrdenar">
@@ -200,24 +180,25 @@
                         <div class="row g-4 mb-5">
                             @forelse($restaurantes as $restaurante)
                             <div class="col-md-4">
-                                <div class="card restaurant-card">
-                                    <img src="https://picsum.photos/400/300?random={{ $restaurante->id }}" class="card-img-top" alt="{{ $restaurante->nombre }}">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ $restaurante->nombre }}</h5>
-                                        <p class="card-text">
-                                            <i class="bi bi-geo-alt"></i> {{ $restaurante->categoria->nombre }} · {{ $restaurante->ubicacion->ciudad }}, {{ $restaurante->ubicacion->provincia }}
-                                        </p>
-                                        <div class="rating">
-                                            @if($restaurante->soles > 0)
-                                                @for($i = 0; $i < $restaurante->soles; $i++)
-                                                    <i class="bi bi-sun-fill sun-icon"></i>
-                                                @endfor
-                                                <span>{{ $restaurante->soles }} {{ $restaurante->soles == 1 ? 'Sol' : 'Soles' }}</span>
-                                            @else
-                                                <i class="bi bi-star-fill"></i>
-                                                <span>{{ number_format($restaurante->valoracion_promedio, 1) }}</span>
-                                            @endif
-                                            <span class="badge-stars">
+                                <a href="{{ route('restaurante.detalle', $restaurante->id) }}" class="text-decoration-none">
+                                    <div class="card restaurant-card">
+                                        <img src="https://picsum.photos/400/300?random={{ $restaurante->id }}" class="card-img-top" alt="{{ $restaurante->nombre }}">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ $restaurante->nombre }}</h5>
+                                            <p class="card-text">
+                                                <i class="bi bi-geo-alt"></i> {{ $restaurante->categoria->nombre }} · {{ $restaurante->ubicacion->ciudad }}, {{ $restaurante->ubicacion->provincia }}
+                                            </p>
+                                            <div class="rating">
+                                                @if($restaurante->soles > 0)
+                                                    @for($i = 0; $i < $restaurante->soles; $i++)
+                                                        <i class="bi bi-sun-fill sun-icon"></i>
+                                                    @endfor
+                                                    <span>{{ $restaurante->soles }} {{ $restaurante->soles == 1 ? 'Sol' : 'Soles' }}</span>
+                                                @else
+                                                    <i class="bi bi-star-fill"></i>
+                                                    <span>{{ number_format($restaurante->valoracion_promedio, 1) }}</span>
+                                                @endif
+                                                <span class="badge-stars">
                                                 @if($restaurante->precio < 30)
                                                     €
                                                 @elseif($restaurante->precio < 60)
@@ -231,6 +212,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                </a>
                             </div>
                             @empty
                             <div class="col-12">
@@ -238,71 +220,134 @@
                             </div>
                             @endforelse
                         </div>
-                    </div>
 
-                    <!-- Lugares de Interés -->
+                        <!-- Paginación -->
+                        @if($restaurantes->hasPages())
+                        <div class="pagination-section mt-5">
+                            <div class="d-flex justify-content-center align-items-center gap-3">
+                                <!-- Flecha Anterior (grande) -->
+                                @if($restaurantes->onFirstPage())
+                                    <span class="pagination-arrow disabled">
+                                        <i class="bi bi-chevron-left" style="font-size: 60px; color: #333;"></i>
+                                    </span>
+                                @else
+                                    <a href="{{ $restaurantes->appends(['ordenar' => request('ordenar')])->previousPageUrl() }}" class="pagination-arrow">
+                                        <i class="bi bi-chevron-left" style="font-size: 60px; color: #333;"></i>
+                                    </a>
+                                @endif
+
+                                <!-- Números de página -->
+                                <div class="d-flex gap-2">
+                                    @foreach ($restaurantes->getUrlRange(1, $restaurantes->lastPage()) as $page => $url)
+                                        @if($page == $restaurantes->currentPage())
+                                            <span class="page-number active">{{ $page }}</span>
+                                        @else
+                                            <a href="{{ $restaurantes->appends(['ordenar' => request('ordenar')])->url($page) }}" class="page-number">{{ $page }}</a>
+                                        @endif
+                                    @endforeach
+                                </div>
+
+                                <!-- Flecha Siguiente (grande) -->
+                                @if($restaurantes->hasMorePages())
+                                    <a href="{{ $restaurantes->appends(['ordenar' => request('ordenar')])->nextPageUrl() }}" class="pagination-arrow">
+                                        <i class="bi bi-chevron-right" style="font-size: 60px; color: #00a3e0;"></i>
+                                    </a>
+                                @else
+                                    <span class="pagination-arrow disabled">
+                                        <i class="bi bi-chevron-right" style="font-size: 60px; color: #ccc;"></i>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mis Restaurantes (Solo para Gerentes) - Ancho completo -->
+            @if(Auth::check() && Auth::user()->rol === 'gerente' && $restaurantesGerente)
+            <div class="row mt-4">
+                <div class="col-12">
                     <div class="content-section">
                         <div class="section-header">
                             <div>
-                                <h2>Lugares de interés</h2>
-                                <span class="result-count">2981 resultados para *</span>
-                            </div>
-                            <div>
-                                <a href="#" class="link-mapa">Ver más en mapa</a>
+                                <h2>Mis restaurantes</h2>
+                                <span class="result-count">{{ $restaurantesGerente->total() }} restaurantes</span>
                             </div>
                         </div>
 
                         <div class="row g-4">
+                            @forelse($restaurantesGerente as $restaurante)
                             <div class="col-md-3">
-                                <div class="card place-card">
-                                    <img src="https://picsum.photos/300/200?random=14" class="card-img-top" alt="Domingo Pérez">
-                                    <div class="card-body">
-                                        <h6 class="card-title">Domingo Pérez</h6>
-                                        <p class="card-text small">Localidad</p>
+                                <a href="{{ route('restaurante.detalle', $restaurante->id) }}" class="text-decoration-none">
+                                    <div class="card place-card">
+                                        <img src="https://picsum.photos/300/200?random={{ $restaurante->id + 100 }}" class="card-img-top" alt="{{ $restaurante->nombre }}">
+                                        <div class="card-body">
+                                            <h6 class="card-title">{{ $restaurante->nombre }}</h6>
+                                            <p class="card-text small">
+                                                <i class="bi bi-geo-alt"></i> {{ $restaurante->ubicacion->ciudad }}
+                                            </p>
+                                            <div class="mt-2">
+                                                @if($restaurante->soles > 0)
+                                                    @for($i = 0; $i < $restaurante->soles; $i++)
+                                                        <i class="bi bi-sun-fill" style="color: #f7931e; font-size: 14px;"></i>
+                                                    @endfor
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
-
-                            <div class="col-md-3">
-                                <div class="card place-card">
-                                    <img src="https://picsum.photos/300/200?random=15" class="card-img-top" alt="Ervidrs">
-                                    <div class="card-body">
-                                        <h6 class="card-title">Ervidrs</h6>
-                                        <p class="card-text small">Localidad</p>
-                                    </div>
-                                </div>
+                            @empty
+                            <div class="col-12">
+                                <p class="text-center text-muted">No tienes restaurantes registrados.</p>
                             </div>
-
-                            <div class="col-md-3">
-                                <div class="card place-card">
-                                    <img src="https://picsum.photos/300/200?random=16" class="card-img-top" alt="Mesegar de Tajo">
-                                    <div class="card-body">
-                                        <h6 class="card-title">Mesegar de Tajo</h6>
-                                        <p class="card-text small">Localidad</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="card place-card">
-                                    <img src="https://picsum.photos/300/200?random=17" class="card-img-top" alt="La Mata">
-                                    <div class="card-body">
-                                        <h6 class="card-title">La Mata</h6>
-                                        <p class="card-text small">Localidad</p>
-                                    </div>
-                                </div>
-                            </div>
+                            @endforelse
                         </div>
 
-                        <!-- Paginación -->
-                        <div class="pagination-dots text-center mt-4">
-                            <span class="dot active"></span>
-                            <span class="dot"></span>
-                            <span class="dot"></span>
+                        <!-- Paginación Gerente -->
+                        @if($restaurantesGerente->hasPages())
+                        <div class="pagination-section mt-4">
+                            <div class="d-flex justify-content-center align-items-center gap-2">
+                                <!-- Flecha Anterior -->
+                                @if($restaurantesGerente->onFirstPage())
+                                    <span class="pagination-arrow-small disabled">
+                                        <i class="bi bi-chevron-left" style="font-size: 30px; color: #ccc;"></i>
+                                    </span>
+                                @else
+                                    <a href="{{ $restaurantesGerente->appends(request()->except('gerente_page'))->previousPageUrl('gerente_page') }}" class="pagination-arrow-small">
+                                        <i class="bi bi-chevron-left" style="font-size: 30px; color: #333;"></i>
+                                    </a>
+                                @endif
+
+                                <!-- Números de página -->
+                                <div class="d-flex gap-1">
+                                    @foreach ($restaurantesGerente->getUrlRange(1, $restaurantesGerente->lastPage()) as $page => $url)
+                                        @if($page == $restaurantesGerente->currentPage())
+                                            <span class="page-number-small active">{{ $page }}</span>
+                                        @else
+                                            <a href="{{ $restaurantesGerente->appends(request()->except('gerente_page'))->url($page) }}" class="page-number-small">{{ $page }}</a>
+                                        @endif
+                                    @endforeach
+                                </div>
+
+                                <!-- Flecha Siguiente -->
+                                @if($restaurantesGerente->hasMorePages())
+                                    <a href="{{ $restaurantesGerente->appends(request()->except('gerente_page'))->nextPageUrl('gerente_page') }}" class="pagination-arrow-small">
+                                        <i class="bi bi-chevron-right" style="font-size: 30px; color: #00a3e0;"></i>
+                                    </a>
+                                @else
+                                    <span class="pagination-arrow-small disabled">
+                                        <i class="bi bi-chevron-right" style="font-size: 30px; color: #ccc;"></i>
+                                    </span>
+                                @endif
+                            </div>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 

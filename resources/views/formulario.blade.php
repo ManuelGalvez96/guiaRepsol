@@ -14,10 +14,10 @@
 <div class="topbar">
     <div class="topbar-inner">
         <div class="top-left">
-            <div class="burger" onclick="window.location.href='{{ route('home') }}'" style="cursor: pointer;">☰</div>
-            <div class="logo" onclick="window.location.href='{{ route('home') }}'" style="cursor: pointer;">guía repsol</div>
+            <div class="burger" onclick="window.location.href='/'" style="cursor: pointer;">☰</div>
+            <div class="logo" onclick="window.location.href='/'" style="cursor: pointer;">guía repsol</div>
             <nav class="nav">
-                <a href="{{ route('home') }}">Inicio</a>
+                <a href="/">Inicio</a>
                 <a href="#" class="active">Registro de Negocio</a>
             </nav>
         </div>
@@ -179,7 +179,7 @@
 
         <!-- BOTONES -->
         <div class="form-actions">
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('home') }}'">Cancelar</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('restaurantes') }}'">Cancelar</button>
             <button type="submit" class="btn btn-primary">Enviar solicitud</button>
         </div>
     </form>

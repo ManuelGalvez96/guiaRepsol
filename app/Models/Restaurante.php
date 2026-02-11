@@ -25,12 +25,14 @@ class Restaurante extends Model
         'precio',
         'soles',
         'valoracion_promedio',
+        'patrocinados',
         'activo'
     ];
 
     protected $casts = [
         'precio' => 'decimal:2',
         'valoracion_promedio' => 'decimal:2',
+        'patrocinados' => 'boolean',
         'activo' => 'boolean',
     ];
 

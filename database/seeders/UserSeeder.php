@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $password = Hash::make('Ejp2021#');
+        $password = Hash::make('password');
 
         // Administradores
         User::create([

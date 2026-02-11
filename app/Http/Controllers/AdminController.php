@@ -54,6 +54,17 @@ class AdminController extends Controller
         return view('admin.index', compact('restaurantes', 'categorias', 'tiposComida'));
     }
 
+    public function solicitudes()
+    {
+        // Obtener solo los restaurantes pendientes de aprobación (activo = false)
+        $solicitudes = Restaurante::with(['categoria', 'ubicacion', 'imagenes', 'tiposComida', 'user'])
+            ->where('activo', false)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('admin.solicitudes', compact('solicitudes'));
+    }
+
     public function create()
     {
         $categorias = Categoria::all();
@@ -123,6 +134,16 @@ class AdminController extends Controller
 
     public function update(Request $request, Restaurante $restaurante)
     {
+        // Si solo se está actualizando el estado activo (aprobar solicitud)
+        if ($request->has('activo') && count($request->all()) == 1) {
+            $restaurante->update(['activo' => $request->activo]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Estado actualizado exitosamente'
+            ]);
+        }
+
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
