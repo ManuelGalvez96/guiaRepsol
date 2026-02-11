@@ -3,11 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RestauranteController;
+use App\Http\Controllers\ValoracionController;
 use App\Http\Controllers\AuthUser;
 
 Route::get('/', function () {
     return view('index');
-});
+})->name('home');
 
 // Rutas de autenticación
 Route::get('/pre-login', [AuthUser::class, 'preLogin'])->name('pre-login');
@@ -31,6 +32,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/restaurantes', [RestauranteController::class, 'index'])->name('restaurantes');
     Route::get('/restaurante/{id}', [RestauranteController::class, 'show'])->name('restaurante.detalle');
+    
+    // Rutas de valoraciones
+    Route::post('/restaurante/{id}/valoracion', [ValoracionController::class, 'store'])->name('valoracion.store');
+    Route::put('/valoracion/{id}', [ValoracionController::class, 'update'])->name('valoracion.update');
+    Route::delete('/valoracion/{id}', [ValoracionController::class, 'destroy'])->name('valoracion.destroy');
+    Route::post('/valoracion/{id}/responder', [ValoracionController::class, 'responder'])->name('valoracion.responder');
 });
 
 // Rutas para formulario de registro de restaurantes
