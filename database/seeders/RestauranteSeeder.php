@@ -17,6 +17,9 @@ class RestauranteSeeder extends Seeder
     public function run(): void
     {
         $gerenteIds = User::where('rol', 'gerente')->orderBy('id')->pluck('id')->all();
+        if (count($gerenteIds) === 0) {
+            return;
+        }
         $defaultGerenteId = $gerenteIds[0] ?? null;
         $index = 0;
 

@@ -228,5 +228,69 @@ class UserSeeder extends Seeder
             'rol' => 'usuario',
             'password' => $password,
         ]);
+
+        User::create([
+            'name' => 'Carlos Medina',
+            'email' => 'carlos.medina@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Lucia Romero',
+            'email' => 'lucia.romero@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'David Navarro',
+            'email' => 'david.navarro@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Paula Cabrera',
+            'email' => 'paula.cabrera@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Hector Salas',
+            'email' => 'hector.salas@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Silvia Pardo',
+            'email' => 'silvia.pardo@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Ruben Molina',
+            'email' => 'ruben.molina@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Clara Santos',
+            'email' => 'clara.santos@email.com',
+            'email_verified_at' => now(),
+            'rol' => 'usuario',
+            'password' => $password,
+        ]);
     }
 }

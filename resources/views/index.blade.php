@@ -18,10 +18,10 @@
       <div class="burger" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">☰</div>
       <div class="logo" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">guía repsol</div>
       <nav class="nav">
-        <a href="{{ route('login') }}">Comer</a>
-        <a href="{{ route('login') }}">Viajar</a>
-        <a href="{{ route('login') }}">Soles</a>
-        <a href="{{ route('login') }}" class="active">Soletes</a>
+        <a href="{{ route('pre-login') }}">Comer</a>
+        <a href="{{ route('pre-login') }}">Viajar</a>
+        <a href="{{ route('pre-login') }}">Soles</a>
+        <a href="{{ route('pre-login') }}" class="active">Soletes</a>
       </nav>
     </div>
     <div class="top-right" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">🔍 Acceso</div>
@@ -54,7 +54,7 @@
       esfuerzo y conocimiento que dedican.
     </p>
     <div class="hero-author">Texto: Ana Caro</div>
-    <a href="{{ route('login') }}" class="hero-btn">📖 Saber más</a>
+    <a href="{{ route('pre-login') }}" class="hero-btn">📖 Saber más</a>
   </div>
 
   <div class="hero-img">
@@ -72,7 +72,7 @@
 
     <div class="momentos-grid">
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="momento-card">
         <div class="momento-img">
           <img src="{{ asset('images/imagen2.png') }}">
@@ -86,7 +86,7 @@
       </article>
       </a>
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="momento-card">
         <div class="momento-img">
           <img src="{{ asset('images/imagen3.png') }}">
@@ -100,7 +100,7 @@
       </article>
       </a>
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="momento-card">
         <div class="momento-img">
           <img src="{{ asset('images/imagen4.png') }}">
@@ -200,7 +200,7 @@
     <!-- CARDS -->
     <div class="cercanos-cards">
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="local-card">
         <img src="{{ asset('images/imagen5.png') }}">
         <div class="local-info">
@@ -211,7 +211,7 @@
       </article>
       </a>
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="local-card">
         <img src="{{ asset('images/imagen6.png') }}">
         <div class="local-info">
@@ -222,7 +222,7 @@
       </article>
       </a>
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="local-card">
         <img src="{{ asset('images/imagen7.png') }}">
         <div class="local-info">
@@ -233,7 +233,7 @@
       </article>
       </a>
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="local-card">
         <img src="{{ asset('images/imagen8.png') }}">
         <div class="local-info">
@@ -268,7 +268,7 @@
     <h2 class="ultimo-title">Lo último sobre Soletes</h2>
 
     <!-- FEATURED -->
-    <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+    <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
     <article class="ultimo-featured">
       <div class="featured-img">
         <img src="{{ asset('images/imagen9.png') }}">
@@ -345,7 +345,7 @@
     <div class="app-content">
       <h2>Guía Repsol en tu bolsillo</h2>
       <p>Explora, reserva y disfruta. ¡Descarga la app!</p>
-      <a href="{{ route('login') }}" class="app-btn">Descargar app</a>
+      <a href="{{ route('pre-login') }}" class="app-btn">Descargar app</a>
     </div>
 
     <!-- MOCKUP -->
@@ -383,28 +383,28 @@
 
     <div class="destacado-grid">
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="destacado-item">
         <img src="{{ asset('images/imagen14.png') }}">
         <h3>Cafeterías</h3>
       </article>
       </a>
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="destacado-item">
         <img src="{{ asset('images/imagen15.png') }}">
         <h3>Bares</h3>
       </article>
       </a>
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="destacado-item">
         <img src="{{ asset('images/imagen16.png') }}">
         <h3>Fast Good</h3>
       </article>
       </a>
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="destacado-item">
         <img src="{{ asset('images/imagen17.png') }}">
         <h3>Vinotecas</h3>
@@ -430,7 +430,7 @@
 
     <div class="frio-grid">
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="frio-card">
         <div class="frio-img">
           <img src="{{ asset('images/imagen18.png') }}">
@@ -444,7 +444,7 @@
       </article>
       </a>
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="frio-card">
         <div class="frio-img">
           <img src="{{ asset('images/imagen19.png') }}">
@@ -458,7 +458,7 @@
       </article>
       </a>
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="frio-card">
         <div class="frio-img">
           <img src="{{ asset('images/imagen20.png') }}">
@@ -486,35 +486,35 @@
 
     <div class="comunidades-grid">
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="comunidad">
         <img src="{{ asset('images/imagen22.png') }}">
         <h3>Madrid</h3>
       </article>
       </a>
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="comunidad">
         <img src="{{ asset('images/imagen23.png') }}">
         <h3>Catalunya</h3>
       </article>
       </a>
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="comunidad">
         <img src="{{ asset('images/imagen24.png') }}">
         <h3>Comunitat Valenciana</h3>
       </article>
       </a>
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="comunidad">
         <img src="{{ asset('images/imagen25.png') }}">
         <h3>Extremadura</h3>
       </article>
       </a>
 
-      <a href="{{ route('login') }}" style="text-decoration: none; color: inherit;">
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="comunidad">
         <img src="{{ asset('images/imagen26.png') }}">
         <h3>Euskadi</h3>
@@ -524,7 +524,7 @@
     </div>
 
     <div class="comunidades-cta">
-      <a href="{{ route('login') }}" class="btn-comunidades">Ver todos los destinos</a>
+      <a href="{{ route('pre-login') }}" class="btn-comunidades">Ver todos los destinos</a>
     </div>
 
   </div>
@@ -560,23 +560,23 @@
 
         <div class="footer-col">
           <h4>Guía Repsol</h4>
-          <a href="{{ route('login') }}">Comer</a>
-          <a href="{{ route('login') }}">Viajar</a>
-          <a href="{{ route('login') }}">Dormir</a>
+          <a href="{{ route('pre-login') }}">Comer</a>
+          <a href="{{ route('pre-login') }}">Viajar</a>
+          <a href="{{ route('pre-login') }}">Dormir</a>
         </div>
 
         <div class="footer-col">
           <h4>Enlaces</h4>
-          <a href="{{ route('login') }}">Contacto</a>
-          <a href="{{ route('login') }}">Sala de prensa</a>
-          <a href="{{ route('login') }}">Canal de ética</a>
+          <a href="{{ route('pre-login') }}">Contacto</a>
+          <a href="{{ route('pre-login') }}">Sala de prensa</a>
+          <a href="{{ route('pre-login') }}">Canal de ética</a>
         </div>
 
         <div class="footer-col">
           <h4>Descubre</h4>
-          <a href="{{ route('login') }}">App Guía Repsol</a>
-          <a href="{{ route('login') }}">Cromos Guía Repsol</a>
-          <a href="{{ route('login') }}">Mercado Vallehermoso</a>
+          <a href="{{ route('pre-login') }}">App Guía Repsol</a>
+          <a href="{{ route('pre-login') }}">Cromos Guía Repsol</a>
+          <a href="{{ route('pre-login') }}">Mercado Vallehermoso</a>
         </div>
 
       </div>
@@ -589,13 +589,13 @@
     <div class="footer-bottom-inner">
 
       <div class="footer-legal">
-        <a href="{{ route('login') }}">Política de privacidad</a>
+        <a href="{{ route('pre-login') }}">Política de privacidad</a>
         <span>|</span>
-        <a href="{{ route('login') }}">Política de cookies</a>
+        <a href="{{ route('pre-login') }}">Política de cookies</a>
         <span>|</span>
-        <a href="{{ route('login') }}">Nota legal</a>
+        <a href="{{ route('pre-login') }}">Nota legal</a>
         <span>|</span>
-        <a href="{{ route('login') }}">Condiciones del servicio</a>
+        <a href="{{ route('pre-login') }}">Condiciones del servicio</a>
       </div>
 
       <div class="footer-social">
