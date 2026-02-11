@@ -158,17 +158,3 @@
     </div>
 </form>
 
-<script>
-// Función para previsualizar imagen
-function previewImage(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('preview').src = e.target.result;
-            document.getElementById('imagePreview').classList.add('active');
-        }
-        reader.readAsDataURL(file);
-    }
-}
-</script>
