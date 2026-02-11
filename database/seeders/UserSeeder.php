@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
         // Administradores
         User::create([
             'name' => 'María',
-            'apellidos' => 'García',
+            'apellidos' => 'García López',
             'email' => 'maria.garcia@email.com',
             'email_verified_at' => now(),
             'rol' => 'administrador',
@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'Victoria',
-            'apellidos' => 'Ruiz',
+            'apellidos' => 'Ruiz Navarro',
             'email' => 'victoria.ruiz@email.com',
             'email_verified_at' => now(),
             'rol' => 'administrador',
@@ -49,7 +49,7 @@ class UserSeeder extends Seeder
         // 15 Gerentes (uno por restaurante)
         User::create([
             'name' => 'Juan',
-            'apellidos' => 'Martínez',
+            'apellidos' => 'Martínez Pérez',
             'email' => 'juan.martinez@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
@@ -67,7 +67,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'Carlos',
-            'apellidos' => 'Fernández',
+            'apellidos' => 'Fernández García',
             'email' => 'carlos.fernandez@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
@@ -85,7 +85,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'Andrés',
-            'apellidos' => 'Martín',
+            'apellidos' => 'Martín Díaz',
             'email' => 'andres.martin@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
@@ -103,7 +103,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'Pedro',
-            'apellidos' => 'Jiménez',
+            'apellidos' => 'Jiménez Ruiz',
             'email' => 'pedro.jimenez@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
@@ -121,7 +121,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'Miguel',
-            'apellidos' => 'Torres',
+            'apellidos' => 'Torres Sánchez',
             'email' => 'miguel.torres@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
@@ -130,7 +130,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'Sofia',
-            'apellidos' => 'González',
+            'apellidos' => 'González Moreno',
             'email' => 'sofia.gonzalez@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
@@ -148,7 +148,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'Elena',
-            'apellidos' => 'García',
+            'apellidos' => 'García Fernández',
             'email' => 'elena.garcia@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
@@ -166,7 +166,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'Beatriz',
-            'apellidos' => 'Ruiz',
+            'apellidos' => 'Ruiz Torres',
             'email' => 'beatriz.ruiz@email.com',
             'email_verified_at' => now(),
             'rol' => 'gerente',
@@ -185,7 +185,7 @@ class UserSeeder extends Seeder
         // Usuarios normales
         User::create([
             'name' => 'David',
-            'apellidos' => 'Jiménez',
+            'apellidos' => 'Jiménez Vega',
             'email' => 'david.jimenez@email.com',
             'email_verified_at' => now(),
             'rol' => 'usuario',
@@ -203,7 +203,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'Enrique',
-            'apellidos' => 'Gómez',
+            'apellidos' => 'Gómez Ramírez',
             'email' => 'enrique.gomez@email.com',
             'email_verified_at' => now(),
             'rol' => 'usuario',
@@ -221,7 +221,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'Fernando',
-            'apellidos' => 'Blanco',
+            'apellidos' => 'Blanco Castro',
             'email' => 'fernando.blanco@email.com',
             'email_verified_at' => now(),
             'rol' => 'usuario',
@@ -239,7 +239,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'Ángel',
-            'apellidos' => 'Delgado',
+            'apellidos' => 'Delgado Prieto',
             'email' => 'angel.delgado@email.com',
             'email_verified_at' => now(),
             'rol' => 'usuario',
@@ -257,7 +257,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'Carlos',
-            'apellidos' => 'Medina',
+            'apellidos' => 'Medina Ortiz',
             'email' => 'carlos.medina@email.com',
             'email_verified_at' => now(),
             'rol' => 'usuario',
@@ -275,7 +275,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'David',
-            'apellidos' => 'Navarro',
+            'apellidos' => 'Navarro Iglesias',
             'email' => 'david.navarro@email.com',
             'email_verified_at' => now(),
             'rol' => 'usuario',
@@ -293,7 +293,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'Hector',
-            'apellidos' => 'Salas',
+            'apellidos' => 'Salas Ramos',
             'email' => 'hector.salas@email.com',
             'email_verified_at' => now(),
             'rol' => 'usuario',
@@ -311,7 +311,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'Ruben',
-            'apellidos' => 'Molina',
+            'apellidos' => 'Molina Herrera',
             'email' => 'ruben.molina@email.com',
             'email_verified_at' => now(),
             'rol' => 'usuario',
