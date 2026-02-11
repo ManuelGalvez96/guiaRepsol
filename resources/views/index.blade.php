@@ -24,7 +24,7 @@
         <a href="{{ route('pre-login') }}" class="active">Soletes</a>
       </nav>
     </div>
-    <div class="top-right" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">🔍 Acceso</div>
+    <div class="top-right" onclick="window.location.href='{{ route('pre-login') }}'" style="cursor: pointer;">🔍 Acceso</div>
   </div>
 </div>
 
