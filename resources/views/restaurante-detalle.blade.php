@@ -139,12 +139,12 @@
                     @endif
 
                     <!-- Reseñas -->
-                    @if($restaurante->resenas->count() > 0)
+                    @if($restaurante->valoraciones->count() > 0)
                     <div class="section-box">
-                        @foreach($restaurante->resenas->take(2) as $resena)
+                        @foreach($restaurante->valoraciones->take(2) as $valoracion)
                         <div class="resena-item">
                             <div class="resena-icon">"</div>
-                            <p class="resena-text">{{ $resena->comentario }}</p>
+                            <p class="resena-text">{{ $valoracion->comentario }}</p>
                             <div class="resena-buttons">
                                 <button class="btn-guardar-sm">
                                     <i class="bi bi-bookmark"></i> Guardar
@@ -352,7 +352,7 @@
                                     $miValoracion = $restaurante->valoraciones->where('usuario_id', Auth::id())->first();
                                 @endphp
                                 @if(!$miValoracion)
-                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAgregarResena">
+                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAgregarValoracion">
                                         <i class="bi bi-plus-circle"></i> Añadir reseña
                                     </button>
                                 @endif
@@ -378,11 +378,11 @@
                                     </div>
                                     @auth
                                         @if($valoracion->usuario_id === Auth::id())
-                                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarResena{{ $valoracion->id }}">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarValoracion{{ $valoracion->id }}">
                                                 <i class="bi bi-pencil"></i> Editar
                                             </button>
                                         @elseif($restaurante->user_id === Auth::id())
-                                            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalResponderResena{{ $valoracion->id }}">
+                                            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalResponderValoracion{{ $valoracion->id }}">
                                                 <i class="bi bi-reply"></i> Responder
                                             </button>
                                         @endif
@@ -424,7 +424,7 @@
                         <!-- Modal Editar Reseña -->
                         @auth
                         @if($valoracion->usuario_id === Auth::id())
-                        <div class="modal fade" id="modalEditarResena{{ $valoracion->id }}" tabindex="-1">
+                        <div class="modal fade" id="modalEditarValoracion{{ $valoracion->id }}" tabindex="-1">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -465,7 +465,7 @@
                         <!-- Modal Responder Reseña (Solo Gerente) -->
                         @auth
                         @if($restaurante->user_id === Auth::id())
-                        <div class="modal fade" id="modalResponderResena{{ $valoracion->id }}" tabindex="-1">
+                        <div class="modal fade" id="modalResponderValoracion{{ $valoracion->id }}" tabindex="-1">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -553,7 +553,7 @@
                         $miValoracion = $restaurante->valoraciones->where('usuario_id', Auth::id())->first();
                     @endphp
                     @if(!$miValoracion)
-                    <div class="modal fade" id="modalAgregarResena" tabindex="-1">
+                    <div class="modal fade" id="modalAgregarValoracion" tabindex="-1">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">

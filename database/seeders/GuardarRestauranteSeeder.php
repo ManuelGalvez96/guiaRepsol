@@ -19,6 +19,9 @@ class GuardarRestauranteSeeder extends Seeder
     {
         $usuarios = User::where('rol', 'usuario')->pluck('id')->all();
         $restaurantes = Restaurante::pluck('id')->all();
+        if (count($usuarios) < 8 || count($restaurantes) < 15) {
+            return;
+        }
 
         // Usuario 1
         GuardarRestaurante::create([
@@ -117,7 +120,7 @@ class GuardarRestauranteSeeder extends Seeder
         ]);
 
         // Additional saves to reach 50+
-        if (count($usuarios) > 8) {
+        if (count($usuarios) > 8 && count($restaurantes) > 34) {
             GuardarRestaurante::create([
                 'user_id' => $usuarios[8],
                 'restaurante_id' => $restaurantes[15],
@@ -210,7 +213,7 @@ class GuardarRestauranteSeeder extends Seeder
                 'restaurante_id' => $restaurantes[34],
             ]);
 
-            if (count($usuarios) > 16) {
+            if (count($usuarios) > 16 && count($restaurantes) > 49) {
                 GuardarRestaurante::create([
                     'user_id' => $usuarios[16],
                     'restaurante_id' => $restaurantes[35],

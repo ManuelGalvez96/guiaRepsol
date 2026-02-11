@@ -13,7 +13,7 @@
 <body>
     <div class="login-header">
         <img src="{{ asset('img/Guia_Repsol.png') }}" class="logo" alt="Guía Repsol">
-        <a href="{{ route('home') }}" class="btn-close-header">✕</a>
+        <a href="{{ url('/') }}" class="btn-close-header">✕</a>
     </div>
 
     <div class="login-container">

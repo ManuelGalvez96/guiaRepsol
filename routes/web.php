@@ -11,6 +11,7 @@ Route::get('/', function () {
 })->name('home');
 
 // Rutas de autenticación
+Route::get('/pre-login', [AuthUser::class, 'preLogin'])->name('pre-login');
 Route::get('/login', [AuthUser::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthUser::class, 'login'])->name('login.post');
 Route::get('/register', [AuthUser::class, 'showRegister'])->name('register');
