@@ -395,6 +395,8 @@ textarea {
 
 .modal-hidden {
     display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
 }
 
 .modal-content {

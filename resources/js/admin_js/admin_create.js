@@ -1,65 +1,69 @@
-/**
- * Admin Create JavaScript - Funcionalidad para crear restaurantes
- * Incluye: Validación, preview de imágenes, envío AJAX
- */
+// JavaScript para crear restaurantes
+// Manejo del formulario, preview de imagen, validación, etc.
 
-// Variables globales
 let csrfToken;
 
-// Inicialización
-document.addEventListener('DOMContentLoaded', function() {
+// Al cargar la página
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('Inicializando formulario de crear...');
     initializeCreateForm();
 });
 
-/**
- * Inicializar formulario de creación
- */
+// Configurar el formulario
 function initializeCreateForm() {
-    // Obtener configuración pasada desde PHP
+    // Obtener token CSRF desde PHP
     if (typeof window.createConfig !== 'undefined') {
         csrfToken = window.createConfig.csrfToken;
     } else {
-        // Fallback
-        csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const metaToken = document.querySelector('meta[name="csrf-token"]');
+        if (metaToken) {
+            csrfToken = metaToken.getAttribute('content');
+        } else {
+            console.error('No se pudo obtener el token CSRF');
+            return;
+        }
     }
-    
+
     const form = document.getElementById('createRestauranteForm');
-    if (!form) return;
-    
+    if (!form) {
+        console.log('No se encontró el formulario');
+        return;
+    }
+
+    console.log('Configurando form de crear...');
     setupCreateFormHandler();
 }
 
-/**
- * Configurar event listeners del formulario
- */
+// Configurar el submit del formulario
 function setupCreateFormHandler() {
     const form = document.getElementById('createRestauranteForm');
     const submitBtn = document.getElementById('submitBtn');
     const alertContainer = document.getElementById('alertContainer');
-    
+
     if (!form) return;
 
-    // Event listener para envío del formulario
-    form.addEventListener('submit', function(e) {
+    // Cuando se envíe el form
+    form.addEventListener('submit', function (e) {
         e.preventDefault();
-        
-        // Limpiar errores previos
+        console.log('Enviando formulario...');
+
+        // Limpiar errores anteriores
         document.querySelectorAll('.error').forEach(el => el.remove());
         if (alertContainer) {
             alertContainer.innerHTML = '';
         }
-        
-        // Mostrar estado de carga
+
+        // Cambiar botón a "Creando..."
         if (submitBtn) {
             submitBtn.textContent = 'Creando...';
             submitBtn.disabled = true;
         }
         form.classList.add('loading');
-        
-        // Preparar datos del formulario
+
+        // Preparar datos
         const formData = new FormData(form);
-        
-        // Enviar petición AJAX
+
+        // Enviar con AJAX
         fetch(form.action, {
             method: 'POST',
             headers: {
@@ -68,93 +72,95 @@ function setupCreateFormHandler() {
             },
             body: formData
         })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(data => {
-                    throw data;
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                // Mostrar mensaje con SweetAlert
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: data.message,
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-                
-                // Limpiar formulario
-                form.reset();
-                
-                // Limpiar preview de imagen
-                const imagePreview = document.getElementById('imagePreview');
-                if (imagePreview) {
-                    imagePreview.classList.remove('active');
+            .then(response => {
+                console.log('Respuesta recibida:', response.status);
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw data;
+                    });
                 }
-                
-                // Redirigir después de 1.5 segundos
-                setTimeout(() => {
-                    const adminIndexUrl = window.createConfig?.adminIndexRoute || '/admin';
-                    window.location.href = adminIndexUrl;
-                }, 1500);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            
-            // Mostrar errores de validación
-            if (error.errors) {
-                Object.keys(error.errors).forEach(field => {
-                    const input = document.getElementById(field);
-                    if (input) {
-                        const errorDiv = document.createElement('div');
-                        errorDiv.className = 'error';
-                        errorDiv.textContent = error.errors[field][0];
-                        input.parentNode.appendChild(errorDiv);
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    console.log('Restaurante creado!');
+
+                    // Mostrar mensaje bonito
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: data.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    // Limpiar form
+                    form.reset();
+
+                    // Quitar preview de imagen si hay
+                    const imagePreview = document.getElementById('imagePreview');
+                    if (imagePreview) {
+                        imagePreview.classList.remove('active');
                     }
-                });
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error de validación',
-                    text: 'Por favor corrige los errores en el formulario',
-                    toast: true,
-                    position: 'top-end',
-                    timer: 3000,
-                    showConfirmButton: false
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: error.message || 'Error al crear el restaurante'
-                });
-            }
-            
-            // Restaurar botón
-            if (submitBtn) {
-                submitBtn.textContent = 'Crear Restaurante';
-                submitBtn.disabled = false;
-            }
-            form.classList.remove('loading');
-        });
+
+                    // Volver al índice después de 1.5 seg
+                    setTimeout(() => {
+                        const adminIndexUrl = window.createConfig?.adminIndexRoute || '/admin';
+                        window.location.href = adminIndexUrl;
+                    }, 1500);
+                }
+            })
+            .catch(error => {
+                console.error('Error creando restaurante:', error);
+
+                // Si hay errores de validación del servidor
+                if (error.errors) {
+                    Object.keys(error.errors).forEach(field => {
+                        const input = document.getElementById(field);
+                        if (input) {
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'error';
+                            errorDiv.textContent = error.errors[field][0];
+                            input.parentNode.appendChild(errorDiv);
+                        }
+                    });
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error de validación',
+                        text: 'Por favor corrige los errores en el formulario',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message || 'Error al crear el restaurante'
+                    });
+                }
+
+                // Restaurar el botón
+                if (submitBtn) {
+                    submitBtn.textContent = 'Crear Restaurante';
+                    submitBtn.disabled = false;
+                }
+                form.classList.remove('loading');
+            });
     });
 }
 
-/**
- * Previsualizar imagen seleccionada
- */
+// Preview de la imagen antes de subir
 function previewImage(event) {
     const file = event.target.files[0];
     if (file) {
+        console.log('Archivo seleccionado:', file.name);
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             const preview = document.getElementById('preview');
             const imagePreview = document.getElementById('imagePreview');
-            
+
             if (preview && imagePreview) {
                 preview.src = e.target.result;
                 imagePreview.classList.add('active');
@@ -164,19 +170,19 @@ function previewImage(event) {
     }
 }
 
-// Hacer función disponible globalmente
+// Hacer disponible para el HTML
 window.previewImage = previewImage;
 
-/**
- * Validar formulario antes de envío
- */
+// TODO: agregar validación de tamaño de archivo antes de subir
+
+// Validación del form (opcional, el servidor también valida)
 function validateCreateForm() {
     const form = document.getElementById('createRestauranteForm');
     if (!form) return false;
-    
+
     let isValid = true;
     const requiredFields = ['nombre', 'categoria_id', 'ubicacion_id', 'user_id', 'direccion', 'email', 'precio'];
-    
+
     requiredFields.forEach(fieldName => {
         const field = document.getElementById(fieldName);
         if (field && !field.value.trim()) {
@@ -184,7 +190,7 @@ function validateCreateForm() {
             isValid = false;
         }
     });
-    
+
     // Validar email
     const emailField = document.getElementById('email');
     if (emailField && emailField.value.trim()) {
@@ -194,7 +200,7 @@ function validateCreateForm() {
             isValid = false;
         }
     }
-    
+
     // Validar precio
     const precioField = document.getElementById('precio');
     if (precioField && precioField.value.trim()) {
@@ -204,26 +210,24 @@ function validateCreateForm() {
             isValid = false;
         }
     }
-    
+
     return isValid;
 }
 
-/**
- * Mostrar error en campo específico
- */
+// Mostrar error en un campo
 function showFieldError(field, message) {
-    // Remover error anterior
+    // Quitar error anterior si existe
     const existingError = field.parentNode.querySelector('.error');
     if (existingError) {
         existingError.remove();
     }
-    
-    // Agregar nuevo error
+
+    // Crear div de error
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error';
     errorDiv.textContent = message;
     field.parentNode.appendChild(errorDiv);
-    
-    // Focus en el campo con error
+
+    // Hacer focus en el campo
     field.focus();
 }

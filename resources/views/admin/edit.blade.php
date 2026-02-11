@@ -181,7 +181,7 @@
 
             <div class="button-group">
                 <button type="submit" class="btn btn-primary" id="submitBtn">Actualizar Restaurante</button>
-                <a href="{{ route('admin.index') }}" class="btn btn-secondary">Cancelar</a>
+                <button type="button" class="btn btn-secondary" onclick="cancelEdit()">Cancelar</button>
             </div>
         </form>
     </div>

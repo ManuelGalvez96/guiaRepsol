@@ -1,65 +1,73 @@
-/**
- * Admin Edit JavaScript - Funcionalidad para editar restaurantes
- * Incluye: Validación, preview de imágenes, envío AJAX, manejo de imagen existente
- */
+// JavaScript para editar restaurantes
+// Validacion, preview de imagen, guardar cambios...
 
-// Variables globales
 let csrfToken;
 
-// Inicialización
-document.addEventListener('DOMContentLoaded', function() {
-    initializeEditForm();
+// Al cargar la pagina
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('Iniciando formulario de editar...');
+    // Pequeño delay para asegurar que el DOM esté listo
+    setTimeout(() => {
+        initializeEditForm();
+    }, 100);
 });
 
-/**
- * Inicializar formulario de edición
- */
+// Configurar formulario de edicion
 function initializeEditForm() {
-    // Obtener configuración pasada desde PHP
+    // Obtener token desde PHP
     if (typeof window.editConfig !== 'undefined') {
         csrfToken = window.editConfig.csrfToken;
     } else {
-        // Fallback
-        csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const metaToken = document.querySelector('meta[name="csrf-token"]');
+        if (metaToken) {
+            csrfToken = metaToken.getAttribute('content');
+        } else {
+            console.error('No se pudo obtener el token CSRF');
+            return;
+        }
     }
-    
+
     const form = document.getElementById('editRestauranteForm');
-    if (!form) return;
-    
+    if (!form) {
+        console.log('No encuentro el form de editar');
+        return;
+    }
+
+    console.log('Configurando form de editar...');
     setupEditFormHandler();
+    saveOriginalValues();
 }
 
-/**
- * Configurar event listeners del formulario
- */
+// Configurar el submit
 function setupEditFormHandler() {
     const form = document.getElementById('editRestauranteForm');
     const submitBtn = document.getElementById('submitBtn');
     const alertContainer = document.getElementById('alertContainer');
-    
+
     if (!form) return;
 
-    // Event listener para envío del formulario
-    form.addEventListener('submit', function(e) {
+    // Cuando se envie el formulario
+    form.addEventListener('submit', function (e) {
         e.preventDefault();
-        
-        // Limpiar errores previos
+        console.log('Actualizando restaurante...');
+
+        // Quitar errores anteriores
         document.querySelectorAll('.error').forEach(el => el.remove());
         if (alertContainer) {
             alertContainer.innerHTML = '';
         }
-        
-        // Mostrar estado de carga
+
+        // Cambiar boton mientras procesa
         if (submitBtn) {
             submitBtn.textContent = 'Actualizando...';
             submitBtn.disabled = true;
         }
         form.classList.add('loading');
-        
-        // Preparar datos del formulario
+
+        // Preparar datos
         const formData = new FormData(form);
-        
-        // Enviar petición AJAX
+
+        // Enviar con AJAX
         fetch(form.action, {
             method: 'POST',
             headers: {
@@ -68,90 +76,92 @@ function setupEditFormHandler() {
             },
             body: formData
         })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(data => {
-                    throw data;
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                // Mostrar mensaje de éxito con SweetAlert
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Actualizado!',
-                    text: data.message,
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-                
-                // Redirigir después de 1.5 segundos
-                setTimeout(() => {
-                    const adminIndexUrl = window.editConfig?.adminIndexRoute || '/admin';
-                    window.location.href = adminIndexUrl;
-                }, 1500);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            
-            // Mostrar errores de validación
-            if (error.errors) {
-                Object.keys(error.errors).forEach(field => {
-                    const input = document.getElementById(field);
-                    if (input) {
-                        const errorDiv = document.createElement('div');
-                        errorDiv.className = 'error';
-                        errorDiv.textContent = error.errors[field][0];
-                        input.parentNode.appendChild(errorDiv);
-                    }
-                });
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error de validación',
-                    text: 'Por favor corrige los errores en el formulario',
-                    toast: true,
-                    position: 'top-end',
-                    timer: 3000,
-                    showConfirmButton: false
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: error.message || 'Error al actualizar el restaurante'
-                });
-            }
-            
-            // Restaurar botón
-            if (submitBtn) {
-                submitBtn.textContent = 'Actualizar Restaurante';
-                submitBtn.disabled = false;
-            }
-            form.classList.remove('loading');
-        });
+            .then(response => {
+                console.log('Respuesta recibida:', response.status);
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw data;
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    console.log('Restaurante actualizado correctamente!');
+
+                    // Mensaje de exito
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Actualizado!',
+                        text: data.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    // Volver al panel después de 1.5seg
+                    setTimeout(() => {
+                        const adminIndexUrl = window.editConfig?.adminIndexRoute || '/admin';
+                        window.location.href = adminIndexUrl;
+                    }, 1500);
+                }
+            })
+            .catch(error => {
+                console.error('Error al actualizar:', error);
+
+                // Si hay errores de validacion
+                if (error.errors) {
+                    Object.keys(error.errors).forEach(field => {
+                        const input = document.getElementById(field);
+                        if (input) {
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'error';
+                            errorDiv.textContent = error.errors[field][0];
+                            input.parentNode.appendChild(errorDiv);
+                        }
+                    });
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error de validación',
+                        text: 'Por favor corrige los errores en el formulario',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message || 'Error al actualizar el restaurante'
+                    });
+                }
+
+                // Restaurar boton
+                if (submitBtn) {
+                    submitBtn.textContent = 'Actualizar Restaurante';
+                    submitBtn.disabled = false;
+                }
+                form.classList.remove('loading');
+            });
     });
 }
 
-/**
- * Previsualizar imagen seleccionada
- */
+// Preview de imagen nueva
 function previewImage(event) {
     const file = event.target.files[0];
     if (file) {
+        console.log('Nueva imagen:', file.name);
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             const preview = document.getElementById('preview');
             const imagePreview = document.getElementById('imagePreview');
-            
+
             if (preview && imagePreview) {
                 preview.src = e.target.result;
                 imagePreview.classList.add('active');
                 imagePreview.style.display = 'block';
-                
-                // Ocultar imagen actual si existe
+
+                // Bajar opacidad de la imagen actual
                 const currentImage = document.querySelector('.current-image');
                 if (currentImage) {
                     currentImage.style.opacity = '0.5';
@@ -162,14 +172,12 @@ function previewImage(event) {
     }
 }
 
-// Hacer función disponible globalmente
+// Hacer disponible globalmente
 window.previewImage = previewImage;
 
-/**
- * Cancelar y volver al índice
- */
+// Cancelar y volver
 function cancelEdit() {
-    // Preguntar confirmación si hay cambios sin guardar
+    // Si hay cambios, preguntar antes
     if (hasUnsavedChanges()) {
         Swal.fire({
             title: '¿Descartar cambios?',
@@ -192,43 +200,40 @@ function cancelEdit() {
     }
 }
 
-// Hacer función disponible globalmente
 window.cancelEdit = cancelEdit;
-/**
- * Verificar si hay cambios sin guardar
- */
+
+// Verificar si el usuario cambió algo
 function hasUnsavedChanges() {
     const form = document.getElementById('editRestauranteForm');
     if (!form) return false;
-    
-    const formData = new FormData(form);
+
     const inputs = form.querySelectorAll('input, select, textarea');
-    
+
     for (let input of inputs) {
-        if (input.type === 'file') continue; // Skip file inputs
-        if (input.type === 'hidden') continue; // Skip hidden inputs like _token and _method
-        
+        if (input.type === 'file') continue; // ignorar archivos
+        if (input.type === 'hidden') continue; // ignorar ocultos (_token, _method)
+
         const originalValue = input.getAttribute('data-original-value') || input.defaultValue;
         const currentValue = input.value;
-        
+
         if (originalValue !== currentValue) {
+            console.log('Cambio detectado en:', input.name);
             return true;
         }
     }
-    
+
     return false;
 }
 
-/**
- * Validar formulario antes de envío
- */
+// Validar form antes de enviar (opcional porque el servidor valida)
 function validateEditForm() {
     const form = document.getElementById('editRestauranteForm');
     if (!form) return false;
-    
+
     let isValid = true;
     const requiredFields = ['nombre', 'categoria_id', 'ubicacion_id', 'user_id', 'direccion', 'email', 'precio'];
-    
+
+    // Verificar campos obligatorios
     requiredFields.forEach(fieldName => {
         const field = document.getElementById(fieldName);
         if (field && !field.value.trim()) {
@@ -236,7 +241,7 @@ function validateEditForm() {
             isValid = false;
         }
     });
-    
+
     // Validar email
     const emailField = document.getElementById('email');
     if (emailField && emailField.value.trim()) {
@@ -246,7 +251,7 @@ function validateEditForm() {
             isValid = false;
         }
     }
-    
+
     // Validar precio
     const precioField = document.getElementById('precio');
     if (precioField && precioField.value.trim()) {
@@ -256,8 +261,8 @@ function validateEditForm() {
             isValid = false;
         }
     }
-    
-    // Validar valoración
+
+    // Validar valoracion
     const valoracionField = document.getElementById('valoracion_promedio');
     if (valoracionField && valoracionField.value.trim()) {
         const valoracion = parseFloat(valoracionField.value);
@@ -266,8 +271,8 @@ function validateEditForm() {
             isValid = false;
         }
     }
-    
-    // Validar soles
+
+    // Validar soles (0-3)
     const solesField = document.getElementById('soles');
     if (solesField && solesField.value.trim()) {
         const soles = parseInt(solesField.value);
@@ -276,37 +281,33 @@ function validateEditForm() {
             isValid = false;
         }
     }
-    
+
     return isValid;
 }
 
-/**
- * Mostrar error en campo específico
- */
+// Mostrar error en campo
 function showFieldError(field, message) {
-    // Remover error anterior
+    // Quitar error anterior si existe
     const existingError = field.parentNode.querySelector('.error');
     if (existingError) {
         existingError.remove();
     }
-    
-    // Agregar nuevo error
+
+    // Crear nuevo div de error
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error';
     errorDiv.textContent = message;
     field.parentNode.appendChild(errorDiv);
-    
-    // Focus en el campo con error
+
+    // Focus al campo con error
     field.focus();
 }
 
-/**
- * Guardar valores originales para detectar cambios
- */
+// Guardar valores originales del form para detectar cambios
 function saveOriginalValues() {
     const form = document.getElementById('editRestauranteForm');
     if (!form) return;
-    
+
     const inputs = form.querySelectorAll('input, select, textarea');
     inputs.forEach(input => {
         if (input.type !== 'file' && input.type !== 'hidden') {
@@ -315,7 +316,9 @@ function saveOriginalValues() {
     });
 }
 
-// Guardar valores originales al cargar la página
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(saveOriginalValues, 100); // Pequeño delay para asegurar que los valores estén cargados
+// TODO: mejorar la deteccion de cambios en checkboxes
+
+// Guardar valores al cargar
+document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(saveOriginalValues, 100); // delay pequeño para que carguen los valores
 });
