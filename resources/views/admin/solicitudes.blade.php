@@ -34,56 +34,37 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Imagen</th>
+                        <th>ID</th>
                         <th>Nombre</th>
-                        <th>Dirección</th>
-                        <th>Tipo de Comida</th>
-                        <th>Teléfono</th>
-                        <th>Email</th>
-                        <th>Fecha Solicitud</th>
+                        <th>Detalles</th>
                         <th>Acción</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($solicitudes as $solicitud)
                     <tr>
-                        <td>
-                            @if($solicitud->imagenes->first())
-                                <img src="{{ asset('storage/' . $solicitud->imagenes->first()->url) }}" alt="{{ $solicitud->nombre }}" class="restaurant-img">
-                            @else
-                                <div class="restaurant-img"></div>
-                            @endif
-                        </td>
+                        <td><strong>#{{ $solicitud->id }}</strong></td>
                         <td>
                             <strong>{{ $solicitud->nombre }}</strong>
-                            @if($solicitud->user)
-                                <br><small style="color: #7f8c8d;">Por: {{ $solicitud->user->name }}</small>
+                            @if($solicitud->usuario)
+                                <br><small style="color: #7f8c8d;">Por: {{ $solicitud->usuario->name }}</small>
                             @endif
                         </td>
-                        <td>{{ $solicitud->direccion }}, {{ $solicitud->ubicacion->ciudad ?? '' }}</td>
                         <td>
-                            @if($solicitud->tiposComida->count() > 0)
-                                {{ $solicitud->tiposComida->pluck('nombre')->join(', ') }}
-                            @else
-                                -
-                            @endif
+                            <button class="btn-edit" onclick="verDetalles({{ $solicitud->id }})" title="Ver detalles">
+                                👁️ Ver Detalles
+                            </button>
                         </td>
-                        <td>{{ $solicitud->telefono ?? '-' }}</td>
-                        <td>{{ $solicitud->email }}</td>
-                        <td>{{ $solicitud->created_at->format('d/m/Y H:i') }}</td>
                         <td>
                             <div class="action-buttons">
                                 <button class="btn-edit" onclick="aprobarSolicitud({{ $solicitud->id }})" title="Aprobar">✅</button>
-                                <a href="{{ route('admin.edit', $solicitud) }}">
-                                    <button class="btn-edit" title="Editar">✏️</button>
-                                </a>
                                 <button type="button" class="btn-delete" onclick="rechazarSolicitud({{ $solicitud->id }})" title="Rechazar">❌</button>
                             </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" style="text-align: center; padding: 40px;">
+                        <td colspan="4" style="text-align: center; padding: 40px;">
                             No hay solicitudes pendientes
                         </td>
                     </tr>
@@ -135,136 +116,80 @@
         </div>
     </div>
 
+    <!-- Modal de Detalles -->
+    <div id="detallesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal()">&times;</span>
+            <h2>Detalles de la Solicitud</h2>
+            
+            <div class="modal-body">
+                <div class="modal-section">
+                    <div class="modal-image">
+                        <img id="modalImagen" src="" alt="Imagen del restaurante">
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3>Información Básica</h3>
+                    <p><strong>Nombre:</strong> <span id="modalNombre"></span></p>
+                    <p><strong>Categoría:</strong> <span id="modalCategoria"></span></p>
+                    <p><strong>Descripción:</strong></p>
+                    <p id="modalDescripcion" style="text-align: justify;"></p>
+                </div>
+
+                <div class="modal-section">
+                    <h3>Ubicación</h3>
+                    <p><strong>Dirección:</strong> <span id="modalDireccion"></span></p>
+                    <p><strong>Ciudad:</strong> <span id="modalCiudad"></span></p>
+                    <p><strong>Provincia:</strong> <span id="modalProvincia"></span></p>
+                    <p><strong>Código Postal:</strong> <span id="modalCodigoPostal"></span></p>
+                    <p><strong>Comunidad Autónoma:</strong> <span id="modalComunidad"></span></p>
+                </div>
+
+                <div class="modal-section">
+                    <h3>Contacto</h3>
+                    <p><strong>Teléfono:</strong> <span id="modalTelefono"></span></p>
+                    <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+                    <p><strong>Web:</strong> <span id="modalWeb"></span></p>
+                </div>
+
+                <div class="modal-section">
+                    <h3>Información Adicional</h3>
+                    <p><strong>Precio Promedio:</strong> <span id="modalPrecio"></span> €</p>
+                    <p><strong>Tipos de Cocina:</strong> <span id="modalTiposComida"></span></p>
+                    <p><strong>Solicitado por:</strong> <span id="modalUsuario"></span></p>
+                    <p><strong>Fecha de Solicitud:</strong> <span id="modalFecha"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Datos de las solicitudes para JavaScript -->
     <script>
-        // Configurar CSRF token para todas las peticiones AJAX
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-        // Función para aprobar solicitud
-        function aprobarSolicitud(id) {
-            Swal.fire({
-                title: '¿Aprobar esta solicitud?',
-                text: "El restaurante será visible para todos los usuarios",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#27ae60',
-                cancelButtonColor: '#95a5a6',
-                confirmButtonText: 'Sí, aprobar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Mostrar loading
-                    Swal.fire({
-                        title: 'Aprobando...',
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-
-                    fetch(`/admin/${id}`, {
-                        method: 'PUT',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken,
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            activo: true
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: '¡Aprobado!',
-                                text: 'La solicitud ha sido aprobada',
-                                timer: 1500,
-                                showConfirmButton: false
-                            }).then(() => {
-                                window.location.reload();
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'No se pudo aprobar la solicitud'
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Error al aprobar la solicitud'
-                        });
-                    });
-                }
-            });
-        }
-
-        // Función para rechazar solicitud
-        function rechazarSolicitud(id) {
-            Swal.fire({
-                title: '¿Rechazar esta solicitud?',
-                text: "El restaurante será eliminado de la base de datos",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#e74c3c',
-                cancelButtonColor: '#95a5a6',
-                confirmButtonText: 'Sí, rechazar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Mostrar loading
-                    Swal.fire({
-                        title: 'Rechazando...',
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-
-                    fetch(`/admin/${id}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken,
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: '¡Rechazado!',
-                                text: 'La solicitud ha sido rechazada',
-                                timer: 1500,
-                                showConfirmButton: false
-                            }).then(() => {
-                                window.location.reload();
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'No se pudo rechazar la solicitud'
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Error al rechazar la solicitud'
-                        });
-                    });
-                }
-            });
-        }
+        window.solicitudesData = {
+            @foreach($solicitudes as $solicitud)
+            {{ $solicitud->id }}: {
+                imagen: "{{ $solicitud->imagenes->first() ? asset('storage/' . $solicitud->imagenes->first()->url) : asset('images/placeholder.jpg') }}",
+                nombre: "{{ $solicitud->nombre }}",
+                categoria: "{{ $solicitud->categoria->nombre ?? '-' }}",
+                descripcion: "{{ $solicitud->descripcion ?? 'Sin descripción' }}",
+                direccion: "{{ $solicitud->direccion }}",
+                ciudad: "{{ $solicitud->ubicacionPendiente->ciudad ?? '' }}",
+                provincia: "{{ $solicitud->ubicacionPendiente->provincia ?? '' }}",
+                codigo_postal: "{{ $solicitud->ubicacionPendiente->codigo_postal ?? '' }}",
+                comunidad: "{{ $solicitud->ubicacionPendiente->comunidad_autonoma ?? '' }}",
+                telefono: "{{ $solicitud->telefono ?? '-' }}",
+                email: "{{ $solicitud->email }}",
+                web: "{{ $solicitud->web ?? '-' }}",
+                precio: "{{ number_format($solicitud->precio, 2) }}",
+                tipos_comida: "{{ $solicitud->tiposComida->count() > 0 ? $solicitud->tiposComida->pluck('nombre')->join(', ') : '-' }}",
+                usuario: "{{ $solicitud->usuario->name ?? 'Desconocido' }}",
+                fecha: "{{ $solicitud->created_at->format('d/m/Y H:i') }}"
+            }{{ !$loop->last ? ',' : '' }}
+            @endforeach
+        };
     </script>
+
+    <script src="{{ asset('js/solicitudes.js') }}"></script>
 </body>
 </html>
