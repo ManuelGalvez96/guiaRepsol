@@ -79,5 +79,143 @@ document.addEventListener('DOMContentLoaded', function() {
             star.classList.remove('active');
         });
     }
+
+    // Configurar CSRF token
+    const csrfToken = document.querySelector('meta[name="csrf-token"]');
+    if (csrfToken) {
+        window.csrfToken = csrfToken.getAttribute('content');
+    }
+
+    // Manejar botones de guardar valoración
+    const botonesGuardar = document.querySelectorAll('.btn-guardar-valoracion');
+    botonesGuardar.forEach(boton => {
+        boton.addEventListener('click', function() {
+            const valoracionId = this.getAttribute('data-valoracion-id');
+            const restauranteId = this.getAttribute('data-restaurante-id');
+            const form = document.getElementById(`form-editar-valoracion-${valoracionId}`);
+            const puntuacion = form.querySelector('[name="puntuacion"]').value;
+            const comentario = form.querySelector('[name="comentario"]').value;
+            
+            if (!puntuacion) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Puntuación requerida',
+                    text: 'Por favor selecciona una puntuación',
+                    confirmButtonColor: '#00a3e0'
+                });
+                return;
+            }
+            
+            // Cerrar modal
+            const modalElement = document.getElementById(`modalEditarValoracion${valoracionId}`);
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            if (modal) modal.hide();
+            
+            // Mostrar loading
+            Swal.fire({
+                title: 'Actualizando...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            fetch(`/valoracion/${valoracionId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': window.csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    puntuacion: parseInt(puntuacion),
+                    comentario: comentario
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Actualizado!',
+                    text: 'Tu reseña ha sido actualizada correctamente',
+                    confirmButtonColor: '#00a3e0'
+                }).then(() => {
+                    window.location.reload();
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo actualizar la reseña',
+                    confirmButtonColor: '#00a3e0'
+                });
+            });
+        });
+    });
+
+    // Manejar botones de eliminar valoración
+    const botonesEliminar = document.querySelectorAll('.btn-eliminar-valoracion');
+    botonesEliminar.forEach(boton => {
+        boton.addEventListener('click', function() {
+            const valoracionId = this.getAttribute('data-valoracion-id');
+            
+            Swal.fire({
+                title: '¿Eliminar reseña?',
+                text: 'Esta acción no se puede deshacer',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Cerrar modal
+                    const modalElement = document.getElementById(`modalEditarValoracion${valoracionId}`);
+                    const modal = bootstrap.Modal.getInstance(modalElement);
+                    if (modal) modal.hide();
+                    
+                    // Mostrar loading
+                    Swal.fire({
+                        title: 'Eliminando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    fetch(`/valoracion/${valoracionId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': window.csrfToken,
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Eliminada!',
+                            text: 'Tu reseña ha sido eliminada correctamente',
+                            confirmButtonColor: '#00a3e0'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No se pudo eliminar la reseña',
+                            confirmButtonColor: '#00a3e0'
+                        });
+                    });
+                }
+            });
+        });
+    });
 });
 

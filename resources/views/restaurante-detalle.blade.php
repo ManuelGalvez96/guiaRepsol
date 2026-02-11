@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{{ asset('css/restaurante-detalle.css') }}">
@@ -431,9 +432,7 @@
                                         <h5 class="modal-title">Editar mi reseña</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
-                                    <form action="{{ route('valoracion.update', $valoracion->id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
+                                    <form id="form-editar-valoracion-{{ $valoracion->id }}">
                                         <div class="modal-body">
                                             <div class="mb-3">
                                                 <label class="form-label">¿Cómo valoras tu experiencia?</label>
@@ -451,9 +450,14 @@
                                                 <textarea name="comentario" class="form-control" rows="4" required>{{ $valoracion->comentario }}</textarea>
                                             </div>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                        <div class="modal-footer d-flex justify-content-between">
+                                            <button type="button" class="btn btn-danger btn-eliminar-valoracion" data-valoracion-id="{{ $valoracion->id }}">
+                                                <i class="bi bi-trash"></i> Eliminar
+                                            </button>
+                                            <div>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                <button type="button" class="btn btn-primary btn-guardar-valoracion" data-valoracion-id="{{ $valoracion->id }}" data-restaurante-id="{{ $restaurante->id }}">Guardar cambios</button>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
@@ -607,6 +611,9 @@
     <!-- Scripts de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- Script personalizado -->
     <script src="{{ asset('js/restaurante-detalle.js') }}"></script>

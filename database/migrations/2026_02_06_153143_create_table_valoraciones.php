@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('puntuacion');
             $table->text('comentario')->nullable();
             $table->text('respuesta_gerente')->nullable();
+            $table->timestamp('fecha_respuesta')->nullable();
             $table->timestamps();
             $table->unique(['restaurante_id', 'usuario_id']);
         });
