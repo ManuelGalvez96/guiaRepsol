@@ -80,12 +80,14 @@ class AuthUser extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'apellidos' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed',
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
+            'apellidos' => $validated['apellidos'],
             'email' => $validated['email'],
             'email_verified_at' => now(),
             'rol' => 'usuario',
