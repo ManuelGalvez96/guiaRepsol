@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{{ asset('css/restaurante-detalle.css') }}">
     <title>{{ $restaurante->nombre }} - Guía Repsol</title>
@@ -394,9 +393,26 @@
                                 
                                 @if($valoracion->respuesta_gerente)
                                     <div class="mt-3 p-3" style="background-color: #f8f9fa; border-left: 3px solid #00a3e0; border-radius: 4px;">
-                                        <div class="d-flex align-items-center mb-2">
-                                            <i class="bi bi-building" style="font-size: 24px; color: #00a3e0; margin-right: 10px;"></i>
-                                            <strong style="color: #00a3e0;">Respuesta del Gerente</strong>
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-building" style="font-size: 24px; color: #00a3e0; margin-right: 10px;"></i>
+                                                <div>
+                                                    <strong style="color: #00a3e0;">{{ $restaurante->gerente->name }}</strong>
+                                                    <p class="mb-0" style="font-size: 12px; color: #666;">Gerente de {{ $restaurante->nombre }}</p>
+                                                </div>
+                                            </div>
+                                            @auth
+                                                @if($restaurante->user_id === Auth::id())
+                                                    <div>
+                                                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarRespuesta{{ $valoracion->id }}">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminarRespuesta{{ $valoracion->id }}">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                @endif
+                                            @endauth
                                         </div>
                                         <p class="mb-0" style="font-size: 14px;">{{ $valoracion->respuesta_gerente }}</p>
                                         <p style="font-size: 11px; color: #999; margin-top: 5px;">{{ $valoracion->fecha_respuesta ? $valoracion->fecha_respuesta->format('d/m/Y') : '' }}</p>
@@ -420,14 +436,15 @@
                                         @method('PUT')
                                         <div class="modal-body">
                                             <div class="mb-3">
-                                                <label class="form-label">Puntuación</label>
-                                                <select name="puntuacion" class="form-select" required>
-                                                    <option value="1" {{ $valoracion->puntuacion == 1 ? 'selected' : '' }}>1 estrella</option>
-                                                    <option value="2" {{ $valoracion->puntuacion == 2 ? 'selected' : '' }}>2 estrellas</option>
-                                                    <option value="3" {{ $valoracion->puntuacion == 3 ? 'selected' : '' }}>3 estrellas</option>
-                                                    <option value="4" {{ $valoracion->puntuacion == 4 ? 'selected' : '' }}>4 estrellas</option>
-                                                    <option value="5" {{ $valoracion->puntuacion == 5 ? 'selected' : '' }}>5 estrellas</option>
-                                                </select>
+                                                <label class="form-label">¿Cómo valoras tu experiencia?</label>
+                                                <input type="hidden" name="puntuacion" id="puntuacion-edit-{{ $valoracion->id }}" value="{{ $valoracion->puntuacion }}" required>
+                                                <div class="rating-stars" data-modal-id="{{ $valoracion->id }}" data-current-rating="{{ $valoracion->puntuacion }}">
+                                                    @for($i = 1; $i <= 5; $i++)
+                                                    <div class="star {{ $i <= $valoracion->puntuacion ? 'active' : '' }}" data-value="{{ $i }}">
+                                                        <i class="bi bi-star-fill"></i>
+                                                    </div>
+                                                    @endfor
+                                                </div>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Comentario</label>
@@ -471,6 +488,57 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Modal Editar Respuesta -->
+                        <div class="modal fade" id="modalEditarRespuesta{{ $valoracion->id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Editar Respuesta</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <form action="{{ route('valoracion.responder', $valoracion->id) }}" method="POST">
+                                        @csrf
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label class="form-label">Tu respuesta</label>
+                                                <textarea name="respuesta_gerente" class="form-control" rows="4" required>{{ $valoracion->respuesta_gerente }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-primary">Actualizar respuesta</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal Eliminar Respuesta -->
+                        <div class="modal fade" id="modalEliminarRespuesta{{ $valoracion->id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Eliminar Respuesta</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>¿Estás seguro de que deseas eliminar tu respuesta?</p>
+                                        <div class="alert alert-warning">
+                                            <i class="bi bi-exclamation-triangle"></i> Esta acción no se puede deshacer.
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <form action="{{ route('valoracion.eliminarRespuesta', $valoracion->id) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">Eliminar respuesta</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         @endif
                         @endauth
 
@@ -496,15 +564,25 @@
                                     @csrf
                                     <div class="modal-body">
                                         <div class="mb-3">
-                                            <label class="form-label">Puntuación</label>
-                                            <select name="puntuacion" class="form-select" required>
-                                                <option value="">Selecciona...</option>
-                                                <option value="1">1 estrella</option>
-                                                <option value="2">2 estrellas</option>
-                                                <option value="3">3 estrellas</option>
-                                                <option value="4">4 estrellas</option>
-                                                <option value="5">5 estrellas</option>
-                                            </select>
+                                            <label class="form-label">¿Cómo valoras tu experiencia?</label>
+                                            <input type="hidden" name="puntuacion" id="puntuacion" required>
+                                            <div class="rating-stars">
+                                                <div class="star" data-value="1">
+                                                    <i class="bi bi-star-fill"></i>
+                                                </div>
+                                                <div class="star" data-value="2">
+                                                    <i class="bi bi-star-fill"></i>
+                                                </div>
+                                                <div class="star" data-value="3">
+                                                    <i class="bi bi-star-fill"></i>
+                                                </div>
+                                                <div class="star" data-value="4">
+                                                    <i class="bi bi-star-fill"></i>
+                                                </div>
+                                                <div class="star" data-value="5">
+                                                    <i class="bi bi-star-fill"></i>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Comentario</label>
@@ -528,7 +606,6 @@
 
     <!-- Scripts de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
     
     <!-- Script personalizado -->

@@ -109,9 +109,31 @@ class ValoracionController extends Controller
 
         $valoracion->update([
             'respuesta_gerente' => $request->respuesta_gerente,
+            'fecha_respuesta' => now(),
         ]);
 
         return redirect()->back()->with('success', 'Respuesta publicada correctamente.');
+    }
+
+    /**
+     * Eliminar la respuesta del gerente a una valoración
+     */
+    public function eliminarRespuesta($id)
+    {
+        $valoracion = Valoracion::findOrFail($id);
+        $restaurante = $valoracion->restaurante;
+
+        // Verificar que el usuario autenticado es el gerente del restaurante
+        if ($restaurante->user_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'No tienes permiso para eliminar esta respuesta.');
+        }
+
+        $valoracion->update([
+            'respuesta_gerente' => null,
+            'fecha_respuesta' => null,
+        ]);
+
+        return redirect()->back()->with('success', 'Respuesta eliminada correctamente.');
     }
 
     /**

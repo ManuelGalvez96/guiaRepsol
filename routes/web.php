@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/valoracion/{id}', [ValoracionController::class, 'update'])->name('valoracion.update');
     Route::delete('/valoracion/{id}', [ValoracionController::class, 'destroy'])->name('valoracion.destroy');
     Route::post('/valoracion/{id}/responder', [ValoracionController::class, 'responder'])->name('valoracion.responder');
+    Route::delete('/valoracion/{id}/respuesta', [ValoracionController::class, 'eliminarRespuesta'])->name('valoracion.eliminarRespuesta');
 });
 
 // Rutas para formulario de registro de restaurantes

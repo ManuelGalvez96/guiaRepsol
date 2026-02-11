@@ -631,6 +631,56 @@ body {
     padding: 10px;
 }
 
+/* Sistema de calificación con estrellas */
+.rating-stars {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.rating-stars .star {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+}
+
+.rating-stars .star i {
+    font-size: 32px;
+    color: white;
+}
+
+.rating-stars .star:hover {
+    transform: scale(1.1);
+}
+
+/* Colores según puntuación */
+.rating-stars .star.active[data-value="1"] {
+    background-color: #ff3722;
+}
+
+.rating-stars .star.active[data-value="2"] {
+    background-color: #ff8622;
+}
+
+.rating-stars .star.active[data-value="3"] {
+    background-color: #ffce00;
+}
+
+.rating-stars .star.active[data-value="4"] {
+    background-color: #84b817;
+}
+
+.rating-stars .star.active[data-value="5"] {
+    background-color: #00a651;
+}
+
 /* Variables específicas para detalle de restaurante */
 :root {
     --color-primary: #1e3a5f;
