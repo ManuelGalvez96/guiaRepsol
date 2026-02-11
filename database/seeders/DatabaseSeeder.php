@@ -27,7 +27,6 @@ class DatabaseSeeder extends Seeder
             RestauranteSeeder::class,
             RestauranteTipoComidaSeeder::class,
             ValoracionSeeder::class,
-            ResenaSeeder::class,
             LikeRestauranteSeeder::class,
             GuardarRestauranteSeeder::class,
         ]);
