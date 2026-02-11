@@ -7,35 +7,40 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ asset('resources/css/login.css') }}">
-    <title>Guía Repsol - Login</title>
+    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+    <title>Guía Repsol - Registro</title>
 </head>
 
 <body>
     <div class="login-header">
         <img src="{{ asset('img/Guia_Repsol.png') }}" class="logo" alt="Guía Repsol">
-        <a href="{{ url('/') }}" class="btn-close-header">✕</a>
+        <a href="{{ route('home') }}" class="btn-close-header">✕</a>
     </div>
 
     <div class="login-container">
         <div class="login-box">
-            <h2 class="login-title">Accede con tu cuenta</h2>
-            <p class="login-description">
-                Accede con tu correo electrónico y contraseña o mediante redes sociales. Recuerda que puedes utilizar la
-                misma
-                cuenta que empleas para
-                <a href="#" data-bs-toggle="modal" data-bs-target="#modalRepsol" class="link-repsol">webs y apps
-                    de Repsol.</a>
-            </p>
-
-            <!-- Iconos de servicios -->
-            <div class="servicios-iconos">
-                <img src="{{ asset('img/Aplicaciones_repsol.png') }}" alt="Aplicaciones Repsol">
-            </div>
+            <h2 class="login-title">Crea tu cuenta Repsol</h2>
 
             <!-- Formulario -->
             <form class="login-form" method="POST" action="{{ route('login.post') }}">
                 @csrf
+                <button type="button" class="btn-social btn-facebook">
+                    <span class="social-icon">f</span>
+                    Acceder con Facebook
+                </button>
+
+                <button type="button" class="btn-social btn-google">
+                    <span class="social-icon">G</span>
+                    Acceder con Google
+                </button>
+
+                <button type="button" class="btn-social btn-apple">
+                    <span class="social-icon"></span>
+                    Acceder con Apple ID
+                </button>
+                <div class="divider">
+                    <span>o</span>
+                </div>
 
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -46,6 +51,24 @@
                         </ul>
                     </div>
                 @endif
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre"
+                        class="form-control @error('nombre') is-invalid @enderror" value="{{ old('nombre') }}" required>
+                    @error('nombre')
+                        <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="apellidos">Apellidos</label>
+                    <input type="text" id="apellidos" name="apellidos"
+                        class="form-control @error('apellidos') is-invalid @enderror" value="{{ old('apellidos') }}"
+                        required>
+                    @error('apellidos')
+                        <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
+                    @enderror
+                </div>
 
                 <div class="form-group">
                     <label for="email">Correo electrónico</label>
@@ -67,32 +90,23 @@
                     @enderror
                 </div>
 
-                <a href="#" class="forgot-password">Olvidé mi contraseña</a>
-
-                <button type="submit" class="btn-login">Iniciar Sesión</button>
-
-                <div class="divider">
-                    <span>o</span>
+                <div class="form-group">
+                    <label for="password_confirmation">Confirmar Contraseña</label>
+                    <div class="password-input">
+                        <input type="password" id="password_confirmation" name="password_confirmation"
+                            class="form-control @error('password_confirmation') is-invalid @enderror" required>
+                    </div>
+                    @error('password_confirmation')
+                        <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
+                    @enderror
                 </div>
 
-                <button type="button" class="btn-social btn-facebook">
-                    <span class="social-icon">f</span>
-                    Acceder con Facebook
-                </button>
+                <button type="submit" class="btn-login">Registrarse</button>
 
-                <button type="button" class="btn-social btn-google">
-                    <span class="social-icon">G</span>
-                    Acceder con Google
-                </button>
-
-                <button type="button" class="btn-social btn-apple">
-                    <span class="social-icon"></span>
-                    Acceder con Apple ID
-                </button>
             </form>
             <hr>
             <div class="signup-link">
-                ¿Necesitas una cuenta? <br><a href="{{ route('register') }}">Regístrate aquí</a>
+                ¿Ya tienes una cuenta? <br><a href="{{ route('login') }}">Inicia sesión</a>
             </div>
         </div>
     </div>
@@ -128,3 +142,4 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
 </html>
+

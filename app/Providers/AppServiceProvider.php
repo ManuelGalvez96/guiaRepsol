@@ -20,10 +20,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Configurar la ruta de vistas para apuntar a public/resources/views
-        $viewPath = public_path('resources/views');
-        
-        // Reemplazar la ruta de vistas por defecto
-        config(['view.paths' => [$viewPath]]);
+        //
     }
 }
