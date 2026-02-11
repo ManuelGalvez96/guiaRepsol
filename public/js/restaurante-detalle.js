@@ -1,5 +1,3 @@
-import '../css/restaurante-detalle.css';
-
 // Función para el horario desplegable
 function toggleHorario() {
     const detalle = document.getElementById('horarioDetalle');
@@ -16,33 +14,42 @@ function toggleHorario() {
     }
 }
 
-// Inicialización automática cuando se carga el DOM
-window.onload = function() {
-    // Inicializar todos los modales
-    const modales = document.querySelectorAll('.modal');
-    modales.forEach(function(modalElement) {
-        new bootstrap.Modal(modalElement);
-    });
-
-    // Asignar eventos a los botones de modal automáticamente
-    const botonesModal = document.querySelectorAll('[data-bs-toggle="modal"]');
-    botonesModal.forEach(function(boton) {
-        boton.onclick = function() {
-            const targetId = boton.getAttribute('data-bs-target');
-            const modalElement = document.querySelector(targetId);
-            if (modalElement) {
-                const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
-                modal.show();
-            }
-        };
-    });
-
-    // Asignar evento al toggle del horario si existe
+// Inicialización cuando se carga el DOM
+document.addEventListener('DOMContentLoaded', function() {
+    // Horario desplegable
     const horarioToggle = document.querySelector('.horario-toggle');
     if (horarioToggle) {
-        horarioToggle.onclick = toggleHorario;
+        horarioToggle.addEventListener('click', toggleHorario);
     }
 
-    console.log('Modales inicializados:', modales.length);
-};
+    // Verificar que Bootstrap esté cargado
+    if (typeof bootstrap !== 'undefined') {
+        console.log('Bootstrap cargado correctamente');
+        
+        // Inicializar todos los botones de modal manualmente
+        const botonesModal = document.querySelectorAll('[data-bs-toggle="modal"]');
+        console.log('Botones de modal encontrados:', botonesModal.length);
+        
+        botonesModal.forEach(function(boton) {
+            boton.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('data-bs-target');
+                console.log('Intentando abrir modal:', targetId);
+                const modalElement = document.querySelector(targetId);
+                
+                if (modalElement) {
+                    const modal = new bootstrap.Modal(modalElement);
+                    modal.show();
+                    console.log('Modal abierto:', targetId);
+                } else {
+                    console.error('Modal no encontrado:', targetId);
+                }
+            });
+        });
+    } else {
+        console.error('Bootstrap no está cargado');
+    }
+    
+    console.log('Página de restaurante cargada correctamente');
+});
 
