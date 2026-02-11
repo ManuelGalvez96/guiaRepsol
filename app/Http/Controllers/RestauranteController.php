@@ -62,7 +62,7 @@ class RestauranteController extends Controller
 
     public function show($id)
     {
-        $restaurante = Restaurante::with(['categoria', 'ubicacion', 'tiposComida', 'valoraciones.usuario', 'resenas.usuario'])
+        $restaurante = Restaurante::with(['categoria', 'ubicacion', 'tiposComida', 'valoraciones.usuario'])
             ->findOrFail($id);
 
         return view('restaurante-detalle', compact('restaurante'));

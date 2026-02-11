@@ -67,11 +67,6 @@ class Restaurante extends Model
         return $this->belongsToMany(TipoComida::class, 'restaurante_tipo_comida');
     }
 
-    public function resenas()
-    {
-        return $this->hasMany(Resena::class);
-    }
-
     public function gerente()
     {
         return $this->belongsTo(User::class, 'user_id');

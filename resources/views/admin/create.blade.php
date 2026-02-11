@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Editar Restaurante - Guía Repsol</title>
-    <link rel="stylesheet" href="{{ asset('resources/css/admin.css') }}">
+    <title>Crear Restaurante - Guía Repsol</title>
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -15,17 +15,16 @@
     </div>
 
     <div class="container">
-        <h1>Editar Restaurante: {{ $restaurante->nombre }}</h1>
+        <h1>Crear Nuevo Restaurante</h1>
 
-        <div id="alertContainer"></div>
-
-        <form id="editRestauranteForm" action="{{ route('admin.update', $restaurante) }}" method="POST" enctype="multipart/form-data">
+        <form id="createRestauranteForm" action="{{ route('admin.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            @method('PUT')
+            
+            <div id="alertContainer"></div>
 
             <div class="form-group">
                 <label for="nombre">Nombre del Restaurante *</label>
-                <input type="text" id="nombre" name="nombre" value="{{ old('nombre', $restaurante->nombre) }}" required>
+                <input type="text" id="nombre" name="nombre" value="{{ old('nombre') }}" required>
                 @error('nombre')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -33,7 +32,7 @@
 
             <div class="form-group">
                 <label for="descripcion">Descripción</label>
-                <textarea id="descripcion" name="descripcion">{{ old('descripcion', $restaurante->descripcion) }}</textarea>
+                <textarea id="descripcion" name="descripcion">{{ old('descripcion') }}</textarea>
                 @error('descripcion')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -41,10 +40,10 @@
 
             <div class="form-group">
                 <label for="categoria_id">Categoría *</label>
-                <select id="categoria_id" name="categoria_id" required>
+                <select id="categoria_id" name="categoria_id" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
                     <option value="">Seleccione una categoría</option>
                     @foreach($categorias as $categoria)
-                        <option value="{{ $categoria->id }}" {{ old('categoria_id', $restaurante->categoria_id) == $categoria->id ? 'selected' : '' }}>
+                        <option value="{{ $categoria->id }}" {{ old('categoria_id') == $categoria->id ? 'selected' : '' }}>
                             {{ $categoria->nombre }}
                         </option>
                     @endforeach
@@ -56,10 +55,10 @@
 
             <div class="form-group">
                 <label for="ubicacion_id">Ubicación *</label>
-                <select id="ubicacion_id" name="ubicacion_id" required>
+                <select id="ubicacion_id" name="ubicacion_id" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
                     <option value="">Seleccione una ubicación</option>
                     @foreach($ubicaciones as $ubicacion)
-                        <option value="{{ $ubicacion->id }}" {{ old('ubicacion_id', $restaurante->ubicacion_id) == $ubicacion->id ? 'selected' : '' }}>
+                        <option value="{{ $ubicacion->id }}" {{ old('ubicacion_id') == $ubicacion->id ? 'selected' : '' }}>
                             {{ $ubicacion->ciudad }} - {{ $ubicacion->provincia }} ({{ $ubicacion->comunidad_autonoma }})
                         </option>
                     @endforeach
@@ -71,7 +70,7 @@
 
             <div class="form-group">
                 <label for="direccion">Dirección *</label>
-                <input type="text" id="direccion" name="direccion" value="{{ old('direccion', $restaurante->direccion) }}" required>
+                <input type="text" id="direccion" name="direccion" value="{{ old('direccion') }}" required>
                 @error('direccion')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -86,8 +85,7 @@
                                 type="checkbox" 
                                 name="tipos_comida[]" 
                                 value="{{ $tipo->id }}"
-                                {{ (is_array(old('tipos_comida')) && in_array($tipo->id, old('tipos_comida'))) || 
-                                   (!old('tipos_comida') && $restaurante->tiposComida->contains($tipo->id)) ? 'checked' : '' }}
+                                {{ is_array(old('tipos_comida')) && in_array($tipo->id, old('tipos_comida')) ? 'checked' : '' }}
                                 style="cursor: pointer;"
                             >
                             <span style="font-size: 14px; font-weight: normal;">{{ $tipo->nombre }}</span>
@@ -101,7 +99,7 @@
 
             <div class="form-group">
                 <label for="telefono">Teléfono</label>
-                <input type="text" id="telefono" name="telefono" value="{{ old('telefono', $restaurante->telefono) }}">
+                <input type="text" id="telefono" name="telefono" value="{{ old('telefono') }}">
                 @error('telefono')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -109,7 +107,7 @@
 
             <div class="form-group">
                 <label for="email">Email *</label>
-                <input type="email" id="email" name="email" value="{{ old('email', $restaurante->email) }}" required>
+                <input type="email" id="email" name="email" value="{{ old('email') }}" required>
                 @error('email')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -117,7 +115,7 @@
 
             <div class="form-group">
                 <label for="web">Sitio Web</label>
-                <input type="url" id="web" name="web" value="{{ old('web', $restaurante->web) }}">
+                <input type="url" id="web" name="web" value="{{ old('web') }}">
                 @error('web')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -125,7 +123,7 @@
 
             <div class="form-group">
                 <label for="precio">Precio Promedio (€) *</label>
-                <input type="number" id="precio" name="precio" value="{{ old('precio', $restaurante->precio) }}" step="0.01" required>
+                <input type="number" id="precio" name="precio" value="{{ old('precio') }}" step="0.01" required>
                 @error('precio')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -133,7 +131,7 @@
 
             <div class="form-group">
                 <label for="soles">Soles Repsol (0-3)</label>
-                <input type="number" id="soles" name="soles" value="{{ old('soles', $restaurante->soles) }}" min="0" max="3">
+                <input type="number" id="soles" name="soles" value="{{ old('soles', 0) }}" min="0" max="3">
                 @error('soles')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -141,7 +139,7 @@
 
             <div class="form-group">
                 <label for="valoracion_promedio">Valoración (0-5)</label>
-                <input type="number" id="valoracion_promedio" name="valoracion_promedio" value="{{ old('valoracion_promedio', $restaurante->valoracion_promedio) }}" step="0.1" min="0" max="5">
+                <input type="number" id="valoracion_promedio" name="valoracion_promedio" value="{{ old('valoracion_promedio') }}" step="0.1" min="0" max="5">
                 @error('valoracion_promedio')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -149,13 +147,7 @@
 
             <div class="form-group">
                 <label for="imagen">Imagen del Restaurante</label>
-                @if($restaurante->imagenes->first())
-                    <div class="current-image">
-                        <p style="font-size: 12px; margin-bottom: 8px; color: #666;">Imagen actual:</p>
-                        <img src="{{ asset('storage/' . $restaurante->imagenes->first()->url) }}" alt="{{ $restaurante->nombre }}">
-                    </div>
-                @endif
-                <input type="file" id="imagen" name="imagen" accept="image/*" onchange="previewImage(event)" style="margin-top: 10px;">
+                <input type="file" id="imagen" name="imagen" accept="image/*" onchange="previewImage(event)">
                 @error('imagen')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -165,14 +157,14 @@
             </div>
 
             <div class="button-group">
-                <button type="submit" class="btn btn-primary" id="submitBtn">Actualizar Restaurante</button>
+                <button type="submit" class="btn btn-primary" id="submitBtn">Crear Restaurante</button>
                 <a href="{{ route('admin.index') }}" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>
 
     <script>
-        const form = document.getElementById('editRestauranteForm');
+        const form = document.getElementById('createRestauranteForm');
         const submitBtn = document.getElementById('submitBtn');
         const alertContainer = document.getElementById('alertContainer');
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -185,7 +177,6 @@
                 reader.onload = function(e) {
                     document.getElementById('preview').src = e.target.result;
                     document.getElementById('imagePreview').classList.add('active');
-                    document.getElementById('imagePreview').style.display = 'block';
                 }
                 reader.readAsDataURL(file);
             }
@@ -199,7 +190,7 @@
             alertContainer.innerHTML = '';
             
             // Mostrar estado de carga
-            submitBtn.textContent = 'Actualizando...';
+            submitBtn.textContent = 'Creando...';
             submitBtn.disabled = true;
             form.classList.add('loading');
             
@@ -225,14 +216,17 @@
             })
             .then(data => {
                 if (data.success) {
-                    // Mostrar mensaje de éxito con SweetAlert
+                    // Mostrar mensaje con SweetAlert
                     Swal.fire({
                         icon: 'success',
-                        title: '¡Actualizado!',
+                        title: '¡Éxito!',
                         text: data.message,
                         timer: 1500,
                         showConfirmButton: false
                     });
+                    
+                    // Limpiar formulario
+                    form.reset();
                     
                     // Redirigir después de 1.5 segundos
                     setTimeout(() => {
@@ -267,18 +261,19 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: error.message || 'Error al actualizar el restaurante'
+                        text: error.message || 'Error al crear el restaurante'
                     });
                 }
                 
                 // Restaurar botón
-                submitBtn.textContent = 'Actualizar Restaurante';
+                submitBtn.textContent = 'Crear Restaurante';
                 submitBtn.disabled = false;
                 form.classList.remove('loading');
             });
         });
 
-        // No necesitamos la función showAlert ya que usamos SweetAlert directamente
+     
     </script>
 </body>
 </html>
+
