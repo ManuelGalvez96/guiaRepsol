@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    @vite(['resources/js/login.js'])
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
     <title>Guía Repsol - Login</title>
 </head>
 
@@ -61,7 +61,6 @@
                     <div class="password-input">
                         <input type="password" id="password" name="password"
                             class="form-control @error('password') is-invalid @enderror" required>
-                        <button type="button" class="toggle-password">👁</button>
                     </div>
                     @error('password')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>

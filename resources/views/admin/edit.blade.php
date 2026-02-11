@@ -70,6 +70,21 @@
             </div>
 
             <div class="form-group">
+                <label for="user_id">Gerente del Restaurante *</label>
+                <select id="user_id" name="user_id" required class="form-select">
+                    <option value="">Seleccione un gerente</option>
+                    @foreach($gerentes as $gerente)
+                        <option value="{{ $gerente->id }}" {{ old('user_id', $restaurante->user_id) == $gerente->id ? 'selected' : '' }}>
+                            {{ $gerente->name }} ({{ $gerente->email }})
+                        </option>
+                    @endforeach
+                </select>
+                @error('user_id')
+                    <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
                 <label for="direccion">Dirección *</label>
                 <input type="text" id="direccion" name="direccion" value="{{ old('direccion', $restaurante->direccion) }}" required>
                 @error('direccion')
@@ -79,18 +94,18 @@
 
             <div class="form-group">
                 <label>Tipos de Comida</label>
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
+                <div class="tipos-comida-grid">
                     @foreach($tiposComida as $tipo)
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <label class="tipos-comida-label">
                             <input 
                                 type="checkbox" 
                                 name="tipos_comida[]" 
                                 value="{{ $tipo->id }}"
                                 {{ (is_array(old('tipos_comida')) && in_array($tipo->id, old('tipos_comida'))) || 
                                    (!old('tipos_comida') && $restaurante->tiposComida->contains($tipo->id)) ? 'checked' : '' }}
-                                style="cursor: pointer;"
+                                class="tipos-comida-checkbox"
                             >
-                            <span style="font-size: 14px; font-weight: normal;">{{ $tipo->nombre }}</span>
+                            <span class="tipos-comida-text">{{ $tipo->nombre }}</span>
                         </label>
                     @endforeach
                 </div>
@@ -151,11 +166,11 @@
                 <label for="imagen">Imagen del Restaurante</label>
                 @if($restaurante->imagenes->first())
                     <div class="current-image">
-                        <p style="font-size: 12px; margin-bottom: 8px; color: #666;">Imagen actual:</p>
+                        <p class="current-image-text">Imagen actual:</p>
                         <img src="{{ asset('storage/' . $restaurante->imagenes->first()->url) }}" alt="{{ $restaurante->nombre }}">
                     </div>
                 @endif
-                <input type="file" id="imagen" name="imagen" accept="image/*" onchange="previewImage(event)" style="margin-top: 10px;">
+                <input type="file" id="imagen" name="imagen" accept="image/*" onchange="previewImage(event)" class="mt-10">
                 @error('imagen')
                     <div class="error">{{ $message }}</div>
                 @enderror

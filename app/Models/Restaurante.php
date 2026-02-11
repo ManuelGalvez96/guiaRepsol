@@ -12,6 +12,7 @@ class Restaurante extends Model
     protected $fillable = [
         'nombre',
         'descripcion',
+        'user_id',
         'categoria_id',
         'ubicacion_id',
         'direccion',
@@ -21,12 +22,14 @@ class Restaurante extends Model
         'precio',
         'soles',
         'valoracion_promedio',
+        'patrocinados',
         'activo'
     ];
 
     protected $casts = [
         'precio' => 'decimal:2',
         'valoracion_promedio' => 'decimal:2',
+        'patrocinados' => 'boolean',
         'activo' => 'boolean',
     ];
 
@@ -68,7 +71,25 @@ class Restaurante extends Model
 
     public function gerente()
     {
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Usuarios que dieron like al restaurante.
+     */
+    public function usuariosLikes()
+    {
+        return $this->belongsToMany(User::class, 'tbl_likes_restaurantes')
+            ->withTimestamps();
+    }
+
+    /**
+     * Usuarios que guardaron el restaurante.
+     */
+    public function usuariosGuardados()
+    {
+        return $this->belongsToMany(User::class, 'tbl_guardar_restaurante')
+            ->withTimestamps();
     }
 }
 

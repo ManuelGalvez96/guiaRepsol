@@ -40,7 +40,7 @@
 
             <div class="form-group">
                 <label for="categoria_id">Categoría *</label>
-                <select id="categoria_id" name="categoria_id" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                <select id="categoria_id" name="categoria_id" required class="form-select">
                     <option value="">Seleccione una categoría</option>
                     @foreach($categorias as $categoria)
                         <option value="{{ $categoria->id }}" {{ old('categoria_id') == $categoria->id ? 'selected' : '' }}>
@@ -55,7 +55,7 @@
 
             <div class="form-group">
                 <label for="ubicacion_id">Ubicación *</label>
-                <select id="ubicacion_id" name="ubicacion_id" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                <select id="ubicacion_id" name="ubicacion_id" required class="form-select">
                     <option value="">Seleccione una ubicación</option>
                     @foreach($ubicaciones as $ubicacion)
                         <option value="{{ $ubicacion->id }}" {{ old('ubicacion_id') == $ubicacion->id ? 'selected' : '' }}>
@@ -64,6 +64,21 @@
                     @endforeach
                 </select>
                 @error('ubicacion_id')
+                    <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="user_id">Gerente del Restaurante *</label>
+                <select id="user_id" name="user_id" required class="form-select">
+                    <option value="">Seleccione un gerente</option>
+                    @foreach($gerentes as $gerente)
+                        <option value="{{ $gerente->id }}" {{ old('user_id') == $gerente->id ? 'selected' : '' }}>
+                            {{ $gerente->name }} ({{ $gerente->email }})
+                        </option>
+                    @endforeach
+                </select>
+                @error('user_id')
                     <div class="error">{{ $message }}</div>
                 @enderror
             </div>
@@ -78,17 +93,17 @@
 
             <div class="form-group">
                 <label>Tipos de Comida</label>
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
+                <div class="tipos-comida-grid">
                     @foreach($tiposComida as $tipo)
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <label class="tipos-comida-label">
                             <input 
                                 type="checkbox" 
                                 name="tipos_comida[]" 
                                 value="{{ $tipo->id }}"
                                 {{ is_array(old('tipos_comida')) && in_array($tipo->id, old('tipos_comida')) ? 'checked' : '' }}
-                                style="cursor: pointer;"
+                                class="tipos-comida-checkbox"
                             >
-                            <span style="font-size: 14px; font-weight: normal;">{{ $tipo->nombre }}</span>
+                            <span class="tipos-comida-text">{{ $tipo->nombre }}</span>
                         </label>
                     @endforeach
                 </div>

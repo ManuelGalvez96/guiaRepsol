@@ -14,9 +14,6 @@ class AuthUser extends Controller
      */
     public function showLogin()
     {
-        if (Auth::check()) {
-            return redirect('/');
-        }
         return view('log.login');
     }
 
@@ -34,6 +31,12 @@ class AuthUser extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            
+            // Redirigir según el rol del usuario
+            if (Auth::user()->rol === 'administrador') {
+                return redirect()->intended(route('admin.index'));
+            }
+            
             return redirect()->intended('/restaurantes');
         }
 
@@ -59,9 +62,6 @@ class AuthUser extends Controller
      */
     public function showRegister()
     {
-        if (Auth::check()) {
-            return redirect('/');
-        }
         return view('log.register');
     }
 
@@ -74,17 +74,19 @@ class AuthUser extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
+            'password_confirmation' => 'required|min:8|same:password',
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+            'email_verified_at' => now(),
+            'password' => Hash::make($validated['password_confirmation']),
         ]);
 
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect('/');
+        return redirect('/restaurantes');
     }
 }
