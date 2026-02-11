@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dar a conocer mi negocio | Guía Repsol</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/soletes.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/formulario.css') }}">
+    <link rel="stylesheet" href="{{ asset('resources/css/soletes.css') }}">
+    <link rel="stylesheet" href="{{ asset('resources/css/formulario.css') }}">
 </head>
 <body>
 

@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="{{ asset('css/restaurante-detalle.css') }}">
+    <link rel="stylesheet" href="{{ asset('resources/css/restaurante-detalle.css') }}">
     <title>{{ $restaurante->nombre }} - Guía Repsol</title>
 </head>
 <body>
@@ -67,6 +67,25 @@
             </div>
         </div>
     </div>
+
+    <!-- Mensajes de éxito o error -->
+    @if(session('success'))
+    <div class="container mt-3">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="container mt-3">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    @endif
 
     <!-- Contenido Principal -->
     <div class="main-detalle">
@@ -185,7 +204,7 @@
                         
                         <div class="contacto-item">
                             <div class="contacto-label">Horario</div>
-                            <div class="horario-toggle" onclick="toggleHorario()">
+                            <div class="horario-toggle">
                                 <div class="horario-status">Abierto <span class="horario-separator">·</span> Cierra a las 16:00h.</div>
                                 <i class="bi bi-chevron-down horario-icon"></i>
                             </div>
@@ -334,7 +353,7 @@
                                     $miValoracion = $restaurante->valoraciones->where('usuario_id', Auth::id())->first();
                                 @endphp
                                 @if(!$miValoracion)
-                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAgregarResena">
+                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAgregarResena">
                                         <i class="bi bi-plus-circle"></i> Añadir reseña
                                     </button>
                                 @endif
@@ -360,11 +379,11 @@
                                     </div>
                                     @auth
                                         @if($valoracion->usuario_id === Auth::id())
-                                            <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarResena{{ $valoracion->id }}">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarResena{{ $valoracion->id }}">
                                                 <i class="bi bi-pencil"></i> Editar
                                             </button>
                                         @elseif($restaurante->user_id === Auth::id())
-                                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalResponderResena{{ $valoracion->id }}">
+                                            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalResponderResena{{ $valoracion->id }}">
                                                 <i class="bi bi-reply"></i> Responder
                                             </button>
                                         @endif
@@ -510,21 +529,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-    <script>
-        function toggleHorario() {
-            const detalle = document.getElementById('horarioDetalle');
-            const icon = document.querySelector('.horario-icon');
-            
-            if (detalle.style.display === 'none') {
-                detalle.style.display = 'block';
-                icon.classList.remove('bi-chevron-down');
-                icon.classList.add('bi-chevron-up');
-            } else {
-                detalle.style.display = 'none';
-                icon.classList.remove('bi-chevron-up');
-                icon.classList.add('bi-chevron-down');
-            }
-        }
-    </script>
+    <script src="{{ asset('resources/js/restaurante-detalle.js') }}"></script>
 </body>
 </html>
