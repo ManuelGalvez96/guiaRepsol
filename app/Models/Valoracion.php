@@ -13,7 +13,12 @@ class Valoracion extends Model
         'usuario_id',
         'puntuacion',
         'comentario',
-        'respuesta_gerente'
+        'respuesta_gerente',
+        'fecha_respuesta'
+    ];
+
+    protected $casts = [
+        'fecha_respuesta' => 'datetime',
     ];
 
     public function restaurante()

@@ -1,55 +1,83 @@
 // Función para el horario desplegable
-function toggleHorario() {
-    const detalle = document.getElementById('horarioDetalle');
-    const icon = document.querySelector('.horario-icon');
-    
-    if (detalle.style.display === 'none') {
-        detalle.style.display = 'block';
-        icon.classList.remove('bi-chevron-down');
-        icon.classList.add('bi-chevron-up');
-    } else {
-        detalle.style.display = 'none';
-        icon.classList.remove('bi-chevron-up');
-        icon.classList.add('bi-chevron-down');
-    }
-}
-
-// Inicialización cuando se carga el DOM
 document.addEventListener('DOMContentLoaded', function() {
     // Horario desplegable
     const horarioToggle = document.querySelector('.horario-toggle');
     if (horarioToggle) {
-        horarioToggle.addEventListener('click', toggleHorario);
+        horarioToggle.addEventListener('click', function() {
+            const detalle = document.getElementById('horarioDetalle');
+            const icon = document.querySelector('.horario-icon');
+            
+            if (detalle.style.display === 'none') {
+                detalle.style.display = 'block';
+                icon.classList.remove('bi-chevron-down');
+                icon.classList.add('bi-chevron-up');
+            } else {
+                detalle.style.display = 'none';
+                icon.classList.remove('bi-chevron-up');
+                icon.classList.add('bi-chevron-down');
+            }
+        });
     }
 
-    // Verificar que Bootstrap esté cargado
-    if (typeof bootstrap !== 'undefined') {
-        console.log('Bootstrap cargado correctamente');
+    // Sistema de calificación con estrellas
+    const ratingContainers = document.querySelectorAll('.rating-stars');
+    
+    ratingContainers.forEach(container => {
+        const stars = container.querySelectorAll('.star');
+        const modalId = container.getAttribute('data-modal-id');
+        const puntuacionInput = modalId 
+            ? document.getElementById(`puntuacion-edit-${modalId}`)
+            : document.getElementById('puntuacion');
         
-        // Inicializar todos los botones de modal manualmente
-        const botonesModal = document.querySelectorAll('[data-bs-toggle="modal"]');
-        console.log('Botones de modal encontrados:', botonesModal.length);
+        let selectedRating = parseInt(container.getAttribute('data-current-rating')) || 0;
         
-        botonesModal.forEach(function(boton) {
-            boton.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('data-bs-target');
-                console.log('Intentando abrir modal:', targetId);
-                const modalElement = document.querySelector(targetId);
-                
-                if (modalElement) {
-                    const modal = new bootstrap.Modal(modalElement);
-                    modal.show();
-                    console.log('Modal abierto:', targetId);
-                } else {
-                    console.error('Modal no encontrado:', targetId);
+        // Inicializar con la puntuación actual si existe
+        if (selectedRating > 0) {
+            highlightStars(stars, selectedRating);
+        }
+
+        stars.forEach(star => {
+            // Efecto hover
+            star.addEventListener('mouseenter', function() {
+                const value = parseInt(this.getAttribute('data-value'));
+                highlightStars(stars, value);
+            });
+
+            // Al hacer clic
+            star.addEventListener('click', function() {
+                selectedRating = parseInt(this.getAttribute('data-value'));
+                if (puntuacionInput) {
+                    puntuacionInput.value = selectedRating;
                 }
+                highlightStars(stars, selectedRating);
             });
         });
-    } else {
-        console.error('Bootstrap no está cargado');
+
+        // Restaurar selección al salir del hover
+        container.addEventListener('mouseleave', function() {
+            if (selectedRating > 0) {
+                highlightStars(stars, selectedRating);
+            } else {
+                clearStars(stars);
+            }
+        });
+    });
+
+    function highlightStars(stars, count) {
+        stars.forEach(star => {
+            const value = parseInt(star.getAttribute('data-value'));
+            if (value <= count) {
+                star.classList.add('active');
+            } else {
+                star.classList.remove('active');
+            }
+        });
     }
-    
-    console.log('Página de restaurante cargada correctamente');
+
+    function clearStars(stars) {
+        stars.forEach(star => {
+            star.classList.remove('active');
+        });
+    }
 });
 
