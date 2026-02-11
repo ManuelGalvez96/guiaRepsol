@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthUser extends Controller
 {
+    public function preLogin()
+    {
+        return view('log.pre-login');
+    }
+
     /**
      * Mostrar el formulario de login
      */

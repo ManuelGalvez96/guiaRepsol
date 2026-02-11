@@ -12,7 +12,8 @@ class Valoracion extends Model
         'restaurante_id',
         'usuario_id',
         'puntuacion',
-        'comentario'
+        'comentario',
+        'respuesta_gerente'
     ];
 
     public function restaurante()

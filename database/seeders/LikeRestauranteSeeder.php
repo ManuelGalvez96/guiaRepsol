@@ -19,6 +19,9 @@ class LikeRestauranteSeeder extends Seeder
     {
         $usuarios = User::where('rol', 'usuario')->pluck('id')->all();
         $restaurantes = Restaurante::pluck('id')->all();
+        if (count($usuarios) < 8 || count($restaurantes) < 15) {
+            return;
+        }
 
         // Usuario 1
         LikeRestaurante::create([
@@ -149,7 +152,7 @@ class LikeRestauranteSeeder extends Seeder
         ]);
 
         // Additional likes to reach 50+
-        if (count($usuarios) > 8) {
+        if (count($usuarios) > 8 && count($restaurantes) > 35) {
             LikeRestaurante::create([
                 'user_id' => $usuarios[8],
                 'restaurante_id' => $restaurantes[15],
@@ -242,7 +245,7 @@ class LikeRestauranteSeeder extends Seeder
                 'restaurante_id' => $restaurantes[35],
             ]);
 
-            if (count($usuarios) > 16) {
+            if (count($usuarios) > 16 && count($restaurantes) > 45) {
                 LikeRestaurante::create([
                     'user_id' => $usuarios[16],
                     'restaurante_id' => $restaurantes[36],
