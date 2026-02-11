@@ -450,6 +450,48 @@ textarea {
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
+/* Galería de imágenes adicionales */
+.imagenes-adicionales-gallery {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 10px 0;
+    margin-top: 10px;
+}
+
+.imagenes-adicionales-gallery img {
+    height: 120px;
+    width: auto;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+}
+
+.imagenes-adicionales-gallery img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.imagenes-adicionales-gallery::-webkit-scrollbar {
+    height: 8px;
+}
+
+.imagenes-adicionales-gallery::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.imagenes-adicionales-gallery::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.imagenes-adicionales-gallery::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
 /* Scrollbar personalizado para el modal */
 .modal-content::-webkit-scrollbar {
     width: 8px;

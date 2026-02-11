@@ -124,8 +124,13 @@
             
             <div class="modal-body">
                 <div class="modal-section">
+                    <h3>Imagen Principal</h3>
                     <div class="modal-image">
                         <img id="modalImagen" src="" alt="Imagen del restaurante">
+                    </div>
+                    <div id="imagenesAdicionalesContainer" style="display: none;">
+                        <h3 style="margin-top: 20px;">Imágenes Adicionales</h3>
+                        <div id="imagenesAdicionales" class="imagenes-adicionales-gallery"></div>
                     </div>
                 </div>
 
@@ -164,12 +169,16 @@
         </div>
     </div>
 
-    <!-- Datos de las solicitudes para JavaScript -->
     <script>
         window.solicitudesData = {
             @foreach($solicitudes as $solicitud)
             {{ $solicitud->id }}: {
                 imagen: "{{ $solicitud->imagenes->first() ? asset('storage/' . $solicitud->imagenes->first()->url) : asset('images/placeholder.jpg') }}",
+                imagenes_adicionales: [
+                    @foreach($solicitud->imagenes->skip(1) as $imagen)
+                        "{{ asset('storage/' . $imagen->url) }}"{{ !$loop->last ? ',' : '' }}
+                    @endforeach
+                ],
                 nombre: "{{ $solicitud->nombre }}",
                 categoria: "{{ $solicitud->categoria->nombre ?? '-' }}",
                 descripcion: "{{ $solicitud->descripcion ?? 'Sin descripción' }}",

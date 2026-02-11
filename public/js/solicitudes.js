@@ -13,6 +13,28 @@ function verDetalles(id) {
     
     // Rellenar el modal con los datos
     document.getElementById('modalImagen').src = data.imagen;
+    
+    // Mostrar imágenes adicionales si existen
+    const imagenesAdicionalesContainer = document.getElementById('imagenesAdicionalesContainer');
+    const imagenesAdicionalesDiv = document.getElementById('imagenesAdicionales');
+    
+    if (data.imagenes_adicionales && data.imagenes_adicionales.length > 0) {
+        imagenesAdicionalesDiv.innerHTML = '';
+        data.imagenes_adicionales.forEach(function(url) {
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = 'Imagen adicional';
+            img.onclick = function() {
+                document.getElementById('modalImagen').src = url;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+            imagenesAdicionalesDiv.appendChild(img);
+        });
+        imagenesAdicionalesContainer.style.display = 'block';
+    } else {
+        imagenesAdicionalesContainer.style.display = 'none';
+    }
+    
     document.getElementById('modalNombre').textContent = data.nombre;
     document.getElementById('modalCategoria').textContent = data.categoria;
     document.getElementById('modalDescripcion').textContent = data.descripcion;

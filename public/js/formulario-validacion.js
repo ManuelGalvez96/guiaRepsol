@@ -46,8 +46,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Validar precio
         const precio = document.querySelector('input[name="precio"]');
-        if (!precio.value || parseFloat(precio.value) <= 0) {
+        const precioValor = parseFloat(precio.value);
+        if (!precio.value || precioValor <= 0) {
             errores.push('El precio debe ser mayor a 0');
+            precio.style.borderColor = 'red';
+        } else if (precioValor > 9999.99) {
+            errores.push('El precio no puede superar los 9999.99€');
             precio.style.borderColor = 'red';
         } else {
             precio.style.borderColor = '';

@@ -77,8 +77,8 @@
 
                 <div class="form-group">
                     <label>Precio promedio <span class="required">*</span></label>
-                    <input type="number" name="precio" required placeholder="Ej: 25.00" step="0.01" min="0" value="{{ old('precio') }}">
-                    <small>Precio promedio por persona en euros</small>
+                    <input type="number" name="precio" required placeholder="Ej: 25.00" step="0.01" min="0.01" max="9999.99" value="{{ old('precio') }}">
+                    <small>Precio promedio por persona en euros (máximo 9999.99€)</small>
                 </div>
             </div>
 
