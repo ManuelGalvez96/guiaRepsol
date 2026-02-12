@@ -82,12 +82,7 @@ class AuthUser extends Controller
             'name' => 'required|string|max:255',
             'apellidos' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-<<<<<<< HEAD
-            'password' => 'required|min:8|confirmed',
-            'password_confirmation' => 'required|min:8|same:password',
-=======
             'password' => 'required|min:6|confirmed',
->>>>>>> 51c406c5331b52020739413100023956e4fd86ee
         ]);
 
         $user = User::create([
@@ -95,21 +90,13 @@ class AuthUser extends Controller
             'apellidos' => $validated['apellidos'],
             'email' => $validated['email'],
             'email_verified_at' => now(),
-<<<<<<< HEAD
-            'password' => Hash::make($validated['password_confirmation']),
-=======
             'rol' => 'usuario',
             'password' => Hash::make($validated['password']),
->>>>>>> 51c406c5331b52020739413100023956e4fd86ee
         ]);
 
         Auth::login($user);
         $request->session()->regenerate();
 
-<<<<<<< HEAD
-        return redirect('/restaurantes');
-=======
         return redirect()->route('restaurantes');
->>>>>>> 51c406c5331b52020739413100023956e4fd86ee
     }
 }
