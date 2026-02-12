@@ -25,7 +25,7 @@ public/images/
 <img src="/images/logos/repsol.png" alt="Logo Repsol">
 ```
 
-### En CSS (archivo public/css/soletes.css)
+### En CSS (archivo public/resources/css/soletes.css)
 ```css
 .card-image {
     background-image: url('/images/hero/banner.jpg');

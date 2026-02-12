@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/register.css') }}">
     <title>Guía Repsol - Registro</title>
 </head>
@@ -14,7 +13,7 @@
 <body>
     <div class="login-header">
         <img src="{{ asset('img/Guia_Repsol.png') }}" class="logo" alt="Guía Repsol">
-        <a href="{{ route('home') }}" class="btn-close-header">✕</a>
+        <a href="{{ url('/') }}" class="btn-close-header">✕</a>
     </div>
 
     <div class="login-container">
@@ -22,7 +21,7 @@
             <h2 class="login-title">Crea tu cuenta Repsol</h2>
 
             <!-- Formulario -->
-            <form class="login-form" method="POST" action="{{ route('login.post') }}">
+            <form class="login-form" method="POST" action="{{ route('register.post') }}">
                 @csrf
                 <button type="button" class="btn-social btn-facebook">
                     <span class="social-icon">f</span>
@@ -52,10 +51,10 @@
                     </div>
                 @endif
                 <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" id="nombre" name="nombre"
-                        class="form-control @error('nombre') is-invalid @enderror" value="{{ old('nombre') }}" required>
-                    @error('nombre')
+                    <label for="name">Nombre</label>
+                    <input type="text" id="name" name="name"
+                        class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
+                    @error('name')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
                     @enderror
                 </div>
@@ -63,8 +62,7 @@
                 <div class="form-group">
                     <label for="apellidos">Apellidos</label>
                     <input type="text" id="apellidos" name="apellidos"
-                        class="form-control @error('apellidos') is-invalid @enderror" value="{{ old('apellidos') }}"
-                        required>
+                        class="form-control @error('apellidos') is-invalid @enderror" value="{{ old('apellidos') }}" required>
                     @error('apellidos')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
                     @enderror
@@ -142,3 +140,4 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
 </html>
+

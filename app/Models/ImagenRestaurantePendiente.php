@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ImagenRestaurante extends Model
+class ImagenRestaurantePendiente extends Model
 {
-    protected $table = 'imagenes_restaurante';
+    protected $table = 'imagenes_restaurante_pendiente';
 
     protected $fillable = [
-        'restaurante_id',
+        'restaurante_pendiente_id',
         'url',
         'alt',
         'principal',
@@ -21,8 +21,8 @@ class ImagenRestaurante extends Model
         'principal' => 'boolean',
     ];
 
-    public function restaurante(): BelongsTo
+    public function restaurantePendiente(): BelongsTo
     {
-        return $this->belongsTo(Restaurante::class);
+        return $this->belongsTo(RestaurantePendiente::class, 'restaurante_pendiente_id');
     }
 }

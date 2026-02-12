@@ -189,3 +189,4 @@
     @vite(['resources/js/admin_js/admin_create.js'])
 </body>
 </html>
+

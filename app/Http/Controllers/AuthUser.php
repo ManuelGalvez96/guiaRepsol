@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthUser extends Controller
 {
+    public function preLogin()
+    {
+        return view('log.pre-login');
+    }
+
     /**
      * Mostrar el formulario de login
      */
@@ -33,11 +38,14 @@ class AuthUser extends Controller
             $request->session()->regenerate();
             
             // Redirigir según el rol del usuario
-            if (Auth::user()->rol === 'administrador') {
-                return redirect()->intended(route('admin.index'));
-            }
+            $user = Auth::user();
             
-            return redirect()->intended('/restaurantes');
+            return match($user->rol) {
+                'administrador' => redirect()->route('admin.index'),
+                'gerente' => redirect()->route('restaurantes'),
+                'usuario' => redirect()->route('restaurantes'),
+                default => redirect()->route('restaurantes'),
+            };
         }
 
         return back()->withErrors([
@@ -72,21 +80,36 @@ class AuthUser extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'apellidos' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
+<<<<<<< HEAD
             'password' => 'required|min:8|confirmed',
             'password_confirmation' => 'required|min:8|same:password',
+=======
+            'password' => 'required|min:6|confirmed',
+>>>>>>> 51c406c5331b52020739413100023956e4fd86ee
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
+            'apellidos' => $validated['apellidos'],
             'email' => $validated['email'],
             'email_verified_at' => now(),
+<<<<<<< HEAD
             'password' => Hash::make($validated['password_confirmation']),
+=======
+            'rol' => 'usuario',
+            'password' => Hash::make($validated['password']),
+>>>>>>> 51c406c5331b52020739413100023956e4fd86ee
         ]);
 
         Auth::login($user);
         $request->session()->regenerate();
 
+<<<<<<< HEAD
         return redirect('/restaurantes');
+=======
+        return redirect()->route('restaurantes');
+>>>>>>> 51c406c5331b52020739413100023956e4fd86ee
     }
 }

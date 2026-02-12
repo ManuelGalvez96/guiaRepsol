@@ -197,3 +197,4 @@
     @vite(['resources/js/admin_js/admin_edit.js'])
 </body>
 </html>
+

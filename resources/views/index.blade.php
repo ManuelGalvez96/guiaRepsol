@@ -15,16 +15,16 @@
 <div class="topbar">
   <div class="topbar-inner">
     <div class="top-left">
-      <div class="burger">☰</div>
-      <div class="logo">guía repsol</div>
+      <div class="burger" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">☰</div>
+      <div class="logo" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">guía repsol</div>
       <nav class="nav">
-        <a href="#">Comer</a>
-        <a href="#">Viajar</a>
-        <a href="#">Soles</a>
-        <a href="#" class="active">Soletes</a>
+        <a href="{{ route('pre-login') }}">Comer</a>
+        <a href="{{ route('pre-login') }}">Viajar</a>
+        <a href="{{ route('pre-login') }}">Soles</a>
+        <a href="{{ route('pre-login') }}" class="active">Soletes</a>
       </nav>
     </div>
-    <a href="{{ route('login') }}" class="btn-login">Iniciar sesión</a>
+    <div class="top-right" onclick="window.location.href='{{ route('pre-login') }}'" style="cursor: pointer;">🔍 Acceso</div>
   </div>
 </div>
 
@@ -34,12 +34,12 @@
 <!-- SUBNAV -->
 <section class="subnav">
   <div class="subnav-inner">
-    <div>Soletes</div>
-    <div>Todos los Soletes</div>
-    <div>Pet friendly</div>
-    <div>Con solera</div>
-    <div>De carretera</div>
-    <div>Donde comen los cocineros</div>
+    <div onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">Soletes</div>
+    <div onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">Todos los Soletes</div>
+    <div onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">Pet friendly</div>
+    <div onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">Con solera</div>
+    <div onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">De carretera</div>
+    <div onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">Donde comen los cocineros</div>
   </div>
 </section>
 
@@ -54,7 +54,7 @@
       esfuerzo y conocimiento que dedican.
     </p>
     <div class="hero-author">Texto: Ana Caro</div>
-    <a href="#" class="hero-btn">📖 Saber más</a>
+    <a href="{{ route('pre-login') }}" class="hero-btn">📖 Saber más</a>
   </div>
 
   <div class="hero-img">
@@ -72,6 +72,7 @@
 
     <div class="momentos-grid">
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="momento-card">
         <div class="momento-img">
           <img src="{{ asset('images/imagen2.png') }}">
@@ -83,7 +84,9 @@
           </div>
         </div>
       </article>
+      </a>
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="momento-card">
         <div class="momento-img">
           <img src="{{ asset('images/imagen3.png') }}">
@@ -95,7 +98,9 @@
           </div>
         </div>
       </article>
+      </a>
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="momento-card">
         <div class="momento-img">
           <img src="{{ asset('images/imagen4.png') }}">
@@ -107,6 +112,7 @@
           </div>
         </div>
       </article>
+      </a>
 
     </div>
   </div>
@@ -129,43 +135,43 @@
 
     <div class="categorias">
 
-      <div class="categoria">
+      <div class="categoria" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">
         <div class="icono">☕</div>
         <h3>Cafeterías</h3>
         <p>Establecimientos con encanto, donde disfrutar de un café en un ambiente único y agradable.</p>
       </div>
 
-      <div class="categoria">
+      <div class="categoria" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">
         <div class="icono">🍽️</div>
         <h3>Restaurantes</h3>
         <p>Rincones gastronómicos donde disfrutar de sabores auténticos y precios accesibles.</p>
       </div>
 
-      <div class="categoria">
+      <div class="categoria" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">
         <div class="icono">☀️</div>
         <h3>Terrazas y chiringuitos</h3>
         <p>Lugares perfectos para disfrutar al aire libre y pasar momentos inolvidables bajo el sol.</p>
       </div>
 
-      <div class="categoria">
+      <div class="categoria" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">
         <div class="icono">🍷</div>
         <h3>Vinotecas</h3>
         <p>Aquí los vinos, sidras o cervezas son protagonistas, acompañados de platos apetecibles.</p>
       </div>
 
-      <div class="categoria">
+      <div class="categoria" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">
         <div class="icono">🍦</div>
         <h3>Heladerías</h3>
         <p>Ese pequeño kiosko donde hacen el mejor granizado, helado u horchata que recuerdas.</p>
       </div>
 
-      <div class="categoria">
+      <div class="categoria" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">
         <div class="icono">🍢</div>
         <h3>Bares</h3>
         <p>Tabernas, cantinas y barras de mercado, clásicas o innovadoras, a las que siempre vuelves.</p>
       </div>
 
-      <div class="categoria">
+      <div class="categoria" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">
         <div class="icono">🍔</div>
         <h3>Fast Good</h3>
         <p>A donde vas cuando quieres tacos, arepas o un sándwich bien hecho y sin sorpresas.</p>
@@ -180,20 +186,21 @@
     <!-- CABECERA -->
     <div class="cercanos-header">
       <h2>Tus Soletes cercanos</h2>
-      <button class="location-btn">📍 Activar ubicación</button>
+      <button class="location-btn" onclick="window.location.href='{{ route('login') }}'">📍 Activar ubicación</button>
     </div>
 
     <!-- FILTROS -->
     <div class="cercanos-filters">
-      <button class="filter-pill">🍽 Tipo de local ▾</button>
-      <button class="filter-pill">€ Precio ▾</button>
-      <button class="filter-pill">🍴 Comida ▾</button>
-      <button class="filter-pill active">1 Solete ▾</button>
+      <button class="filter-pill" onclick="window.location.href='{{ route('login') }}'">🍽 Tipo de local ▾</button>
+      <button class="filter-pill" onclick="window.location.href='{{ route('login') }}'">€ Precio ▾</button>
+      <button class="filter-pill" onclick="window.location.href='{{ route('login') }}'">🍴 Comida ▾</button>
+      <button class="filter-pill active" onclick="window.location.href='{{ route('login') }}'">1 Solete ▾</button>
     </div>
 
     <!-- CARDS -->
     <div class="cercanos-cards">
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="local-card">
         <img src="{{ asset('images/imagen5.png') }}">
         <div class="local-info">
@@ -202,7 +209,9 @@
           <span class="solete">● Solete · €</span>
         </div>
       </article>
+      </a>
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="local-card">
         <img src="{{ asset('images/imagen6.png') }}">
         <div class="local-info">
@@ -211,7 +220,9 @@
           <span class="solete">● Solete · €</span>
         </div>
       </article>
+      </a>
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="local-card">
         <img src="{{ asset('images/imagen7.png') }}">
         <div class="local-info">
@@ -220,7 +231,9 @@
           <span class="solete">● Solete · €</span>
         </div>
       </article>
+      </a>
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="local-card">
         <img src="{{ asset('images/imagen8.png') }}">
         <div class="local-info">
@@ -229,21 +242,22 @@
           <span class="solete">● Solete · €</span>
         </div>
       </article>
+      </a>
 
     </div>
 
     <!-- INDICADORES -->
     <div class="cercanos-dots">
-      <span class="dot active"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
+      <span class="dot active" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;"></span>
+      <span class="dot" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;"></span>
+      <span class="dot" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;"></span>
+      <span class="dot" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;"></span>
+      <span class="dot" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;"></span>
     </div>
 
     <!-- CTA -->
     <div class="cercanos-cta">
-      <button class="ver-mas">Ver más</button>
+      <button class="ver-mas" onclick="window.location.href='{{ route('login') }}'">Ver más</button>
     </div>
 
   </div>
@@ -254,6 +268,7 @@
     <h2 class="ultimo-title">Lo último sobre Soletes</h2>
 
     <!-- FEATURED -->
+    <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
     <article class="ultimo-featured">
       <div class="featured-img">
         <img src="{{ asset('images/imagen9.png') }}">
@@ -262,13 +277,14 @@
       <div class="featured-content">
         <span class="featured-tag">ψ Reportaje gastronómico</span>
         <h3>El café de especialidad aterriza en el sur de Madrid</h3>
-        <p class="featured-place">Cafetería ‘Linda’ (Valdemoro, Madrid)</p>
+        <p class="featured-place">Cafetería 'Linda' (Valdemoro, Madrid)</p>
 
         <div class="featured-actions">
           ♡ ⤴ 🔖
         </div>
       </div>
     </article>
+    </a>
 
     <!-- GRID -->
     <div class="ultimo-grid">
@@ -317,7 +333,7 @@
 
     <!-- CTA -->
     <div class="ultimo-cta">
-      <button>Ver todos los reportajes</button>
+      <button onclick="window.location.href='{{ route('login') }}'">Ver todos los reportajes</button>
     </div>
 
   </div>
@@ -329,7 +345,7 @@
     <div class="app-content">
       <h2>Guía Repsol en tu bolsillo</h2>
       <p>Explora, reserva y disfruta. ¡Descarga la app!</p>
-      <a href="#" class="app-btn">Descargar app</a>
+      <a href="{{ route('pre-login') }}" class="app-btn">Descargar app</a>
     </div>
 
     <!-- MOCKUP -->
@@ -338,17 +354,17 @@
         <img src="https://picsum.photos/300/600?app" alt="App Guía Repsol">
 
         <!-- CARDS FLOTANTES -->
-        <div class="float-card left">
+        <div class="float-card left" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">
           <span>🍳</span>
           <p>¿Unas tostadas mañaneras?</p>
         </div>
 
-        <div class="float-card center">
+        <div class="float-card center" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">
           <span>📍</span>
           <p>Haz una reserva<br>en el sitio</p>
         </div>
 
-        <div class="float-card right">
+        <div class="float-card right" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">
           <span>📅</span>
           <p>Próx. reserva<br>14/03/24</p>
         </div>
@@ -367,25 +383,33 @@
 
     <div class="destacado-grid">
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="destacado-item">
         <img src="{{ asset('images/imagen14.png') }}">
         <h3>Cafeterías</h3>
       </article>
+      </a>
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="destacado-item">
         <img src="{{ asset('images/imagen15.png') }}">
         <h3>Bares</h3>
       </article>
+      </a>
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="destacado-item">
         <img src="{{ asset('images/imagen16.png') }}">
         <h3>Fast Good</h3>
       </article>
+      </a>
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="destacado-item">
         <img src="{{ asset('images/imagen17.png') }}">
         <h3>Vinotecas</h3>
       </article>
+      </a>
 
     </div>
 
@@ -406,6 +430,7 @@
 
     <div class="frio-grid">
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="frio-card">
         <div class="frio-img">
           <img src="{{ asset('images/imagen18.png') }}">
@@ -417,7 +442,9 @@
           </div>
         </div>
       </article>
+      </a>
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="frio-card">
         <div class="frio-img">
           <img src="{{ asset('images/imagen19.png') }}">
@@ -429,7 +456,9 @@
           </div>
         </div>
       </article>
+      </a>
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="frio-card">
         <div class="frio-img">
           <img src="{{ asset('images/imagen20.png') }}">
@@ -441,6 +470,7 @@
           </div>
         </div>
       </article>
+      </a>
 
     </div>
 
@@ -456,35 +486,45 @@
 
     <div class="comunidades-grid">
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="comunidad">
         <img src="{{ asset('images/imagen22.png') }}">
         <h3>Madrid</h3>
       </article>
+      </a>
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="comunidad">
         <img src="{{ asset('images/imagen23.png') }}">
         <h3>Catalunya</h3>
       </article>
+      </a>
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="comunidad">
         <img src="{{ asset('images/imagen24.png') }}">
         <h3>Comunitat Valenciana</h3>
       </article>
+      </a>
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="comunidad">
         <img src="{{ asset('images/imagen25.png') }}">
         <h3>Extremadura</h3>
       </article>
+      </a>
 
+      <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="comunidad">
         <img src="{{ asset('images/imagen26.png') }}">
         <h3>Euskadi</h3>
       </article>
+      </a>
 
     </div>
 
     <div class="comunidades-cta">
-      <a href="#" class="btn-comunidades">Ver todos los destinos</a>
+      <a href="{{ route('pre-login') }}" class="btn-comunidades">Ver todos los destinos</a>
     </div>
 
   </div>
@@ -500,8 +540,8 @@
         <p>Suscríbete a la newsletter de los amantes del viaje y de la buena comida</p>
       </div>
 
-      <form class="newsletter-form">
-        <input type="email" placeholder="Email donde recibir las recomendaciones">
+      <form class="newsletter-form" onsubmit="event.preventDefault(); window.location.href='{{ route('login') }}';">
+        <input type="email" placeholder="Email donde recibir las recomendaciones" onclick="window.location.href='{{ route('login') }}'">
         <button type="submit">Suscribirme</button>
       </form>
 
@@ -512,7 +552,7 @@
   <div class="footer-main">
     <div class="footer-main-inner">
 
-      <div class="footer-brand">
+      <div class="footer-brand" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">
         <span>guía repsol</span>
       </div>
 
@@ -520,23 +560,23 @@
 
         <div class="footer-col">
           <h4>Guía Repsol</h4>
-          <a href="#">Comer</a>
-          <a href="#">Viajar</a>
-          <a href="#">Dormir</a>
+          <a href="{{ route('pre-login') }}">Comer</a>
+          <a href="{{ route('pre-login') }}">Viajar</a>
+          <a href="{{ route('pre-login') }}">Dormir</a>
         </div>
 
         <div class="footer-col">
           <h4>Enlaces</h4>
-          <a href="#">Contacto</a>
-          <a href="#">Sala de prensa</a>
-          <a href="#">Canal de ética</a>
+          <a href="{{ route('pre-login') }}">Contacto</a>
+          <a href="{{ route('pre-login') }}">Sala de prensa</a>
+          <a href="{{ route('pre-login') }}">Canal de ética</a>
         </div>
 
         <div class="footer-col">
           <h4>Descubre</h4>
-          <a href="#">App Guía Repsol</a>
-          <a href="#">Cromos Guía Repsol</a>
-          <a href="#">Mercado Vallehermoso</a>
+          <a href="{{ route('pre-login') }}">App Guía Repsol</a>
+          <a href="{{ route('pre-login') }}">Cromos Guía Repsol</a>
+          <a href="{{ route('pre-login') }}">Mercado Vallehermoso</a>
         </div>
 
       </div>
@@ -549,20 +589,20 @@
     <div class="footer-bottom-inner">
 
       <div class="footer-legal">
-        <a href="#">Política de privacidad</a>
+        <a href="{{ route('pre-login') }}">Política de privacidad</a>
         <span>|</span>
-        <a href="#">Política de cookies</a>
+        <a href="{{ route('pre-login') }}">Política de cookies</a>
         <span>|</span>
-        <a href="#">Nota legal</a>
+        <a href="{{ route('pre-login') }}">Nota legal</a>
         <span>|</span>
-        <a href="#">Condiciones del servicio</a>
+        <a href="{{ route('pre-login') }}">Condiciones del servicio</a>
       </div>
 
       <div class="footer-social">
-        <span>f</span>
-        <span>x</span>
-        <span>◎</span>
-        <span>♪</span>
+        <span onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">f</span>
+        <span onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">x</span>
+        <span onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">◎</span>
+        <span onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">♪</span>
       </div>
 
     </div>
@@ -575,4 +615,5 @@
 </footer>
 </body>
 </html>
+
 

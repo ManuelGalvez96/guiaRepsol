@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{{ asset('css/restaurante-detalle.css') }}">
     <title>{{ $restaurante->nombre }} - Guía Repsol</title>
@@ -68,6 +67,25 @@
         </div>
     </div>
 
+    <!-- Mensajes de éxito o error -->
+    @if(session('success'))
+    <div class="container mt-3">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="container mt-3">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    @endif
+
     <!-- Contenido Principal -->
     <div class="main-detalle">
         <div class="container">
@@ -121,12 +139,12 @@
                     @endif
 
                     <!-- Reseñas -->
-                    @if($restaurante->resenas->count() > 0)
+                    @if($restaurante->valoraciones->count() > 0)
                     <div class="section-box">
-                        @foreach($restaurante->resenas->take(2) as $resena)
+                        @foreach($restaurante->valoraciones->take(2) as $valoracion)
                         <div class="resena-item">
                             <div class="resena-icon">"</div>
-                            <p class="resena-text">{{ $resena->comentario }}</p>
+                            <p class="resena-text">{{ $valoracion->comentario }}</p>
                             <div class="resena-buttons">
                                 <button class="btn-guardar-sm">
                                     <i class="bi bi-bookmark"></i> Guardar
@@ -185,7 +203,7 @@
                         
                         <div class="contacto-item">
                             <div class="contacto-label">Horario</div>
-                            <div class="horario-toggle" onclick="toggleHorario()">
+                            <div class="horario-toggle">
                                 <div class="horario-status">Abierto <span class="horario-separator">·</span> Cierra a las 16:00h.</div>
                                 <i class="bi bi-chevron-down horario-icon"></i>
                             </div>
@@ -327,14 +345,26 @@
 
                     <!-- Reportajes Relacionados -->
                     <div class="section-box">
-                        <h3 class="section-title">Valoraciones de usuarios</h3>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="section-title mb-0">Valoraciones de usuarios</h3>
+                            @auth
+                                @php
+                                    $miValoracion = $restaurante->valoraciones->where('usuario_id', Auth::id())->first();
+                                @endphp
+                                @if(!$miValoracion)
+                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAgregarValoracion">
+                                        <i class="bi bi-plus-circle"></i> Añadir reseña
+                                    </button>
+                                @endif
+                            @endauth
+                        </div>
                         
                         @forelse($restaurante->valoraciones as $valoracion)
                         <div class="reportaje-item">
                             <div class="reportaje-content" style="width: 100%;">
                                 <div class="d-flex align-items-center mb-2">
                                     <i class="bi bi-person-circle" style="font-size: 40px; color: #00a3e0; margin-right: 15px;"></i>
-                                    <div>
+                                    <div style="flex-grow: 1;">
                                         <h4 class="reportaje-titulo mb-0">{{ $valoracion->usuario->name }}</h4>
                                         <div class="mt-1">
                                             @for($i = 0; $i < $valoracion->puntuacion; $i++)
@@ -346,38 +376,240 @@
                                             <span style="font-size: 12px; color: #666; margin-left: 5px;">{{ $valoracion->puntuacion }}/5</span>
                                         </div>
                                     </div>
+                                    @auth
+                                        @if($valoracion->usuario_id === Auth::id())
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarValoracion{{ $valoracion->id }}">
+                                                <i class="bi bi-pencil"></i> Editar
+                                            </button>
+                                        @elseif($restaurante->user_id === Auth::id())
+                                            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalResponderValoracion{{ $valoracion->id }}">
+                                                <i class="bi bi-reply"></i> Responder
+                                            </button>
+                                        @endif
+                                    @endauth
                                 </div>
                                 <p class="reportaje-subtitulo mb-0">{{ $valoracion->comentario }}</p>
                                 <p style="font-size: 11px; color: #999; margin-top: 8px;">{{ $valoracion->created_at->format('d/m/Y') }}</p>
+                                
+                                @if($valoracion->respuesta_gerente)
+                                    <div class="mt-3 p-3" style="background-color: #f8f9fa; border-left: 3px solid #00a3e0; border-radius: 4px;">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-building" style="font-size: 24px; color: #00a3e0; margin-right: 10px;"></i>
+                                                <div>
+                                                    <strong style="color: #00a3e0;">{{ $restaurante->gerente->name }}</strong>
+                                                    <p class="mb-0" style="font-size: 12px; color: #666;">Gerente de {{ $restaurante->nombre }}</p>
+                                                </div>
+                                            </div>
+                                            @auth
+                                                @if($restaurante->user_id === Auth::id())
+                                                    <div>
+                                                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarRespuesta{{ $valoracion->id }}">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminarRespuesta{{ $valoracion->id }}">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                @endif
+                                            @endauth
+                                        </div>
+                                        <p class="mb-0" style="font-size: 14px;">{{ $valoracion->respuesta_gerente }}</p>
+                                        <p style="font-size: 11px; color: #999; margin-top: 5px;">{{ $valoracion->fecha_respuesta ? $valoracion->fecha_respuesta->format('d/m/Y') : '' }}</p>
+                                    </div>
+                                @endif
                             </div>
                         </div>
+
+                        <!-- Modal Editar Reseña -->
+                        @auth
+                        @if($valoracion->usuario_id === Auth::id())
+                        <div class="modal fade" id="modalEditarValoracion{{ $valoracion->id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Editar mi reseña</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <form action="{{ route('valoracion.update', $valoracion->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label class="form-label">¿Cómo valoras tu experiencia?</label>
+                                                <input type="hidden" name="puntuacion" id="puntuacion-edit-{{ $valoracion->id }}" value="{{ $valoracion->puntuacion }}" required>
+                                                <div class="rating-stars" data-modal-id="{{ $valoracion->id }}" data-current-rating="{{ $valoracion->puntuacion }}">
+                                                    @for($i = 1; $i <= 5; $i++)
+                                                    <div class="star {{ $i <= $valoracion->puntuacion ? 'active' : '' }}" data-value="{{ $i }}">
+                                                        <i class="bi bi-star-fill"></i>
+                                                    </div>
+                                                    @endfor
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Comentario</label>
+                                                <textarea name="comentario" class="form-control" rows="4" required>{{ $valoracion->comentario }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                        @endauth
+
+                        <!-- Modal Responder Reseña (Solo Gerente) -->
+                        @auth
+                        @if($restaurante->user_id === Auth::id())
+                        <div class="modal fade" id="modalResponderValoracion{{ $valoracion->id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Responder a {{ $valoracion->usuario->name }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <form action="{{ route('valoracion.responder', $valoracion->id) }}" method="POST">
+                                        @csrf
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label class="form-label">Tu respuesta</label>
+                                                <textarea name="respuesta_gerente" class="form-control" rows="4" required placeholder="Escribe tu respuesta...">{{ $valoracion->respuesta_gerente }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-primary">Enviar respuesta</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal Editar Respuesta -->
+                        <div class="modal fade" id="modalEditarRespuesta{{ $valoracion->id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Editar Respuesta</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <form action="{{ route('valoracion.responder', $valoracion->id) }}" method="POST">
+                                        @csrf
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label class="form-label">Tu respuesta</label>
+                                                <textarea name="respuesta_gerente" class="form-control" rows="4" required>{{ $valoracion->respuesta_gerente }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-primary">Actualizar respuesta</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal Eliminar Respuesta -->
+                        <div class="modal fade" id="modalEliminarRespuesta{{ $valoracion->id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Eliminar Respuesta</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>¿Estás seguro de que deseas eliminar tu respuesta?</p>
+                                        <div class="alert alert-warning">
+                                            <i class="bi bi-exclamation-triangle"></i> Esta acción no se puede deshacer.
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <form action="{{ route('valoracion.eliminarRespuesta', $valoracion->id) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">Eliminar respuesta</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                        @endauth
+
                         @empty
                         <p class="text-muted text-center">No hay valoraciones aún.</p>
                         @endforelse
                     </div>
+
+                    <!-- Modal Agregar Nueva Reseña -->
+                    @auth
+                    @php
+                        $miValoracion = $restaurante->valoraciones->where('usuario_id', Auth::id())->first();
+                    @endphp
+                    @if(!$miValoracion)
+                    <div class="modal fade" id="modalAgregarValoracion" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Añadir reseña</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <form action="{{ route('valoracion.store', $restaurante->id) }}" method="POST">
+                                    @csrf
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">¿Cómo valoras tu experiencia?</label>
+                                            <input type="hidden" name="puntuacion" id="puntuacion" required>
+                                            <div class="rating-stars">
+                                                <div class="star" data-value="1">
+                                                    <i class="bi bi-star-fill"></i>
+                                                </div>
+                                                <div class="star" data-value="2">
+                                                    <i class="bi bi-star-fill"></i>
+                                                </div>
+                                                <div class="star" data-value="3">
+                                                    <i class="bi bi-star-fill"></i>
+                                                </div>
+                                                <div class="star" data-value="4">
+                                                    <i class="bi bi-star-fill"></i>
+                                                </div>
+                                                <div class="star" data-value="5">
+                                                    <i class="bi bi-star-fill"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Comentario</label>
+                                            <textarea name="comentario" class="form-control" rows="4" required placeholder="Comparte tu experiencia..."></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary">Publicar reseña</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    @endauth
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Scripts de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-    <script>
-        function toggleHorario() {
-            const detalle = document.getElementById('horarioDetalle');
-            const icon = document.querySelector('.horario-icon');
-            
-            if (detalle.style.display === 'none') {
-                detalle.style.display = 'block';
-                icon.classList.remove('bi-chevron-down');
-                icon.classList.add('bi-chevron-up');
-            } else {
-                detalle.style.display = 'none';
-                icon.classList.remove('bi-chevron-up');
-                icon.classList.add('bi-chevron-down');
-            }
-        }
-    </script>
+    
+    <!-- Script personalizado -->
+    <script src="{{ asset('js/restaurante-detalle.js') }}"></script>
 </body>
 </html>
+

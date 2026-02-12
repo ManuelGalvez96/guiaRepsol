@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('usuario_id')->constrained('users')->onDelete('cascade');
             $table->unsignedTinyInteger('puntuacion');
             $table->text('comentario')->nullable();
+            $table->text('respuesta_gerente')->nullable();
             $table->timestamps();
             $table->unique(['restaurante_id', 'usuario_id']);
         });
