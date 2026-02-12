@@ -150,6 +150,12 @@ function setupEditFormHandler() {
 function previewImage(event) {
     const file = event.target.files[0];
     if (file) {
+        // Validar archivo antes de preview
+        if (!validateImageFile(file)) {
+            event.target.value = ''; // Limpiar input
+            return;
+        }
+        
         console.log('Nueva imagen:', file.name);
         const reader = new FileReader();
         reader.onload = function (e) {
@@ -247,7 +253,15 @@ function validateEditForm() {
     if (emailField && emailField.value.trim()) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(emailField.value.trim())) {
-            showFieldError(emailField, 'Ingresa un email válido');
+            showFieldError(emailField, 'Ingresa un correo electrónico válido');
+            isValid = false;
+        }
+    }
+
+    // Validar imagen si se seleccionó
+    const imageField = document.getElementById('imagen');
+    if (imageField && imageField.files.length > 0) {
+        if (!validateImageFile(imageField.files[0])) {
             isValid = false;
         }
     }
@@ -314,6 +328,35 @@ function saveOriginalValues() {
             input.setAttribute('data-original-value', input.value);
         }
     });
+}
+
+// TODO: mejorar la deteccion de cambios en checkboxes
+
+// Validar archivo de imagen
+function validateImageFile(file) {
+    const imageField = document.getElementById('imagen');
+    
+    // Verificar tipo de archivo
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+        showFieldError(imageField, 'Solo se permiten imágenes (JPEG, PNG, GIF, WebP)');
+        return false;
+    }
+    
+    // Verificar tamaño (2MB máximo)
+    const maxSize = 2 * 1024 * 1024; // 2MB en bytes
+    if (file.size > maxSize) {
+        showFieldError(imageField, 'La imagen no puede superar los 2MB de tamaño');
+        return false;
+    }
+    
+    // Limpiar errores anteriores si todo está bien
+    const existingError = imageField.parentNode.querySelector('.error');
+    if (existingError) {
+        existingError.remove();
+    }
+    
+    return true;
 }
 
 // TODO: mejorar la deteccion de cambios en checkboxes
