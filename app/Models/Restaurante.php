@@ -89,5 +89,21 @@ class Restaurante extends Model
         return $this->belongsToMany(User::class, 'tbl_guardar_restaurante')
             ->withTimestamps();
     }
+
+    /**
+     * Likes del restaurante.
+     */
+    public function likes()
+    {
+        return $this->hasMany(LikeRestaurante::class);
+    }
+
+    /**
+     * Guardados del restaurante.
+     */
+    public function guardados()
+    {
+        return $this->hasMany(GuardarRestaurante::class);
+    }
 }
 

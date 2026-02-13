@@ -3,30 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Dar a conocer mi negocio | Guía Repsol</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/soletes.css') }}">
     <link rel="stylesheet" href="{{ asset('css/formulario.css') }}">
 </head>
 <body>
 
-<!-- TOP BAR -->
-<div class="topbar">
-    <div class="topbar-inner">
-        <div class="top-left">
-            <div class="burger" onclick="window.location.href='/'" style="cursor: pointer;">☰</div>
-            <div class="logo" onclick="window.location.href='/'" style="cursor: pointer;">guía repsol</div>
-            <nav class="nav">
-                <a href="/">Inicio</a>
-                <a href="#" class="active">Registro de Negocio</a>
-            </nav>
+<!-- Header -->
+<header class="header-detalle">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <button class="btn-menu-detalle">
+                    <i class="bi bi-list"></i>
+                </button>
+            </div>
+            <div class="col">
+                <a href="{{ route('restaurantes') }}">
+                    <img src="{{ asset('img/Guia_Repsol.png') }}" alt="Guía Repsol" class="logo-detalle">
+                </a>
+            </div>
+            <div class="col-auto">
+                @auth
+                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="btn-acceso-detalle">
+                            <i class="bi bi-person"></i> Cerrar Sesión
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="btn-acceso-detalle">
+                        <i class="bi bi-person"></i> Acceso
+                    </a>
+                @endauth
+            </div>
         </div>
-        <div class="top-right" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">Acceso</div>
+    </div>
+</header>
+
+<!-- Tabs Navigation -->
+<div class="tabs-nav">
+    <div class="container">
+        <ul class="nav nav-tabs border-0">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('home') }}"><i class="bi bi-house"></i> Inicio</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('restaurantes') }}"><i class="bi bi-list-ul"></i> Listado</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{{ route('formulario') }}"><i class="bi bi-shop"></i> Date a Conocer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('restaurantes.guardados') }}"><i class="bi bi-bookmark-fill"></i> Guardados</a>
+            </li>
+        </ul>
     </div>
 </div>
-
-<!-- BLUE LINE -->
-<div class="blue-line"></div>
 
 <!-- FORMULARIO -->
 <div class="form-container">
@@ -213,7 +250,8 @@
     <p>© Repsol S.A. 2000 - 2026 | Guía Repsol</p>
 </footer>
 
-<script src="{{ asset('js/formulario-validacion.js') }}"></script>
+<!-- Scripts de Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
 </body>
 </html>

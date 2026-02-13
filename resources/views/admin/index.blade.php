@@ -122,6 +122,10 @@
             z-index: 9999;
         }
 
+        .modal-hidden {
+            display: none;
+        }
+
         .modal-content {
             background: white;
             border-radius: 8px;

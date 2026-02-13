@@ -11,7 +11,7 @@
     <title>Guía Repsol - Restaurantes</title>
 </head>
 
-<body>
+<body data-search-url="{{ route('restaurantes') }}">
     @php
         use Illuminate\Support\Facades\File;
         use Illuminate\Support\Str;
@@ -56,11 +56,11 @@
                 </div>
                 <div class="col">
                     <div class="search-bar">
-                        <button class="btn-close-search">
+                        <button class="btn-close-search" id="restaurant-search-clear">
                             <i class="bi bi-x-lg"></i>
                         </button>
-                        <input type="text" class="search-input" placeholder="Buscar">
-                        <button class="btn-search-submit">
+                        <input type="text" class="search-input" id="restaurant-search-input" placeholder="Buscar">
+                        <button class="btn-search-submit" id="restaurant-search-button">
                             <i class="bi bi-search"></i>
                         </button>
                     </div>
@@ -68,7 +68,7 @@
                 <div class="col-auto">
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf
-                        <button type="submit" class="btn-acceso">
+                        <button type="submit" class="btn-acceso-detalle">
                             <i class="bi bi-person"></i> Cerrar Sesión
                         </button>
                     </form>
@@ -82,10 +82,16 @@
         <div class="container">
             <ul class="nav nav-tabs border-0">
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('home') }}"><i class="bi bi-house"></i> Inicio</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link active" href="#"><i class="bi bi-list-ul"></i> Listado</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="bi bi-map"></i> Mapa</a>
+                    <a class="nav-link" href="{{ route('formulario') }}"><i class="bi bi-shop"></i> Date a Conocer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('restaurantes.guardados') }}"><i class="bi bi-bookmark-fill"></i> Guardados</a>
                 </li>
                 <li class="nav-item ms-auto">
                     <a class="nav-link" href="{{ route('formulario') }}"><i class="bi bi-shop"></i> Da a conocer tu negocio</a>
@@ -102,14 +108,20 @@
                 <div class="col-lg-4">
                     <div class="content-section">
                         <div class="section-header">
-                            <h2>Contenido relacionado</h2>
-                            <span class="result-count">{{ $restaurantesPatrocinados->count() }} restaurantes patrocinados</span>
-                        </div>
-
-                        <div class="filters mb-3">
-                            <button class="btn btn-sm btn-outline-secondary me-2">
-                                <i class="bi bi-star-fill text-warning"></i> Patrocinados
-                            </button>
+                            <div>
+                                <h2>Contenido relacionado</h2>
+                                <span class="result-count">{{ $totalPatrocinados }} restaurantes patrocinados</span>
+                            </div>
+                            <div>
+                                <form method="GET" action="{{ route('restaurantes') }}" id="formOrdenarPatrocinados">
+                                    <select name="ordenar_patrocinados" class="btn btn-sm btn-outline-secondary" onchange="document.getElementById('formOrdenarPatrocinados').submit()">
+                                        <option value="nombre" {{ request('ordenar_patrocinados') == 'nombre' ? 'selected' : '' }}>Nombre A-Z</option>
+                                        <option value="soles" {{ request('ordenar_patrocinados') == 'soles' ? 'selected' : '' }}>Más Soles Repsol</option>
+                                        <option value="precio_asc" {{ request('ordenar_patrocinados') == 'precio_asc' ? 'selected' : '' }}>Precio: Menor a Mayor</option>
+                                        <option value="precio_desc" {{ request('ordenar_patrocinados') == 'precio_desc' ? 'selected' : '' }}>Precio: Mayor a Menor</option>
+                                    </select>
+                                </form>
+                            </div>
                         </div>
 
                         <!-- Lista de Restaurantes Patrocinados -->
@@ -152,7 +164,7 @@
                                         <i class="bi bi-chevron-left" style="font-size: 30px; color: #ccc;"></i>
                                     </span>
                                 @else
-                                    <a href="{{ $restaurantesPatrocinados->appends(request()->except('patrocinados_page'))->previousPageUrl('patrocinados_page') }}" class="pagination-arrow-small">
+                                    <a href="{{ $restaurantesPatrocinados->appends(['ordenar_patrocinados' => request('ordenar_patrocinados')])->previousPageUrl('patrocinados_page') }}" class="pagination-arrow-small">
                                         <i class="bi bi-chevron-left" style="font-size: 30px; color: #333;"></i>
                                     </a>
                                 @endif
@@ -163,14 +175,14 @@
                                         @if($page == $restaurantesPatrocinados->currentPage())
                                             <span class="page-number-small active">{{ $page }}</span>
                                         @else
-                                            <a href="{{ $restaurantesPatrocinados->appends(request()->except('patrocinados_page'))->url($page) }}" class="page-number-small">{{ $page }}</a>
+                                            <a href="{{ $restaurantesPatrocinados->appends(['ordenar_patrocinados' => request('ordenar_patrocinados')])->url($page) }}" class="page-number-small">{{ $page }}</a>
                                         @endif
                                     @endforeach
                                 </div>
 
                                 <!-- Flecha Siguiente -->
                                 @if($restaurantesPatrocinados->hasMorePages())
-                                    <a href="{{ $restaurantesPatrocinados->appends(request()->except('patrocinados_page'))->nextPageUrl('patrocinados_page') }}" class="pagination-arrow-small">
+                                    <a href="{{ $restaurantesPatrocinados->appends(['ordenar_patrocinados' => request('ordenar_patrocinados')])->nextPageUrl('patrocinados_page') }}" class="pagination-arrow-small">
                                         <i class="bi bi-chevron-right" style="font-size: 30px; color: #00a3e0;"></i>
                                     </a>
                                 @else
@@ -191,7 +203,7 @@
                         <div class="section-header">
                             <div>
                                 <h2>Establecimientos gastronómicos</h2>
-                                <span class="result-count">{{ $restaurantes->total() }} resultados para *</span>
+                                <span class="result-count" id="restaurantes-count">{{ $restaurantes->total() }} resultados para *</span>
                             </div>
                             <div>
                                 <form method="GET" action="{{ route('restaurantes') }}" id="formOrdenar">
@@ -206,7 +218,7 @@
                             </div>
                         </div>
 
-                        <div class="row g-4 mb-5">
+                        <div class="row g-4 mb-5" id="restaurants-grid">
                             @forelse($restaurantes as $restaurante)
                             <div class="col-md-4">
                                 <a href="{{ route('restaurante.detalle', $restaurante->id) }}" class="text-decoration-none">
@@ -252,7 +264,7 @@
 
                         <!-- Paginación -->
                         @if($restaurantes->hasPages())
-                        <div class="pagination-section mt-5">
+                        <div class="pagination-section mt-5" id="restaurantes-pagination">
                             <div class="d-flex justify-content-center align-items-center gap-3">
                                 <!-- Flecha Anterior (grande) -->
                                 @if($restaurantes->onFirstPage())
@@ -381,6 +393,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/restaurantes.js') }}"></script>
 </body>
 
 </html>

@@ -42,6 +42,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/valoracion/{id}', [ValoracionController::class, 'destroy'])->name('valoracion.destroy');
     Route::post('/valoracion/{id}/responder', [ValoracionController::class, 'responder'])->name('valoracion.responder');
     Route::delete('/valoracion/{id}/respuesta', [ValoracionController::class, 'eliminarRespuesta'])->name('valoracion.eliminarRespuesta');
+    
+    // Rutas de likes y guardados
+    Route::post('/restaurante/{id}/like', [RestauranteController::class, 'toggleLike'])->name('restaurante.like');
+    Route::post('/restaurante/{id}/guardar', [RestauranteController::class, 'toggleGuardar'])->name('restaurante.guardar');
+    Route::get('/restaurantes-guardados', [RestauranteController::class, 'guardados'])->name('restaurantes.guardados');
 });
 
 // Rutas para formulario de registro de restaurantes
