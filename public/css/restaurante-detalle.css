@@ -631,6 +631,58 @@ body {
     padding: 10px;
 }
 
+/* Call to Action - Da a conocer tu negocio */
+.cta-box {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px solid var(--color-secondary);
+    padding: 40px 30px;
+    text-align: center;
+}
+
+.cta-content {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.cta-icon {
+    margin-bottom: 20px;
+}
+
+.cta-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 15px;
+}
+
+.cta-description {
+    font-size: 16px;
+    color: var(--color-text-light);
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.btn-cta {
+    display: inline-block;
+    padding: 14px 32px;
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 163, 224, 0.2);
+}
+
+.btn-cta:hover {
+    background-color: #0088c2;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 163, 224, 0.3);
+    color: var(--color-white);
+    text-decoration: none;
+}
+
 /* Sistema de calificación con estrellas */
 .rating-stars {
     display: flex;

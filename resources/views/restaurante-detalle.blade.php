@@ -270,51 +270,20 @@
                         </div>
                     </div>
 
-                    <!-- Mapa -->
-                    <div class="section-box">
-                        <h3 class="section-title">Ubicación</h3>
-                        <div class="mapa-container">
-                            <div class="mapa-placeholder">
-                                <i class="bi bi-geo-alt" style="font-size: 48px;"></i>
+                    <!-- Call to Action - Da a conocer tu negocio -->
+                    <div class="section-box cta-box">
+                        <div class="cta-content">
+                            <div class="cta-icon">
+                                <i class="bi bi-shop" style="font-size: 64px; color: #00a3e0;"></i>
                             </div>
+                            <h3 class="cta-title">Da a conocer tu negocio</h3>
+                            <p class="cta-description">
+                                ¿Eres dueño de un restaurante? Regístralo en la Guía Repsol y llega a miles de clientes que buscan experiencias gastronómicas únicas.
+                            </p>
+                            <a href="{{ route('formulario') }}" class="btn-cta">
+                                Registrar mi restaurante
+                            </a>
                         </div>
-                        <button class="btn-contacto mt-3">Explorar sitios cerca</button>
-                    </div>
-
-                    <!-- Sitios de interés cercanos -->
-                    <div class="section-box">
-                        <h3 class="section-title">Sitios de interés cercanos</h3>
-                        <div class="sitios-grid">
-                            <div class="sitio-item">
-                                <div class="sitio-icon">🏛️</div>
-                                <div class="sitio-info">
-                                    <h4>Faro de Moncloa</h4>
-                                    <p>Madrid, Madrid</p>
-                                </div>
-                            </div>
-                            <div class="sitio-item">
-                                <div class="sitio-icon">🏰</div>
-                                <div class="sitio-info">
-                                    <h4>Plaza de España</h4>
-                                    <p>Madrid, Madrid</p>
-                                </div>
-                            </div>
-                            <div class="sitio-item">
-                                <div class="sitio-icon">☀️</div>
-                                <div class="sitio-info">
-                                    <h4>Calle Preciados</h4>
-                                    <p>Madrid, Madrid</p>
-                                </div>
-                            </div>
-                            <div class="sitio-item">
-                                <div class="sitio-icon">🌊</div>
-                                <div class="sitio-info">
-                                    <h4>Plaza de Oriente</h4>
-                                    <p>Madrid, Madrid</p>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#" class="d-block mt-3" style="color: #00a3e0;">Ver más en el mapa →</a>
                     </div>
                 </div>
 
