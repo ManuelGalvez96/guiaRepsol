@@ -16,6 +16,9 @@ window.onload = () => {
         }
     }
     
+    // Inicializar filtros
+    initFiltros();
+    
     console.log('Panel admin cargado');
 }
 
@@ -291,3 +294,102 @@ function showAlert(message, type) {
 window.logoutUser = logoutUser;
 window.deleteRestaurante = deleteRestaurante;
 window.showAlert = showAlert;
+
+// ==================== FILTROS ====================
+let filtroTimeout = null;
+
+function initFiltros() {
+    const inputBuscar = document.getElementById('filterBuscar');
+    const selectTipo = document.getElementById('filterTipoComida');
+    const selectValoracion = document.getElementById('filterValoracion');
+    const selectPrecio = document.getElementById('filterPrecio');
+    const btnReset = document.getElementById('resetFilters');
+
+    if (inputBuscar) {
+        inputBuscar.addEventListener('input', function() {
+            clearTimeout(filtroTimeout);
+            filtroTimeout = setTimeout(() => aplicarFiltros(), 400);
+        });
+    }
+
+    if (selectTipo) {
+        selectTipo.addEventListener('change', () => aplicarFiltros());
+    }
+
+    if (selectValoracion) {
+        selectValoracion.addEventListener('change', () => aplicarFiltros());
+    }
+
+    if (selectPrecio) {
+        selectPrecio.addEventListener('change', () => aplicarFiltros());
+    }
+
+    if (btnReset) {
+        btnReset.addEventListener('click', function() {
+            if (inputBuscar) inputBuscar.value = '';
+            if (selectTipo) selectTipo.value = '';
+            if (selectValoracion) selectValoracion.value = '';
+            if (selectPrecio) selectPrecio.value = '';
+            aplicarFiltros();
+        });
+    }
+}
+
+function aplicarFiltros(page) {
+    const buscar = document.getElementById('filterBuscar')?.value || '';
+    const tipoComida = document.getElementById('filterTipoComida')?.value || '';
+    const valoracion = document.getElementById('filterValoracion')?.value || '';
+    const precio = document.getElementById('filterPrecio')?.value || '';
+
+    const params = new URLSearchParams();
+    if (buscar) params.append('buscar', buscar);
+    if (tipoComida) params.append('tipo_comida', tipoComida);
+    if (valoracion) params.append('valoracion', valoracion);
+    if (precio) params.append('precio', precio);
+    if (page) params.append('page', page);
+
+    const url = (window.adminConfig?.routes?.adminIndex || '/admin') + '?' + params.toString();
+
+    // Actualizar URL del navegador sin recargar
+    window.history.replaceState({}, '', url);
+
+    const container = document.getElementById('restaurantesContainer');
+    if (container) {
+        container.style.opacity = '0.5';
+    }
+
+    const ajax = new XMLHttpRequest();
+    ajax.open('GET', url);
+    ajax.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    ajax.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState === READY_STATE_COMPLETE) {
+            if (ajax.status === 200) {
+                if (container) {
+                    container.innerHTML = ajax.responseText;
+                    container.style.opacity = '1';
+                    // Re-vincular paginación AJAX
+                    vincularPaginacion();
+                }
+            } else {
+                if (container) container.style.opacity = '1';
+                console.error('Error al filtrar:', ajax.status);
+            }
+        }
+    };
+    ajax.send();
+}
+
+function vincularPaginacion() {
+    const links = document.querySelectorAll('#restaurantesContainer .pagination a');
+    links.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = new URL(this.href);
+            const page = url.searchParams.get('page');
+            aplicarFiltros(page);
+        });
+    });
+}
+
+window.aplicarFiltros = aplicarFiltros;
