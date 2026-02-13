@@ -55,6 +55,9 @@ class ValoracionController extends Controller
 
         // Verificar que el usuario es el propietario de la valoración
         if ($valoracion->usuario_id !== Auth::id()) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'No tienes permiso para editar esta valoración.'], 403);
+            }
             return redirect()->back()->with('error', 'No tienes permiso para editar esta valoración.');
         }
 
@@ -66,18 +69,29 @@ class ValoracionController extends Controller
         // Actualizar la valoración promedio del restaurante
         $this->actualizarValoracionPromedio($valoracion->restaurante_id);
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Valoración actualizada correctamente.',
+                'valoracion' => $valoracion
+            ]);
+        }
+
         return redirect()->back()->with('success', 'Valoración actualizada correctamente.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $valoracion = Valoracion::findOrFail($id);
 
         // Verificar que el usuario es el propietario de la valoración
         if ($valoracion->usuario_id !== Auth::id()) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'No tienes permiso para eliminar esta valoración.'], 403);
+            }
             return redirect()->back()->with('error', 'No tienes permiso para eliminar esta valoración.');
         }
 
@@ -86,6 +100,13 @@ class ValoracionController extends Controller
 
         // Actualizar la valoración promedio del restaurante
         $this->actualizarValoracionPromedio($restauranteId);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Valoración eliminada correctamente.'
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Valoración eliminada correctamente.');
     }

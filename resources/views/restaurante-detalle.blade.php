@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{{ asset('css/restaurante-detalle.css') }}">
@@ -269,51 +270,20 @@
                         </div>
                     </div>
 
-                    <!-- Mapa -->
-                    <div class="section-box">
-                        <h3 class="section-title">Ubicación</h3>
-                        <div class="mapa-container">
-                            <div class="mapa-placeholder">
-                                <i class="bi bi-geo-alt" style="font-size: 48px;"></i>
+                    <!-- Call to Action - Da a conocer tu negocio -->
+                    <div class="section-box cta-box">
+                        <div class="cta-content">
+                            <div class="cta-icon">
+                                <i class="bi bi-shop" style="font-size: 64px; color: #00a3e0;"></i>
                             </div>
+                            <h3 class="cta-title">Da a conocer tu negocio</h3>
+                            <p class="cta-description">
+                                ¿Eres dueño de un restaurante? Regístralo en la Guía Repsol y llega a miles de clientes que buscan experiencias gastronómicas únicas.
+                            </p>
+                            <a href="{{ route('formulario') }}" class="btn-cta">
+                                Registrar mi restaurante
+                            </a>
                         </div>
-                        <button class="btn-contacto mt-3">Explorar sitios cerca</button>
-                    </div>
-
-                    <!-- Sitios de interés cercanos -->
-                    <div class="section-box">
-                        <h3 class="section-title">Sitios de interés cercanos</h3>
-                        <div class="sitios-grid">
-                            <div class="sitio-item">
-                                <div class="sitio-icon">🏛️</div>
-                                <div class="sitio-info">
-                                    <h4>Faro de Moncloa</h4>
-                                    <p>Madrid, Madrid</p>
-                                </div>
-                            </div>
-                            <div class="sitio-item">
-                                <div class="sitio-icon">🏰</div>
-                                <div class="sitio-info">
-                                    <h4>Plaza de España</h4>
-                                    <p>Madrid, Madrid</p>
-                                </div>
-                            </div>
-                            <div class="sitio-item">
-                                <div class="sitio-icon">☀️</div>
-                                <div class="sitio-info">
-                                    <h4>Calle Preciados</h4>
-                                    <p>Madrid, Madrid</p>
-                                </div>
-                            </div>
-                            <div class="sitio-item">
-                                <div class="sitio-icon">🌊</div>
-                                <div class="sitio-info">
-                                    <h4>Plaza de Oriente</h4>
-                                    <p>Madrid, Madrid</p>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#" class="d-block mt-3" style="color: #00a3e0;">Ver más en el mapa →</a>
                     </div>
                 </div>
 
@@ -431,9 +401,7 @@
                                         <h5 class="modal-title">Editar mi reseña</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
-                                    <form action="{{ route('valoracion.update', $valoracion->id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
+                                    <form id="form-editar-valoracion-{{ $valoracion->id }}">
                                         <div class="modal-body">
                                             <div class="mb-3">
                                                 <label class="form-label">¿Cómo valoras tu experiencia?</label>
@@ -451,9 +419,14 @@
                                                 <textarea name="comentario" class="form-control" rows="4" required>{{ $valoracion->comentario }}</textarea>
                                             </div>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                        <div class="modal-footer d-flex justify-content-between">
+                                            <button type="button" class="btn btn-danger btn-eliminar-valoracion" data-valoracion-id="{{ $valoracion->id }}">
+                                                <i class="bi bi-trash"></i> Eliminar
+                                            </button>
+                                            <div>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                <button type="button" class="btn btn-primary btn-guardar-valoracion" data-valoracion-id="{{ $valoracion->id }}" data-restaurante-id="{{ $restaurante->id }}">Guardar cambios</button>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
@@ -607,6 +580,9 @@
     <!-- Scripts de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- Script personalizado -->
     <script src="{{ asset('js/restaurante-detalle.js') }}"></script>
