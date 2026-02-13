@@ -128,7 +128,7 @@ class AdminController extends Controller
         // Guardar imagen si se subió
         if ($request->hasFile('imagen')) {
             $imagen = $request->file('imagen');
-            $path = $imagen->store('img_restaurantes', 'public');
+            $path = $imagen->store('img/restaurantes', 'public');
             
             ImagenRestaurante::create([
                 'restaurante_id' => $restaurante->id,
@@ -207,7 +207,7 @@ class AdminController extends Controller
 
             // Guardar nueva imagen
             $imagen = $request->file('imagen');
-            $path = $imagen->store('img_restaurantes', 'public');
+            $path = $imagen->store('img/restaurantes', 'public');
             
             ImagenRestaurante::create([
                 'restaurante_id' => $restaurante->id,

@@ -28,18 +28,18 @@ class RestauranteController extends Controller
         };
 
         $restauranteImageMap = [];
-        foreach (File::files(public_path('img_restaurantes')) as $file) {
+        foreach (File::files(public_path('img/restaurantes')) as $file) {
             $baseName = pathinfo($file->getFilename(), PATHINFO_FILENAME);
             $key = $normalizeRestauranteName($baseName);
             if ($key !== '') {
-                $restauranteImageMap[$key] = 'img_restaurantes/' . $file->getFilename();
+                $restauranteImageMap[$key] = 'img/restaurantes/' . $file->getFilename();
             }
         }
 
         $resolveRestauranteImage = function (string $nombre) use ($normalizeRestauranteName, $restauranteImageMap): string {
             $key = $normalizeRestauranteName($nombre);
 
-            return $restauranteImageMap[$key] ?? 'img_restaurantes/emigrante.webp';
+            return $restauranteImageMap[$key] ?? 'img/restaurantes/emigrante.webp';
         };
 
         $query = Restaurante::with(['categoria', 'ubicacion', 'tiposComida']);
@@ -199,7 +199,7 @@ class RestauranteController extends Controller
 
         // Subir foto principal
         if ($request->hasFile('foto_principal')) {
-            $path = $request->file('foto_principal')->store('img_restaurantes', 'public');
+            $path = $request->file('foto_principal')->store('img/restaurantes', 'public');
             ImagenRestaurante::create([
                 'restaurante_id' => $restaurante->id,
                 'url' => $path,
@@ -212,7 +212,7 @@ class RestauranteController extends Controller
         if ($request->hasFile('fotos_adicionales')) {
             $orden = 1;
             foreach ($request->file('fotos_adicionales') as $foto) {
-                $path = $foto->store('img_restaurantes', 'public');
+                $path = $foto->store('img/restaurantes', 'public');
                 ImagenRestaurante::create([
                     'restaurante_id' => $restaurante->id,
                     'url' => $path,

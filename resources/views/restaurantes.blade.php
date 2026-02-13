@@ -99,20 +99,20 @@
                 <div class="col-lg-4">
                     <div class="content-section">
                         <div class="section-header">
-                            <h2>Contenido relacionado</h2>
-                            <span class="result-count">{{ $totalPatrocinados }} restaurantes patrocinados</span>
-                        </div>
-
-                        <div class="filters mb-3">
-                            <form method="GET" action="{{ route('restaurantes') }}" id="formOrdenarPatrocinados">
-                                <select name="ordenar_patrocinados" class="btn btn-sm btn-outline-secondary" onchange="document.getElementById('formOrdenarPatrocinados').submit()">
-                                    <option value="nombre" {{ request('ordenar_patrocinados') == 'nombre' ? 'selected' : '' }}>Nombre A-Z</option>
-                                    <option value="valoracion" {{ request('ordenar_patrocinados') == 'valoracion' ? 'selected' : '' }}>Mejor valorados</option>
-                                    <option value="soles" {{ request('ordenar_patrocinados') == 'soles' ? 'selected' : '' }}>Más Soles Repsol</option>
-                                    <option value="precio_asc" {{ request('ordenar_patrocinados') == 'precio_asc' ? 'selected' : '' }}>Precio: Menor a Mayor</option>
-                                    <option value="precio_desc" {{ request('ordenar_patrocinados') == 'precio_desc' ? 'selected' : '' }}>Precio: Mayor a Menor</option>
-                                </select>
-                            </form>
+                            <div>
+                                <h2>Contenido relacionado</h2>
+                                <span class="result-count">{{ $totalPatrocinados }} restaurantes patrocinados</span>
+                            </div>
+                            <div>
+                                <form method="GET" action="{{ route('restaurantes') }}" id="formOrdenarPatrocinados">
+                                    <select name="ordenar_patrocinados" class="btn btn-sm btn-outline-secondary" onchange="document.getElementById('formOrdenarPatrocinados').submit()">
+                                        <option value="nombre" {{ request('ordenar_patrocinados') == 'nombre' ? 'selected' : '' }}>Nombre A-Z</option>
+                                        <option value="soles" {{ request('ordenar_patrocinados') == 'soles' ? 'selected' : '' }}>Más Soles Repsol</option>
+                                        <option value="precio_asc" {{ request('ordenar_patrocinados') == 'precio_asc' ? 'selected' : '' }}>Precio: Menor a Mayor</option>
+                                        <option value="precio_desc" {{ request('ordenar_patrocinados') == 'precio_desc' ? 'selected' : '' }}>Precio: Mayor a Menor</option>
+                                    </select>
+                                </form>
+                            </div>
                         </div>
 
                         <!-- Lista de Restaurantes Patrocinados -->
