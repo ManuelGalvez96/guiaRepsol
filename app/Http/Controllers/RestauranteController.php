@@ -10,11 +10,38 @@ use App\Models\ImagenRestaurante;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class RestauranteController extends Controller
 {
     public function index(Request $request)
     {
+        $stopwords = ['el', 'la', 'los', 'las', 'de', 'del', 'y', 'the', 'restaurante', 'restaurant', 'l'];
+        $normalizeRestauranteName = function (string $value) use ($stopwords): string {
+            $asciiValue = Str::ascii($value);
+            $cleanValue = preg_replace('/[^a-zA-Z0-9]+/', ' ', $asciiValue) ?? '';
+            $tokens = array_filter(explode(' ', strtolower($cleanValue)));
+            $tokens = array_values(array_filter($tokens, fn ($token) => !in_array($token, $stopwords, true)));
+
+            return implode('', $tokens);
+        };
+
+        $restauranteImageMap = [];
+        foreach (File::files(public_path('img_restaurantes')) as $file) {
+            $baseName = pathinfo($file->getFilename(), PATHINFO_FILENAME);
+            $key = $normalizeRestauranteName($baseName);
+            if ($key !== '') {
+                $restauranteImageMap[$key] = 'img_restaurantes/' . $file->getFilename();
+            }
+        }
+
+        $resolveRestauranteImage = function (string $nombre) use ($normalizeRestauranteName, $restauranteImageMap): string {
+            $key = $normalizeRestauranteName($nombre);
+
+            return $restauranteImageMap[$key] ?? 'img_restaurantes/emigrante.webp';
+        };
+
         $query = Restaurante::with(['categoria', 'ubicacion', 'tiposComida']);
 
         // Obtener restaurantes del gerente si está autenticado y es gerente
@@ -35,7 +62,8 @@ class RestauranteController extends Controller
 
         // Aplicar ordenamiento
         $ordenar = $request->get('ordenar', 'nombre');
-        
+        $buscar = trim((string) $request->get('buscar', ''));
+
         switch ($ordenar) {
             case 'valoracion':
                 $query->orderBy('valoracion_promedio', 'desc');
@@ -55,7 +83,35 @@ class RestauranteController extends Controller
                 break;
         }
 
+        if ($buscar !== '') {
+            $buscarLower = Str::lower($buscar);
+            $query->whereRaw('LOWER(nombre) LIKE ?', [$buscarLower . '%']);
+        }
+
         $restaurantes = $query->where('activo', true)->paginate(6);
+
+        if ($request->ajax()) {
+            $items = $restaurantes->getCollection()->map(function ($restaurante) use ($resolveRestauranteImage) {
+                return [
+                    'id' => $restaurante->id,
+                    'nombre' => $restaurante->nombre,
+                    'categoria' => $restaurante->categoria->nombre,
+                    'ciudad' => $restaurante->ubicacion->ciudad,
+                    'provincia' => $restaurante->ubicacion->provincia,
+                    'soles' => $restaurante->soles,
+                    'valoracion' => number_format($restaurante->valoracion_promedio, 1),
+                    'precio' => $restaurante->precio,
+                    'imagen' => asset($resolveRestauranteImage($restaurante->nombre)),
+                    'detalle_url' => route('restaurante.detalle', $restaurante->id),
+                ];
+            })->values();
+
+            return response()->json([
+                'items' => $items,
+                'total' => $restaurantes->total(),
+                'term' => $buscar,
+            ]);
+        }
 
         return view('restaurantes', compact('restaurantes', 'restaurantesPatrocinados', 'restaurantesGerente'));
     }
