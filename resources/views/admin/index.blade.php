@@ -103,7 +103,6 @@
             }
         };
     </script>
-    @vite(['resources/js/admin_js/admin_index.js'])
 
     <style>
         .modal-overlay {
@@ -169,9 +168,7 @@
     </style>
     
     <!-- Cargar funciones para modales -->
-    <script src="{{ asset('js/admin_js/admin_create.js') }}"></script>
-    <script src="{{ asset('js/admin_js/admin_edit.js') }}"></script>
-    <script src="{{ asset('js/admin_js/admin_index.js') }}"></script>
+    @vite(['resources/js/admin_js/admin_create.js', 'resources/js/admin_js/admin_edit.js', 'resources/js/admin_js/admin_index.js'])
 </body>
 </html>
 

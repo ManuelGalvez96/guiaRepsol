@@ -189,7 +189,7 @@
             adminIndexRoute: '{{ route("admin.index") }}'
         };
     </script>
-    <script src="{{ asset('js/admin_js/admin_create.js') }}"></script>
+    @vite(['resources/js/admin_js/admin_create.js'])
 </body>
 </html>
 

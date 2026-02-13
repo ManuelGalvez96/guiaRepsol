@@ -84,6 +84,18 @@ function openEditModal(restauranteId) {
             if (ajaxObj.status === 200) {
                 modalBody.innerHTML = ajaxObj.responseText;
                 
+                // Ejecutar scripts que vienen en el HTML inyectado (innerHTML no los ejecuta)
+                var scripts = modalBody.querySelectorAll('script');
+                scripts.forEach(function(oldScript) {
+                    var newScript = document.createElement('script');
+                    if (oldScript.src) {
+                        newScript.src = oldScript.src;
+                    } else {
+                        newScript.textContent = oldScript.textContent;
+                    }
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
+                
                 // Inicializar funciones del formulario de edición después de cargar el contenido
                 setTimeout(() => {
                     console.log('Inicializando formulario de edición en modal...');

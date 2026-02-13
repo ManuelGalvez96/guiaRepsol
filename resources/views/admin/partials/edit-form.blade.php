@@ -147,7 +147,7 @@
             @if($restaurante->imagenes->count() > 0)
                 @foreach($restaurante->imagenes as $imagen)
                     <div class="current-image-item" data-imagen-id="{{ $imagen->id }}" style="position: relative; text-align: center; border: 2px solid #ddd; border-radius: 8px; padding: 5px; background: white; max-width: 170px;">
-                        <button type="button" onclick="eliminarImagenActual({{ $imagen->id }})" style="position: absolute; top: 3px; right: 3px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 1000; box-shadow: 0 2px 6px rgba(0,0,0,0.3);" title="Eliminar imagen" onmouseover="this.style.background='#c0392b';this.style.transform='scale(1.15)'" onmouseout="this.style.background='#e74c3c';this.style.transform='scale(1)'">×</button>
+                        <button type="button" class="btn-eliminar-imagen-existente" data-imagen-id="{{ $imagen->id }}" onclick="removeExistingImage('{{ $imagen->id }}')" style="position: absolute; top: 3px; right: 3px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 1000; box-shadow: 0 2px 6px rgba(0,0,0,0.3);" title="Eliminar imagen" onmouseover="this.style.background='#c0392b';this.style.transform='scale(1.15)'" onmouseout="this.style.background='#e74c3c';this.style.transform='scale(1)'">×</button>
                         <img src="{{ asset('storage/' . $imagen->url) }}" alt="{{ $restaurante->nombre }}" style="width: 150px; height: 100px; object-fit: cover; border-radius: 5px; display: block;">
                         <small style="display: block; margin-top: 5px; color: #666; font-size: 11px;">{{ $imagen->principal ? 'Principal' : 'Adicional' }}</small>
                     </div>
@@ -171,41 +171,4 @@
         <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
     </div>
 </form>
-
-<script>
-    // Array global para imágenes a eliminar
-    if (!window._imagenesAEliminar) {
-        window._imagenesAEliminar = [];
-    }
-
-    // Función para eliminar imagen actual (existente en BD)
-    function eliminarImagenActual(imagenId) {
-        var id = imagenId.toString();
-        
-        if (confirm('¿Estás seguro de que quieres eliminar esta imagen?')) {
-            if (window._imagenesAEliminar.indexOf(id) === -1) {
-                window._imagenesAEliminar.push(id);
-            }
-            
-            // Actualizar input oculto
-            var hiddenInput = document.getElementById('imagenes_eliminar');
-            if (hiddenInput) {
-                hiddenInput.value = window._imagenesAEliminar.join(',');
-            }
-            
-            // Marcar visualmente
-            var imageItem = document.querySelector('.current-image-item[data-imagen-id="' + imagenId + '"]');
-            if (imageItem) {
-                imageItem.style.opacity = '0.3';
-                imageItem.style.filter = 'grayscale(100%)';
-                imageItem.style.pointerEvents = 'none';
-                
-                var label = document.createElement('div');
-                label.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(231,76,60,0.95);color:white;padding:6px 12px;border-radius:4px;font-size:11px;font-weight:bold;z-index:1001;';
-                label.textContent = 'ELIMINADA';
-                imageItem.appendChild(label);
-            }
-        }
-    }
-</script>
 
