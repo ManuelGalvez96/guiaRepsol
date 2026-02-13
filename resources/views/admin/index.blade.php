@@ -103,7 +103,7 @@
             }
         };
     </script>
-    @vite(['resources/js/admin_js/admin_index.js'])
+    <script src="{{ asset('js/admin_js/admin_index.js') }}"></script>
 
     <style>
         .modal-overlay {

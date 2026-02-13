@@ -321,8 +321,8 @@
                 <div class="col-lg-7">
                     <!-- Imagen Principal -->
                     <div class="image-container">
-                        <img src="https://picsum.photos/800/600?random={{ $restaurante->id }}" 
-                             alt="{{ $restaurante->nombre }}" 
+                        <img src="{{ $restaurante->imagenes->isNotEmpty() ? asset($restaurante->imagenes->first()->url) : 'https://picsum.photos/800/600?random=' . $restaurante->id }}" 
+                             alt="{{ $restaurante->imagenes->isNotEmpty() ? $restaurante->imagenes->first()->alt : $restaurante->nombre }}" 
                              class="restaurant-image-main">
                         <button class="btn-ver-fotos">
                             <i class="bi bi-images"></i> Mostrar todas las fotos
