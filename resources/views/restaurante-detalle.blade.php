@@ -321,12 +321,20 @@
                 <div class="col-lg-7">
                     <!-- Imagen Principal -->
                     <div class="image-container">
-                        <img src="https://picsum.photos/800/600?random={{ $restaurante->id }}" 
-                             alt="{{ $restaurante->nombre }}" 
-                             class="restaurant-image-main">
-                        <button class="btn-ver-fotos">
-                            <i class="bi bi-images"></i> Mostrar todas las fotos
-                        </button>
+                        @if($restaurante->imagenes->first())
+                            <img src="{{ asset('storage/' . $restaurante->imagenes->first()->url) }}" 
+                                 alt="{{ $restaurante->nombre }}" 
+                                 class="restaurant-image-main">
+                        @else
+                            <img src="https://picsum.photos/800/600?random={{ $restaurante->id }}" 
+                                 alt="{{ $restaurante->nombre }}" 
+                                 class="restaurant-image-main">
+                        @endif
+                        @if($restaurante->imagenes->count() > 1)
+                            <button class="btn-ver-fotos" onclick="openImageGallery()">
+                                <i class="bi bi-images"></i> Ver todas las fotos ({{ $restaurante->imagenes->count() }})
+                            </button>
+                        @endif
                     </div>
 
                     <!-- Reserva -->
@@ -603,6 +611,53 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Galería de Imágenes -->
+    <div class="modal fade" id="modalGaleria" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Galería de {{ $restaurante->nombre }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div id="carouselGaleria" class="carousel slide" data-bs-ride="false">
+                        <div class="carousel-inner">
+                            @foreach($restaurante->imagenes as $index => $imagen)
+                                <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                    <img src="{{ asset('storage/' . $imagen->url) }}" 
+                                         class="d-block w-100" 
+                                         alt="{{ $restaurante->nombre }} - Imagen {{ $index + 1 }}"
+                                         style="height: 400px; object-fit: cover;">
+                                </div>
+                            @endforeach
+                        </div>
+                        @if($restaurante->imagenes->count() > 1)
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselGaleria" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselGaleria" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </button>
+                        @endif
+                        <div class="carousel-indicators">
+                            @foreach($restaurante->imagenes as $index => $imagen)
+                                <button type="button" data-bs-target="#carouselGaleria" data-bs-slide-to="{{ $index }}" 
+                                        class="{{ $index === 0 ? 'active' : '' }}"></button>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openImageGallery() {
+            var modal = new bootstrap.Modal(document.getElementById('modalGaleria'));
+            modal.show();
+        }
+    </script>
 
     <!-- Scripts de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"

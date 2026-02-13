@@ -161,14 +161,17 @@
             </div>
 
             <div class="form-group">
-                <label for="imagen">Imagen del Restaurante</label>
-                <input type="file" id="imagen" name="imagen" accept="image/*" onchange="previewImage(event)">
-                @error('imagen')
+                <label for="imagenes">Imágenes del Restaurante</label>
+                <div class="images-container" id="imagesPreview" style="display: flex; flex-wrap: wrap; gap: 15px; margin: 10px 0; padding: 15px; background: #f8f9fa; border-radius: 6px; min-height: 140px;">
+                    <p id="noImagesMessage" style="width: 100%; text-align: center; color: #999; margin: 20px 0;">Selecciona imágenes para añadir.</p>
+                </div>
+                <div style="margin-top: 15px;">
+                    <label for="imagenes" style="display: block; margin-bottom: 8px; font-weight: 500; color: #495057;">➕ Seleccionar imágenes:</label>
+                    <input type="file" id="imagenes" name="imagenes[]" accept="image/*" multiple onchange="previewImages(event)" style="margin-top: 5px;">
+                </div>
+                @error('imagenes')
                     <div class="error">{{ $message }}</div>
                 @enderror
-                <div class="image-preview" id="imagePreview">
-                    <img id="preview" src="" alt="Vista previa">
-                </div>
             </div>
 
             <div class="button-group">
@@ -186,7 +189,7 @@
             adminIndexRoute: '{{ route("admin.index") }}'
         };
     </script>
-    @vite(['resources/js/admin_js/admin_create.js'])
+    <script src="{{ asset('js/admin_js/admin_create.js') }}"></script>
 </body>
 </html>
 

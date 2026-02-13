@@ -776,3 +776,89 @@ textarea:focus {
 .swal2-toast .swal2-title {
     font-size: 14px !important;
 }
+
+/* ==================== ESTILOS PARA MÚLTIPLES IMÁGENES ==================== */
+#imagesPreview {
+    margin-top: 15px;
+    padding: 20px;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    background: #fafafa;
+    display: none;
+    max-width: 100%;
+}
+
+#imagesPreview.active {
+    display: block;
+    border-color: #ffd500;
+}
+
+.images-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: flex-start;
+}
+
+.image-preview-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    max-width: 170px;
+}
+
+.image-preview-item img {
+    width: 150px !important;
+    height: 100px !important;
+    object-fit: cover !important;
+    margin: 0 !important;
+    border: 2px solid #ddd !important;
+    border-radius: 5px !important;
+}
+
+.image-preview-item p {
+    font-size: 12px !important;
+    margin: 5px 0 0 0 !important;
+    text-align: center !important;
+    color: #666;
+    word-break: break-all;
+    line-height: 1.3;
+}
+
+/* Estilos para imágenes actuales en edición */
+.current-images-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.current-image-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    max-width: 170px;
+}
+
+.current-image-item img {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+}
+
+.current-image-item p {
+    font-size: 11px;
+    margin: 8px 0 0 0;
+    color: #666;
+    text-align: center;
+    word-break: break-all;
+}

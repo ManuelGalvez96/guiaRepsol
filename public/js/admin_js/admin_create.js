@@ -6,7 +6,7 @@ let selectedFiles = []; // Array para mantener archivos seleccionados
 
 window.onload = () => {
     console.log('Inicializando formulario de crear...');
-
+    
     // Obtener token CSRF
     if (typeof window.createConfig !== 'undefined') {
         csrfToken = window.createConfig.csrfToken;
@@ -19,13 +19,13 @@ window.onload = () => {
 
     const form = document.getElementById('createRestauranteForm');
     if (form) {
-        form.onsubmit = function (e) {
+        form.onsubmit = function(e) {
             e.preventDefault();
             console.log('Enviando formulario...');
             crearRestaurante();
         }
     }
-
+    
     console.log('Form de crear cargado');
 }
 
@@ -33,14 +33,14 @@ window.onload = () => {
 function peticionAjax(url, metodo, funcionCallback, datos) {
     ajaxObj = new XMLHttpRequest();
     ajaxObj.open(metodo, url);
-
+    
     if (metodo === 'POST') {
         ajaxObj.setRequestHeader('Accept', 'application/json');
         ajaxObj.setRequestHeader('X-CSRF-TOKEN', csrfToken);
     }
-
+    
     ajaxObj.onreadystatechange = funcionCallback;
-
+    
     if (metodo === 'POST' && datos) {
         ajaxObj.send(datos);
     } else {
@@ -51,19 +51,19 @@ function peticionAjax(url, metodo, funcionCallback, datos) {
 function crearRestaurante() {
     const form = document.getElementById('createRestauranteForm');
     const submitBtn = document.getElementById('submitBtn');
-
+    
     // Limpiar errores anteriores
     document.querySelectorAll('.error').forEach(el => el.remove());
-
+    
     // Cambiar botón
     if (submitBtn) {
         submitBtn.textContent = 'Creando...';
         submitBtn.disabled = true;
     }
-
+    
     // Preparar datos
     const formData = new FormData(form);
-
+    
     // AJAX con patrón 
     peticionAjax(form.action, 'POST', manejarCrear, formData);
 }
@@ -71,7 +71,7 @@ function crearRestaurante() {
 function manejarCrear() {
     if (ajaxObj.readyState == READY_STATE_COMPLETE) {
         const submitBtn = document.getElementById('submitBtn');
-
+        
         if (ajaxObj.status == 200) {
             const data = JSON.parse(ajaxObj.responseText);
             if (data.success) {
@@ -105,7 +105,7 @@ function manejarCrear() {
                     text: 'Por favor corrige los errores en el formulario'
                 });
             }
-
+            
             // Restaurar botón
             if (submitBtn) {
                 submitBtn.textContent = 'Crear Restaurante';
@@ -117,7 +117,7 @@ function manejarCrear() {
                 title: 'Error',
                 text: 'Error al crear el restaurante'
             });
-
+            
             // Restaurar botón
             if (submitBtn) {
                 submitBtn.textContent = 'Crear Restaurante';
@@ -131,13 +131,13 @@ function manejarCrear() {
 function previewImages(event) {
     const files = event.target.files;
     const imagesPreview = document.getElementById('imagesPreview');
-
+    
     if (!imagesPreview) return;
-
+    
     // Limpiar previews anteriores y resetear array
     imagesPreview.innerHTML = '';
     selectedFiles = [];
-
+    
     if (files && files.length > 0) {
         // Validar cada archivo y añadir a selectedFiles
         for (let i = 0; i < files.length; i++) {
@@ -145,16 +145,16 @@ function previewImages(event) {
                 selectedFiles.push(files[i]);
             }
         }
-
+        
         if (selectedFiles.length === 0) {
-            imagesPreview.innerHTML = '<p id="noImagesMessage" style="width: 100%; text-align: center; color: #999; margin: 20px 0;">No se seleccionaron imágenes válidas. Intenta de nuevo.</p>';
+            imagesPreview.innerHTML = '<small style="color: #e74c3c; width: 100%; text-align: center; margin: 20px 0;">No se seleccionaron imágenes válidas</small>';
             return;
         }
-
+        
         // Renderizar previews
         renderImagePreviews();
     } else {
-        imagesPreview.innerHTML = '<p id="noImagesMessage" style="width: 100%; text-align: center; color: #999; margin: 20px 0;">Selecciona imágenes para añadir.</p>';
+        imagesPreview.innerHTML = '<small style="color: #666; width: 100%; text-align: center; margin: 20px 0;">Las imágenes seleccionadas aparecerán aquí</small>';
     }
 }
 
@@ -162,89 +162,69 @@ function previewImages(event) {
 function renderImagePreviews() {
     const imagesPreview = document.getElementById('imagesPreview');
     if (!imagesPreview) return;
-
+    
     imagesPreview.innerHTML = '';
-
+    
     selectedFiles.forEach((file, index) => {
         const reader = new FileReader();
         reader.onload = function (e) {
             const previewDiv = document.createElement('div');
-            previewDiv.className = 'new-image-item';
-            previewDiv.style.cssText = 'position: relative; text-align: center; border: 3px solid #ffc107; border-radius: 8px; padding: 5px; background: #fffbf0; max-width: 170px; box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);';
-
+            previewDiv.style.cssText = 'position: relative; display: flex; flex-direction: column; align-items: center; padding: 10px; background: #fff; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 170px;';
+            
             // Botón X para eliminar
             const removeBtn = document.createElement('button');
             removeBtn.innerHTML = '×';
-            removeBtn.className = 'btn-eliminar-imagen-nueva';
-            removeBtn.style.cssText = 'position: absolute; top: 3px; right: 3px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(0,0,0,0.3);';
-            removeBtn.title = 'Quitar imagen seleccionada';
-
-            // Efectos hover
-            removeBtn.onmouseenter = function () {
-                this.style.background = '#c0392b';
-                this.style.transform = 'scale(1.15)';
-            };
-
-            removeBtn.onmouseleave = function () {
-                this.style.background = '#e74c3c';
-                this.style.transform = 'scale(1)';
-            };
-
+            removeBtn.style.cssText = 'position: absolute; top: 5px; right: 5px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 10;';
+            removeBtn.title = 'Eliminar imagen';
             removeBtn.onclick = (e) => {
                 e.preventDefault();
-                e.stopPropagation();
                 removeImage(index);
             };
-
+            
             const img = document.createElement('img');
             img.src = e.target.result;
             img.alt = `Vista previa ${index + 1}`;
-            img.style.cssText = 'width: 150px; height: 100px; object-fit: cover; border-radius: 5px; display: block;';
-
+            img.style.cssText = 'width: 150px; height: 100px; object-fit: cover; border: 2px solid #28a745; border-radius: 5px;';
+            
             const fileName = document.createElement('small');
-            fileName.textContent = file.name.length > 20 ? file.name.substring(0, 17) + '...' : file.name;
-            fileName.style.cssText = 'display: block; margin-top: 5px; color: #856404; text-align: center; font-size: 11px; font-weight: 600;';
-
-            const badge = document.createElement('span');
-            badge.textContent = 'NUEVA';
-            badge.style.cssText = 'display: inline-block; background: #ffc107; color: #000; padding: 2px 8px; border-radius: 3px; font-size: 9px; font-weight: bold; margin-top: 3px;';
-
+            fileName.textContent = file.name;
+            fileName.style.cssText = 'margin-top: 8px; color: #666; text-align: center; word-break: break-all; line-height: 1.3; max-width: 150px;';
+            
             previewDiv.appendChild(removeBtn);
             previewDiv.appendChild(img);
             previewDiv.appendChild(fileName);
-            previewDiv.appendChild(badge);
             imagesPreview.appendChild(previewDiv);
         }
         reader.readAsDataURL(file);
     });
-
+    
+    // Añadir mensaje de resumen
+    const summary = document.createElement('div');
+    summary.style.cssText = 'width: 100%; text-align: center; margin: 10px 0; font-weight: 500; color: #28a745;';
+    summary.textContent = `✓ ${selectedFiles.length} imagen(es) seleccionada(s)`;
+    imagesPreview.appendChild(summary);
+    
     console.log(`${selectedFiles.length} imágenes seleccionadas`);
 }
 
 // Función para eliminar una imagen específica
 function removeImage(index) {
     if (index >= 0 && index < selectedFiles.length) {
-        const fileName = selectedFiles[index].name;
         selectedFiles.splice(index, 1);
-
+        
         // Actualizar el input file con los archivos restantes
         updateFileInput();
-
+        
         // Si quedan archivos, renderizar de nuevo
         if (selectedFiles.length > 0) {
             renderImagePreviews();
-            console.log(`Imagen "${fileName}" eliminada. Quedan ${selectedFiles.length} imagen(es)`);
         } else {
             // Si no quedan archivos, mostrar mensaje por defecto
             const imagesPreview = document.getElementById('imagesPreview');
             if (imagesPreview) {
-                imagesPreview.innerHTML = '<p id="noImagesMessage" style="width: 100%; text-align: center; color: #999; margin: 20px 0;">Selecciona imágenes para añadir.</p>';
+                imagesPreview.innerHTML = '<small style="color: #666; width: 100%; text-align: center; margin: 20px 0;">Las imágenes seleccionadas aparecerán aquí</small>';
             }
-            console.log(`Imagen "${fileName}" eliminada. No quedan más imágenes seleccionadas`);
         }
-    } else {
-        console.error('Índice de imagen no válido:', index);
-        alert('Error al eliminar la imagen');
     }
 }
 
@@ -252,14 +232,14 @@ function removeImage(index) {
 function updateFileInput() {
     const fileInput = document.getElementById('imagenes');
     if (!fileInput) return;
-
+    
     // Crear un nuevo DataTransfer object para reconstruir la lista de archivos
     const dataTransfer = new DataTransfer();
-
+    
     selectedFiles.forEach(file => {
         dataTransfer.items.add(file);
     });
-
+    
     fileInput.files = dataTransfer.files;
 }
 
@@ -267,17 +247,17 @@ function updateFileInput() {
 function validateImageFile(file) {
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
     const maxSize = 5 * 1024 * 1024; // 5MB
-
+    
     if (!validTypes.includes(file.type)) {
         alert(`Archivo ${file.name}: Formato no válido. Use JPG, PNG, GIF o WebP`);
         return false;
     }
-
+    
     if (file.size > maxSize) {
         alert(`Archivo ${file.name}: Muy grande. Máximo 5MB`);
-        return false;
+        return false; 
     }
-
+    
     return true;
 }
 

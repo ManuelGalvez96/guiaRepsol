@@ -84,7 +84,11 @@
                             @forelse($restaurantesPatrocinados as $patrocinado)
                             <a href="{{ route('restaurante.detalle', $patrocinado->id) }}" style="text-decoration: none; color: inherit;">
                             <article class="article-item">
-                                <img src="https://picsum.photos/100/80?random={{ $patrocinado->id }}" alt="{{ $patrocinado->nombre }}">
+                                @if($patrocinado->imagenes->first())
+                                    <img src="{{ asset('storage/' . $patrocinado->imagenes->first()->url) }}" alt="{{ $patrocinado->nombre }}">
+                                @else
+                                    <img src="https://picsum.photos/100/80?random={{ $patrocinado->id }}" alt="{{ $patrocinado->nombre }}">
+                                @endif
                                 <div class="article-content">
                                     <h3>{{ $patrocinado->nombre }}</h3>
                                     <p class="article-meta">
@@ -178,7 +182,11 @@
                             <div class="col-md-4">
                                 <a href="{{ route('restaurante.detalle', $restaurante->id) }}" class="text-decoration-none">
                                     <div class="card restaurant-card">
-                                        <img src="https://picsum.photos/400/300?random={{ $restaurante->id }}" class="card-img-top" alt="{{ $restaurante->nombre }}">
+                                        @if($restaurante->imagenes->first())
+                                            <img src="{{ asset('storage/' . $restaurante->imagenes->first()->url) }}" class="card-img-top" alt="{{ $restaurante->nombre }}">
+                                        @else
+                                            <img src="https://picsum.photos/400/300?random={{ $restaurante->id }}" class="card-img-top" alt="{{ $restaurante->nombre }}">
+                                        @endif
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $restaurante->nombre }}</h5>
                                             <p class="card-text">
@@ -277,7 +285,11 @@
                             <div class="col-md-3">
                                 <a href="{{ route('restaurante.detalle', $restaurante->id) }}" class="text-decoration-none">
                                     <div class="card place-card">
-                                        <img src="https://picsum.photos/300/200?random={{ $restaurante->id + 100 }}" class="card-img-top" alt="{{ $restaurante->nombre }}">
+                                        @if($restaurante->imagenes->first())
+                                            <img src="{{ asset('storage/' . $restaurante->imagenes->first()->url) }}" class="card-img-top" alt="{{ $restaurante->nombre }}">
+                                        @else
+                                            <img src="https://picsum.photos/300/200?random={{ $restaurante->id + 100 }}" class="card-img-top" alt="{{ $restaurante->nombre }}">
+                                        @endif
                                         <div class="card-body">
                                             <h6 class="card-title">{{ $restaurante->nombre }}</h6>
                                             <p class="card-text small">

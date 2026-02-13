@@ -34,7 +34,7 @@
             <tr>
                 <td>
                     @if($restaurante->imagenes->first())
-                        <img src="{{ asset($restaurante->imagenes->first()->url) }}" alt="{{ $restaurante->nombre }}" class="restaurant-img">
+                        <img src="{{ asset('storage/' . $restaurante->imagenes->first()->url) }}" alt="{{ $restaurante->nombre }}" class="restaurant-img">
                     @else
                         <div class="restaurant-img"></div>
                     @endif

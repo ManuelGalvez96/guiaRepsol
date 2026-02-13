@@ -15,19 +15,19 @@ class RestauranteController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Restaurante::with(['categoria', 'ubicacion', 'tiposComida']);
+        $query = Restaurante::with(['categoria', 'ubicacion', 'tiposComida', 'imagenes']);
 
         // Obtener restaurantes del gerente si está autenticado y es gerente
         $restaurantesGerente = null;
         if (Auth::check() && Auth::user()->rol === 'gerente') {
-            $restaurantesGerente = Restaurante::with(['categoria', 'ubicacion', 'tiposComida'])
+            $restaurantesGerente = Restaurante::with(['categoria', 'ubicacion', 'tiposComida', 'imagenes'])
                 ->where('user_id', Auth::id())
                 ->where('activo', true)
                 ->paginate(4, ['*'], 'gerente_page');
         }
 
         // Obtener restaurantes patrocinados
-        $restaurantesPatrocinados = Restaurante::with(['categoria', 'ubicacion', 'tiposComida'])
+        $restaurantesPatrocinados = Restaurante::with(['categoria', 'ubicacion', 'tiposComida', 'imagenes'])
             ->where('patrocinados', true)
             ->where('activo', true)
             ->inRandomOrder()
@@ -62,7 +62,7 @@ class RestauranteController extends Controller
 
     public function show($id)
     {
-        $restaurante = Restaurante::with(['categoria', 'ubicacion', 'tiposComida', 'valoraciones.usuario'])
+        $restaurante = Restaurante::with(['categoria', 'ubicacion', 'tiposComida', 'valoraciones.usuario', 'imagenes'])
             ->findOrFail($id);
 
         return view('restaurante-detalle', compact('restaurante'));
