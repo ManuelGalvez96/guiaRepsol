@@ -733,6 +733,41 @@ body {
     background-color: #00a651;
 }
 
+/* Tabs Navigation */
+.tabs-nav {
+    background-color: var(--color-white);
+    border-bottom: 1px solid var(--color-border);
+    padding: 0;
+}
+
+.tabs-nav .nav-tabs {
+    margin: 0;
+}
+
+.tabs-nav .nav-link {
+    color: var(--color-text-light);
+    border: none;
+    padding: 14px 24px;
+    font-size: 15px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.tabs-nav .nav-link:hover {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-border);
+}
+
+.tabs-nav .nav-link.active {
+    color: var(--color-secondary);
+    border-bottom-color: var(--color-secondary);
+    background-color: transparent;
+}
+
 /* Variables específicas para detalle de restaurante */
 :root {
     --color-primary: #1e3a5f;

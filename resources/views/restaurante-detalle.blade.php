@@ -11,6 +11,36 @@
     <title>{{ $restaurante->nombre }} - Guía Repsol</title>
 </head>
 <body>
+    @php
+        use Illuminate\Support\Facades\File;
+        use Illuminate\Support\Str;
+
+        $stopwords = ['el', 'la', 'los', 'las', 'de', 'del', 'y', 'the', 'restaurante', 'restaurant', 'l'];
+
+        $normalizeRestauranteName = function (string $value) use ($stopwords): string {
+            $asciiValue = Str::ascii($value);
+            $cleanValue = preg_replace('/[^a-zA-Z0-9]+/', ' ', $asciiValue) ?? '';
+            $tokens = array_filter(explode(' ', strtolower($cleanValue)));
+            $tokens = array_values(array_filter($tokens, fn ($token) => !in_array($token, $stopwords, true)));
+
+            return implode('', $tokens);
+        };
+
+        $restauranteImageMap = [];
+        foreach (File::files(public_path('img/restaurantes')) as $file) {
+            $baseName = pathinfo($file->getFilename(), PATHINFO_FILENAME);
+            $key = $normalizeRestauranteName($baseName);
+            if ($key !== '') {
+                $restauranteImageMap[$key] = 'img/restaurantes/' . $file->getFilename();
+            }
+        }
+
+        $resolveRestauranteImage = function (string $nombre) use ($normalizeRestauranteName, $restauranteImageMap): string {
+            $key = $normalizeRestauranteName($nombre);
+
+            return $restauranteImageMap[$key] ?? 'img/restaurantes/emigrante.webp';
+        };
+    @endphp
     <!-- Header -->
     <header class="header-detalle">
         <div class="container">
@@ -43,28 +73,23 @@
         </div>
     </header>
 
-    <!-- Banner Gala -->
-    <div class="banner-gala-detalle">
+    <!-- Tabs Navigation -->
+    <div class="tabs-nav">
         <div class="container">
-            <div class="gala-content">
-                <div class="gala-left">
-                    <div class="gala-icons">
-                        <span class="icon-sol red"></span>
-                        <span class="icon-sol yellow"></span>
-                        <span class="icon-sol green"></span>
-                    </div>
-                    <span class="gala-text">Vive la Gala de los Soles 2024</span>
-                    <span class="gala-date">4d : 3h : 26m : 14s</span>
-                </div>
-                <div class="gala-right">
-                    <div class="gala-links">
-                        <a href="#">Todo sobre la Gala</a>
-                    </div>
-                    <a href="#" class="btn-calendar">
-                        <i class="bi bi-calendar-plus"></i> Añadir al calendario
-                    </a>
-                </div>
-            </div>
+            <ul class="nav nav-tabs border-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('home') }}"><i class="bi bi-house"></i> Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('restaurantes') }}"><i class="bi bi-list-ul"></i> Listado</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#"><i class="bi bi-info-circle"></i> Información</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('formulario') }}"><i class="bi bi-shop"></i> Date a Conocer</a>
+                </li>
+            </ul>
         </div>
     </div>
 
@@ -123,9 +148,6 @@
                             <button class="btn-guardar">
                                 <i class="bi bi-bookmark"></i> Guardar
                             </button>
-                            <button class="btn-compartir">
-                                <i class="bi bi-share"></i>
-                            </button>
                             <button class="btn-favorito">
                                 <i class="bi bi-heart"></i>
                             </button>
@@ -139,134 +161,134 @@
                     </div>
                     @endif
 
-                    <!-- Reseñas -->
-                    @if($restaurante->valoraciones->count() > 0)
+                    <!-- Opciones de menú, Servicios e Información de contacto (Acordeón) -->
                     <div class="section-box">
-                        @foreach($restaurante->valoraciones->take(2) as $valoracion)
-                        <div class="resena-item">
-                            <div class="resena-icon">"</div>
-                            <p class="resena-text">{{ $valoracion->comentario }}</p>
-                            <div class="resena-buttons">
-                                <button class="btn-guardar-sm">
-                                    <i class="bi bi-bookmark"></i> Guardar
-                                </button>
-                                <button class="btn-compartir">
-                                    <i class="bi bi-share"></i>
-                                </button>
-                                <button class="btn-favorito">
-                                    <i class="bi bi-heart"></i>
-                                </button>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                    @endif
-
-                    <!-- Opciones de menú -->
-                    <div class="section-box">
-                        <h3 class="section-title">Opciones de menú</h3>
-                        
-                        <div class="opciones-menu-item">
-                            <div class="menu-titulo">
-                                <i class="bi bi-cup-straw"></i>
-                                Opciones para celíacos
-                            </div>
-                        </div>
-
-                        <div class="opciones-menu-item">
-                            <div class="menu-titulo">
-                                <i class="bi bi-leaf"></i>
-                                Opciones veganas
-                            </div>
-                        </div>
-
-                        <div class="opciones-menu-item">
-                            <div class="menu-titulo">
-                                <i class="bi bi-star"></i>
-                                Nuestra recomendación
-                            </div>
-                            <p class="menu-descripcion">Excelente producto local con innovación culinaria.</p>
-                        </div>
-                    </div>
-
-                    <!-- Servicios -->
-                    <div class="section-box">
-                        <h3 class="section-title">Servicios del restaurante</h3>
-                        <div class="servicio-item">
-                            <i class="bi bi-clock servicio-icon"></i>
-                            <span>Comida para llevar</span>
-                        </div>
-                    </div>
-
-                    <!-- Información de contacto -->
-                    <div class="section-box">
-                        <h3 class="section-title">Información de contacto</h3>
-                        
-                        <div class="contacto-item">
-                            <div class="contacto-label">Horario</div>
-                            <div class="horario-toggle">
-                                <div class="horario-status">Abierto <span class="horario-separator">·</span> Cierra a las 16:00h.</div>
-                                <i class="bi bi-chevron-down horario-icon"></i>
-                            </div>
-                            
-                            <div class="horario-detalle-list" id="horarioDetalle" style="display: none;">
-                                <div class="horario-dia-item">
-                                    <div class="horario-dia">Lunes</div>
-                                    <div class="horario-horas cerrado">Cerrado</div>
-                                </div>
-                                <div class="horario-dia-item">
-                                    <div class="horario-dia">Martes</div>
-                                    <div class="horario-horas">13:00 - 16:00, 20:00 - 00:00</div>
-                                </div>
-                                <div class="horario-dia-item">
-                                    <div class="horario-dia">Miércoles</div>
-                                    <div class="horario-horas">13:00 - 16:00, 20:00 - 00:00</div>
-                                </div>
-                                <div class="horario-dia-item">
-                                    <div class="horario-dia">Jueves</div>
-                                    <div class="horario-horas">13:00 - 16:00, 20:00 - 00:00</div>
-                                </div>
-                                <div class="horario-dia-item">
-                                    <div class="horario-dia">Viernes</div>
-                                    <div class="horario-horas">13:00 - 16:00, 20:00 - 00:00</div>
-                                </div>
-                                <div class="horario-dia-item">
-                                    <div class="horario-dia">Sábado</div>
-                                    <div class="horario-horas">13:00 - 16:30, 20:00 - 00:00</div>
-                                </div>
-                                <div class="horario-dia-item">
-                                    <div class="horario-dia">Domingo</div>
-                                    <div class="horario-horas">13:00 - 16:00</div>
+                        <div class="accordion" id="accordionOpcionesServicios">
+                            <!-- Opciones de menú -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOpciones">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOpciones" aria-expanded="true" aria-controls="collapseOpciones">
+                                        <i class="bi bi-cup-straw me-2"></i> Opciones de menú
+                                    </button>
+                                </h2>
+                                <div id="collapseOpciones" class="accordion-collapse collapse show" aria-labelledby="headingOpciones" data-bs-parent="#accordionOpcionesServicios">
+                                    <div class="accordion-body">
+                                        <div class="opciones-menu-item">
+                                            <div class="menu-titulo">
+                                                <i class="bi bi-cup-straw"></i>
+                                                Opciones para celíacos
+                                            </div>
+                                        </div>
+                                        <div class="opciones-menu-item">
+                                            <div class="menu-titulo">
+                                                <i class="bi bi-leaf"></i>
+                                                Opciones veganas
+                                            </div>
+                                        </div>
+                                        <div class="opciones-menu-item">
+                                            <div class="menu-titulo">
+                                                <i class="bi bi-star"></i>
+                                                Nuestra recomendación
+                                            </div>
+                                            <p class="menu-descripcion">Excelente producto local con innovación culinaria.</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            <!-- Servicios -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingServicios">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseServicios" aria-expanded="false" aria-controls="collapseServicios">
+                                        <i class="bi bi-gear me-2"></i> Servicios del restaurante
+                                    </button>
+                                </h2>
+                                <div id="collapseServicios" class="accordion-collapse collapse" aria-labelledby="headingServicios" data-bs-parent="#accordionOpcionesServicios">
+                                    <div class="accordion-body">
+                                        <div class="servicio-item">
+                                            <i class="bi bi-clock servicio-icon"></i>
+                                            <span>Comida para llevar</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Información de contacto -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingContacto">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseContacto" aria-expanded="false" aria-controls="collapseContacto">
+                                        <i class="bi bi-telephone me-2"></i> Información de contacto
+                                    </button>
+                                </h2>
+                                <div id="collapseContacto" class="accordion-collapse collapse" aria-labelledby="headingContacto" data-bs-parent="#accordionOpcionesServicios">
+                                    <div class="accordion-body">
+                                        <div class="contacto-item">
+                                            <div class="contacto-label">Horario</div>
+                                            <div class="horario-toggle">
+                                                <div class="horario-status">Abierto <span class="horario-separator">·</span> Cierra a las 16:00h.</div>
+                                                <i class="bi bi-chevron-down horario-icon"></i>
+                                            </div>
+                                            
+                                            <div class="horario-detalle-list" id="horarioDetalle" style="display: none;">
+                                                <div class="horario-dia-item">
+                                                    <div class="horario-dia">Lunes</div>
+                                                    <div class="horario-horas cerrado">Cerrado</div>
+                                                </div>
+                                                <div class="horario-dia-item">
+                                                    <div class="horario-dia">Martes</div>
+                                                    <div class="horario-horas">13:00 - 16:00, 20:00 - 00:00</div>
+                                                </div>
+                                                <div class="horario-dia-item">
+                                                    <div class="horario-dia">Miércoles</div>
+                                                    <div class="horario-horas">13:00 - 16:00, 20:00 - 00:00</div>
+                                                </div>
+                                                <div class="horario-dia-item">
+                                                    <div class="horario-dia">Jueves</div>
+                                                    <div class="horario-horas">13:00 - 16:00, 20:00 - 00:00</div>
+                                                </div>
+                                                <div class="horario-dia-item">
+                                                    <div class="horario-dia">Viernes</div>
+                                                    <div class="horario-horas">13:00 - 16:00, 20:00 - 00:00</div>
+                                                </div>
+                                                <div class="horario-dia-item">
+                                                    <div class="horario-dia">Sábado</div>
+                                                    <div class="horario-horas">13:00 - 16:30, 20:00 - 00:00</div>
+                                                </div>
+                                                <div class="horario-dia-item">
+                                                    <div class="horario-dia">Domingo</div>
+                                                    <div class="horario-horas">13:00 - 16:00</div>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                        <div class="contacto-item">
-                            <div class="contacto-label">Dirección:</div>
-                            <div class="contacto-valor">{{ $restaurante->direccion }}, {{ $restaurante->ubicacion->codigo_postal }} {{ $restaurante->ubicacion->ciudad }}</div>
-                            <button class="btn-contacto">Cómo llegar</button>
-                        </div>
+                                        <div class="contacto-item">
+                                            <div class="contacto-label">Dirección:</div>
+                                            <div class="contacto-valor">{{ $restaurante->direccion }}, {{ $restaurante->ubicacion->codigo_postal }} {{ $restaurante->ubicacion->ciudad }}</div>
+                                            <button class="btn-contacto">Cómo llegar</button>
+                                        </div>
 
-                        @if($restaurante->telefono)
-                        <div class="contacto-item">
-                            <div class="contacto-label">Teléfono:</div>
-                            <div class="contacto-valor">{{ $restaurante->telefono }}</div>
-                            <button class="btn-contacto">Llamar</button>
-                        </div>
-                        @endif
+                                        @if($restaurante->telefono)
+                                        <div class="contacto-item">
+                                            <div class="contacto-label">Teléfono:</div>
+                                            <div class="contacto-valor">{{ $restaurante->telefono }}</div>
+                                            <button class="btn-contacto">Llamar</button>
+                                        </div>
+                                        @endif
 
-                        @if($restaurante->web)
-                        <div class="contacto-item">
-                            <div class="contacto-label">Web:</div>
-                            <div class="contacto-valor">{{ $restaurante->web }}</div>
-                            <button class="btn-contacto">Ver web</button>
-                        </div>
-                        @endif
+                                        @if($restaurante->web)
+                                        <div class="contacto-item">
+                                            <div class="contacto-label">Web:</div>
+                                            <div class="contacto-valor">{{ $restaurante->web }}</div>
+                                            <button class="btn-contacto">Ver web</button>
+                                        </div>
+                                        @endif
 
-                        <div class="contacto-item">
-                            <div class="contacto-label">Instagram:</div>
-                            <div class="contacto-valor">{{ '@' . strtolower(str_replace(' ', '', $restaurante->nombre)) }}</div>
-                            <button class="btn-contacto">Ver Instagram</button>
+                                        <div class="contacto-item">
+                                            <div class="contacto-label">Instagram:</div>
+                                            <div class="contacto-valor">{{ '@' . strtolower(str_replace(' ', '', $restaurante->nombre)) }}</div>
+                                            <button class="btn-contacto">Ver Instagram</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -289,28 +311,36 @@
 
                 <!-- Columna Derecha - Imágenes y Reservas -->
                 <div class="col-lg-7">
-                    <!-- Imagen Principal -->
-                    <div class="image-container">
-                        <img src="{{ $restaurante->imagenes->isNotEmpty() ? asset($restaurante->imagenes->first()->url) : 'https://picsum.photos/800/600?random=' . $restaurante->id }}" 
-                             alt="{{ $restaurante->imagenes->isNotEmpty() ? $restaurante->imagenes->first()->alt : $restaurante->nombre }}" 
-                             class="restaurant-image-main">
-                        <button class="btn-ver-fotos">
-                            <i class="bi bi-images"></i> Mostrar todas las fotos
+                    <!-- Carousel de Imágenes -->
+                    <div id="carouselRestaurante" class="carousel slide mb-4" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            @if($restaurante->imagenes->isNotEmpty())
+                                @foreach($restaurante->imagenes as $index => $imagen)
+                                <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                    <img src="{{ asset($imagen->url) }}" class="d-block w-100" alt="{{ $imagen->alt ?? $restaurante->nombre }}" style="height: 400px; object-fit: cover; border-radius: 8px;">
+                                </div>
+                                @endforeach
+                            @else
+                                <div class="carousel-item active">
+                                    <img src="{{ asset($resolveRestauranteImage($restaurante->nombre)) }}" class="d-block w-100" alt="{{ $restaurante->nombre }}" style="height: 400px; object-fit: cover; border-radius: 8px;">
+                                </div>
+                            @endif
+                        </div>
+                        @if($restaurante->imagenes->count() > 1)
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselRestaurante" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
                         </button>
-                    </div>
-
-                    <!-- Reserva -->
-                    <div class="reserva-box">
-                        <h3 class="reserva-title">Reserva una mesa</h3>
-                        <button class="btn-reserva">
-                            <i class="bi bi-clipboard-check"></i> Mostrar todas las fotos
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselRestaurante" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Siguiente</span>
                         </button>
-                        <button class="btn-reserva">
-                            <i class="bi bi-calendar-check"></i> Reservar
-                        </button>
-                        <p class="reserva-info">
-                            La reserva se realizará en otro sitio web distinto a Guía Repsol
-                        </p>
+                        <div class="carousel-indicators">
+                            @foreach($restaurante->imagenes as $index => $imagen)
+                            <button type="button" data-bs-target="#carouselRestaurante" data-bs-slide-to="{{ $index }}" class="{{ $index == 0 ? 'active' : '' }}" aria-current="{{ $index == 0 ? 'true' : 'false' }}" aria-label="Slide {{ $index + 1 }}"></button>
+                            @endforeach
+                        </div>
+                        @endif
                     </div>
 
                     <!-- Reportajes Relacionados -->

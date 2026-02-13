@@ -82,10 +82,13 @@
         <div class="container">
             <ul class="nav nav-tabs border-0">
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('home') }}"><i class="bi bi-house"></i> Inicio</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link active" href="#"><i class="bi bi-list-ul"></i> Listado</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="bi bi-map"></i> Mapa</a>
+                    <a class="nav-link" href="{{ route('formulario') }}"><i class="bi bi-shop"></i> Date a Conocer</a>
                 </li>
             </ul>
         </div>
