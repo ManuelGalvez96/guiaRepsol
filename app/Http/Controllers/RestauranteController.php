@@ -54,11 +54,32 @@ class RestauranteController extends Controller
         }
 
         // Obtener restaurantes patrocinados
-        $restaurantesPatrocinados = Restaurante::with(['categoria', 'ubicacion', 'tiposComida'])
+        $patrocinadosQuery = Restaurante::with(['categoria', 'ubicacion', 'tiposComida'])
             ->where('patrocinados', true)
-            ->where('activo', true)
-            ->inRandomOrder()
-            ->paginate(5, ['*'], 'patrocinados_page');
+            ->where('activo', true);
+        $totalPatrocinados = (clone $patrocinadosQuery)->count();
+        $ordenarPatrocinados = $request->get('ordenar_patrocinados', 'nombre');
+
+        switch ($ordenarPatrocinados) {
+            case 'valoracion':
+                $patrocinadosQuery->orderBy('valoracion_promedio', 'desc');
+                break;
+            case 'precio_asc':
+                $patrocinadosQuery->orderBy('precio', 'asc');
+                break;
+            case 'precio_desc':
+                $patrocinadosQuery->orderBy('precio', 'desc');
+                break;
+            case 'soles':
+                $patrocinadosQuery->orderBy('soles', 'desc');
+                break;
+            case 'nombre':
+            default:
+                $patrocinadosQuery->orderBy('nombre', 'asc');
+                break;
+        }
+
+        $restaurantesPatrocinados = $patrocinadosQuery->paginate(5, ['*'], 'patrocinados_page');
 
         // Aplicar ordenamiento
         $ordenar = $request->get('ordenar', 'nombre');
@@ -113,7 +134,7 @@ class RestauranteController extends Controller
             ]);
         }
 
-        return view('restaurantes', compact('restaurantes', 'restaurantesPatrocinados', 'restaurantesGerente'));
+        return view('restaurantes', compact('restaurantes', 'restaurantesPatrocinados', 'restaurantesGerente', 'totalPatrocinados'));
     }
 
     public function show($id)

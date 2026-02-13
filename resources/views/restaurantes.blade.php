@@ -100,13 +100,19 @@
                     <div class="content-section">
                         <div class="section-header">
                             <h2>Contenido relacionado</h2>
-                            <span class="result-count">{{ $restaurantesPatrocinados->count() }} restaurantes patrocinados</span>
+                            <span class="result-count">{{ $totalPatrocinados }} restaurantes patrocinados</span>
                         </div>
 
                         <div class="filters mb-3">
-                            <button class="btn btn-sm btn-outline-secondary me-2">
-                                <i class="bi bi-star-fill text-warning"></i> Patrocinados
-                            </button>
+                            <form method="GET" action="{{ route('restaurantes') }}" id="formOrdenarPatrocinados">
+                                <select name="ordenar_patrocinados" class="btn btn-sm btn-outline-secondary" onchange="document.getElementById('formOrdenarPatrocinados').submit()">
+                                    <option value="nombre" {{ request('ordenar_patrocinados') == 'nombre' ? 'selected' : '' }}>Nombre A-Z</option>
+                                    <option value="valoracion" {{ request('ordenar_patrocinados') == 'valoracion' ? 'selected' : '' }}>Mejor valorados</option>
+                                    <option value="soles" {{ request('ordenar_patrocinados') == 'soles' ? 'selected' : '' }}>Más Soles Repsol</option>
+                                    <option value="precio_asc" {{ request('ordenar_patrocinados') == 'precio_asc' ? 'selected' : '' }}>Precio: Menor a Mayor</option>
+                                    <option value="precio_desc" {{ request('ordenar_patrocinados') == 'precio_desc' ? 'selected' : '' }}>Precio: Mayor a Menor</option>
+                                </select>
+                            </form>
                         </div>
 
                         <!-- Lista de Restaurantes Patrocinados -->
@@ -149,7 +155,7 @@
                                         <i class="bi bi-chevron-left" style="font-size: 30px; color: #ccc;"></i>
                                     </span>
                                 @else
-                                    <a href="{{ $restaurantesPatrocinados->appends(request()->except('patrocinados_page'))->previousPageUrl('patrocinados_page') }}" class="pagination-arrow-small">
+                                    <a href="{{ $restaurantesPatrocinados->appends(['ordenar_patrocinados' => request('ordenar_patrocinados')])->previousPageUrl('patrocinados_page') }}" class="pagination-arrow-small">
                                         <i class="bi bi-chevron-left" style="font-size: 30px; color: #333;"></i>
                                     </a>
                                 @endif
@@ -160,14 +166,14 @@
                                         @if($page == $restaurantesPatrocinados->currentPage())
                                             <span class="page-number-small active">{{ $page }}</span>
                                         @else
-                                            <a href="{{ $restaurantesPatrocinados->appends(request()->except('patrocinados_page'))->url($page) }}" class="page-number-small">{{ $page }}</a>
+                                            <a href="{{ $restaurantesPatrocinados->appends(['ordenar_patrocinados' => request('ordenar_patrocinados')])->url($page) }}" class="page-number-small">{{ $page }}</a>
                                         @endif
                                     @endforeach
                                 </div>
 
                                 <!-- Flecha Siguiente -->
                                 @if($restaurantesPatrocinados->hasMorePages())
-                                    <a href="{{ $restaurantesPatrocinados->appends(request()->except('patrocinados_page'))->nextPageUrl('patrocinados_page') }}" class="pagination-arrow-small">
+                                    <a href="{{ $restaurantesPatrocinados->appends(['ordenar_patrocinados' => request('ordenar_patrocinados')])->nextPageUrl('patrocinados_page') }}" class="pagination-arrow-small">
                                         <i class="bi bi-chevron-right" style="font-size: 30px; color: #00a3e0;"></i>
                                     </a>
                                 @else
