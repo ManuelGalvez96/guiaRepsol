@@ -7,6 +7,8 @@ use App\Models\Categoria;
 use App\Models\TipoComida;
 use App\Models\Ubicacion;
 use App\Models\ImagenRestaurante;
+use App\Models\LikeRestaurante;
+use App\Models\GuardarRestaurante;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -142,7 +144,18 @@ class RestauranteController extends Controller
         $restaurante = Restaurante::with(['categoria', 'ubicacion', 'tiposComida', 'valoraciones.usuario'])
             ->findOrFail($id);
 
-        return view('restaurante-detalle', compact('restaurante'));
+        // Verificar si el usuario ha dado like o guardado el restaurante
+        $userHasLiked = Auth::check() && LikeRestaurante::where('user_id', Auth::id())
+            ->where('restaurante_id', $id)
+            ->exists();
+            
+        $userHasSaved = Auth::check() && GuardarRestaurante::where('user_id', Auth::id())
+            ->where('restaurante_id', $id)
+            ->exists();
+            
+        $totalLikes = LikeRestaurante::where('restaurante_id', $id)->count();
+
+        return view('restaurante-detalle', compact('restaurante', 'userHasLiked', 'userHasSaved', 'totalLikes'));
     }
 
     public function create()
@@ -230,5 +243,106 @@ class RestauranteController extends Controller
         }
 
         return redirect()->route('home')->with('success', '¡Solicitud enviada! Tu restaurante será revisado pronto.');
+    }
+
+    // Toggle like (dar/quitar like a un restaurante)
+    public function toggleLike($id)
+    {
+        $restaurante = Restaurante::findOrFail($id);
+        $userId = Auth::id();
+
+        $like = \App\Models\LikeRestaurante::where('user_id', $userId)
+            ->where('restaurante_id', $id)
+            ->first();
+
+        if ($like) {
+            // Ya tiene like, se quita
+            $like->delete();
+            $liked = false;
+        } else {
+            // No tiene like, se agrega
+            \App\Models\LikeRestaurante::create([
+                'user_id' => $userId,
+                'restaurante_id' => $id,
+            ]);
+            $liked = true;
+        }
+
+        $totalLikes = \App\Models\LikeRestaurante::where('restaurante_id', $id)->count();
+
+        return response()->json([
+            'success' => true,
+            'liked' => $liked,
+            'totalLikes' => $totalLikes,
+        ]);
+    }
+
+    // Toggle guardar (guardar/quitar guardado de un restaurante)
+    public function toggleGuardar($id)
+    {
+        $restaurante = Restaurante::findOrFail($id);
+        $userId = Auth::id();
+
+        $guardado = \App\Models\GuardarRestaurante::where('user_id', $userId)
+            ->where('restaurante_id', $id)
+            ->first();
+
+        if ($guardado) {
+            // Ya está guardado, se quita
+            $guardado->delete();
+            $saved = false;
+            $message = 'Restaurante eliminado de guardados';
+        } else {
+            // No está guardado, se agrega
+            \App\Models\GuardarRestaurante::create([
+                'user_id' => $userId,
+                'restaurante_id' => $id,
+            ]);
+            $saved = true;
+            $message = 'Restaurante guardado correctamente';
+        }
+
+        return response()->json([
+            'success' => true,
+            'saved' => $saved,
+            'message' => $message,
+        ]);
+    }
+
+    // Vista de restaurantes guardados
+    public function guardados(Request $request)
+    {
+        $userId = Auth::id();
+        
+        $query = Restaurante::with(['categoria', 'ubicacion', 'tiposComida', 'imagenes'])
+            ->whereHas('guardados', function ($q) use ($userId) {
+                $q->where('user_id', $userId);
+            });
+
+        // Aplicar ordenamiento
+        $ordenar = $request->get('ordenar', 'nombre');
+        
+        switch ($ordenar) {
+            case 'valoracion':
+                $query->orderBy('valoracion_promedio', 'desc');
+                break;
+            case 'precio_asc':
+                $query->orderBy('precio', 'asc');
+                break;
+            case 'precio_desc':
+                $query->orderBy('precio', 'desc');
+                break;
+            case 'soles':
+                $query->orderBy('soles', 'desc');
+                break;
+            case 'nombre':
+            default:
+                $query->orderBy('nombre', 'asc');
+                break;
+        }
+
+        $restaurantes = $query->paginate(12);
+
+        return view('restaurantes-guardados', compact('restaurantes'));
     }
 }

@@ -217,5 +217,110 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+
+    // Manejar botón de favorito (like)
+    const btnFavorito = document.getElementById('btn-favorito');
+    if (btnFavorito) {
+        btnFavorito.addEventListener('click', function() {
+            const restauranteId = this.getAttribute('data-restaurante-id');
+            
+            fetch(`/restaurante/${restauranteId}/like`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': window.csrfToken,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const icon = this.querySelector('i');
+                    const likeCount = document.getElementById('like-count');
+                    
+                    if (data.liked) {
+                        this.classList.add('active');
+                        icon.classList.remove('bi-heart');
+                        icon.classList.add('bi-heart-fill');
+                    } else {
+                        this.classList.remove('active');
+                        icon.classList.remove('bi-heart-fill');
+                        icon.classList.add('bi-heart');
+                    }
+                    
+                    if (likeCount) {
+                        likeCount.textContent = data.totalLikes;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo actualizar el like',
+                    confirmButtonColor: '#00a3e0'
+                });
+            });
+        });
+    }
+
+    // Manejar botón de guardar
+    const btnGuardar = document.getElementById('btn-guardar');
+    if (btnGuardar) {
+        btnGuardar.addEventListener('click', function() {
+            const restauranteId = this.getAttribute('data-restaurante-id');
+            
+            fetch(`/restaurante/${restauranteId}/guardar`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': window.csrfToken,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const icon = this.querySelector('i');
+                    
+                    if (data.saved) {
+                        this.classList.add('active');
+                        icon.classList.remove('bi-bookmark');
+                        icon.classList.add('bi-bookmark-fill');
+                        
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Guardado!',
+                            text: data.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        this.classList.remove('active');
+                        icon.classList.remove('bi-bookmark-fill');
+                        icon.classList.add('bi-bookmark');
+                        
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Eliminado',
+                            text: data.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo guardar el restaurante',
+                    confirmButtonColor: '#00a3e0'
+                });
+            });
+        });
+    }
 });
 

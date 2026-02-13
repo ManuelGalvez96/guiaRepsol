@@ -68,7 +68,7 @@
                 <div class="col-auto">
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf
-                        <button type="submit" class="btn-acceso">
+                        <button type="submit" class="btn-acceso-detalle">
                             <i class="bi bi-person"></i> Cerrar Sesión
                         </button>
                     </form>
@@ -89,6 +89,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('formulario') }}"><i class="bi bi-shop"></i> Date a Conocer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('restaurantes.guardados') }}"><i class="bi bi-bookmark-fill"></i> Guardados</a>
                 </li>
             </ul>
         </div>

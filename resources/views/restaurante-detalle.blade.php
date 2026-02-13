@@ -89,6 +89,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('formulario') }}"><i class="bi bi-shop"></i> Date a Conocer</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('restaurantes.guardados') }}"><i class="bi bi-bookmark-fill"></i> Guardados</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -145,11 +148,16 @@
                         </div>
 
                         <div class="mt-3">
-                            <button class="btn-guardar">
-                                <i class="bi bi-bookmark"></i> Guardar
+                            <button class="btn-guardar {{ $userHasSaved ? 'active' : '' }}" 
+                                    id="btn-guardar" 
+                                    data-restaurante-id="{{ $restaurante->id }}">
+                                <i class="bi bi-bookmark{{ $userHasSaved ? '-fill' : '' }}"></i> Guardar
                             </button>
-                            <button class="btn-favorito">
-                                <i class="bi bi-heart"></i>
+                            <button class="btn-favorito {{ $userHasLiked ? 'active' : '' }}" 
+                                    id="btn-favorito" 
+                                    data-restaurante-id="{{ $restaurante->id }}">
+                                <i class="bi bi-heart{{ $userHasLiked ? '-fill' : '' }}"></i>
+                                <span id="like-count">{{ $totalLikes }}</span>
                             </button>
                         </div>
                     </div>
