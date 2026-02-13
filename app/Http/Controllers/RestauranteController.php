@@ -141,8 +141,15 @@ class RestauranteController extends Controller
 
     public function show($id)
     {
-        $restaurante = Restaurante::with(['categoria', 'ubicacion', 'tiposComida', 'valoraciones.usuario'])
-            ->findOrFail($id);
+        $restaurante = Restaurante::with([
+            'categoria', 
+            'ubicacion', 
+            'tiposComida', 
+            'valoraciones.usuario',
+            'imagenes' => function($query) {
+                $query->where('principal', false)->orderBy('orden', 'asc');
+            }
+        ])->findOrFail($id);
 
         // Verificar si el usuario ha dado like o guardado el restaurante
         $userHasLiked = Auth::check() && LikeRestaurante::where('user_id', Auth::id())

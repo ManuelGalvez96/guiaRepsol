@@ -319,35 +319,122 @@
 
                 <!-- Columna Derecha - Imágenes y Reservas -->
                 <div class="col-lg-7">
-                    <!-- Carousel de Imágenes -->
-                    <div id="carouselRestaurante" class="carousel slide mb-4" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            @if($restaurante->imagenes->isNotEmpty())
-                                @foreach($restaurante->imagenes as $index => $imagen)
-                                <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                    <img src="{{ asset($imagen->url) }}" class="d-block w-100" alt="{{ $imagen->alt ?? $restaurante->nombre }}" style="height: 400px; object-fit: cover; border-radius: 8px;">
+                    <!-- Slider de Imágenes -->
+                    <div class="image-slider mb-4">
+                        @if($restaurante->imagenes->isNotEmpty())
+                            <!-- Imagen Principal -->
+                            <div class="main-image-container mb-3">
+                                <img id="mainSliderImage" src="{{ asset($restaurante->imagenes->first()->url) }}" 
+                                     alt="{{ $restaurante->imagenes->first()->alt ?? $restaurante->nombre }}" 
+                                     class="img-fluid w-100 rounded" 
+                                     style="height: 400px; object-fit: cover;">
+                            </div>
+
+                            @if($restaurante->imagenes->count() > 1)
+                            <!-- Slider de Miniaturas (debajo de la imagen principal) -->
+                            <div class="thumbnails-container position-relative">
+                                @if($restaurante->imagenes->count() > 4)
+                                <button class="thumbnail-nav-btn thumbnail-prev" onclick="scrollThumbnails(-1)">
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+                                <button class="thumbnail-nav-btn thumbnail-next" onclick="scrollThumbnails(1)">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+                                @endif
+                                
+                                <div class="thumbnails-scroll-container" id="thumbnailsContainer">
+                                    <div class="thumbnails-grid">
+                                        @foreach($restaurante->imagenes as $index => $imagen)
+                                        <div class="thumbnail-item {{ $index == 0 ? 'active' : '' }}" onclick="selectSlide({{ $index }})">
+                                            <img src="{{ asset($imagen->url) }}" 
+                                                 alt="{{ $imagen->alt ?? $restaurante->nombre }}" 
+                                                 class="rounded">
+                                        </div>
+                                        @endforeach
+                                    </div>
                                 </div>
-                                @endforeach
-                            @else
-                                <div class="carousel-item active">
-                                    <img src="{{ asset($resolveRestauranteImage($restaurante->nombre)) }}" class="d-block w-100" alt="{{ $restaurante->nombre }}" style="height: 400px; object-fit: cover; border-radius: 8px;">
-                                </div>
+                            </div>
                             @endif
-                        </div>
-                        @if($restaurante->imagenes->count() > 1)
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselRestaurante" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Anterior</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselRestaurante" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Siguiente</span>
-                        </button>
-                        <div class="carousel-indicators">
-                            @foreach($restaurante->imagenes as $index => $imagen)
-                            <button type="button" data-bs-target="#carouselRestaurante" data-bs-slide-to="{{ $index }}" class="{{ $index == 0 ? 'active' : '' }}" aria-current="{{ $index == 0 ? 'true' : 'false' }}" aria-label="Slide {{ $index + 1 }}"></button>
-                            @endforeach
-                        </div>
+
+                            @if($restaurante->imagenes->count() > 1)
+                            <script>
+                                let currentImageIndex = 0;
+                                const images = @json($restaurante->imagenes->map(function($img) { return ['url' => $img->url, 'alt' => $img->alt]; })->values());
+                                let autoPlayInterval;
+
+                                function selectSlide(index) {
+                                    currentImageIndex = index;
+                                    updateMainImage();
+                                    updateThumbnails();
+                                    resetAutoPlay();
+                                }
+
+                                function changeSlide() {
+                                    currentImageIndex++;
+                                    if (currentImageIndex >= images.length) currentImageIndex = 0;
+                                    updateMainImage();
+                                    updateThumbnails();
+                                }
+
+                                function updateMainImage() {
+                                    const mainImg = document.getElementById('mainSliderImage');
+                                    mainImg.style.opacity = '0';
+                                    
+                                    setTimeout(() => {
+                                        mainImg.src = '{{ asset('') }}' + images[currentImageIndex].url;
+                                        mainImg.alt = images[currentImageIndex].alt || '{{ $restaurante->nombre }}';
+                                        mainImg.style.opacity = '1';
+                                    }, 300);
+                                }
+
+                                function updateThumbnails() {
+                                    document.querySelectorAll('.thumbnail-item').forEach((thumb, i) => {
+                                        if (i === currentImageIndex) {
+                                            thumb.classList.add('active');
+                                        } else {
+                                            thumb.classList.remove('active');
+                                        }
+                                    });
+                                }
+
+                                function scrollThumbnails(direction) {
+                                    const container = document.getElementById('thumbnailsContainer');
+                                    const scrollAmount = container.offsetWidth; // Desplaza el ancho completo (4 thumbnails)
+                                    container.scrollBy({
+                                        left: direction * scrollAmount,
+                                        behavior: 'smooth'
+                                    });
+                                }
+
+                                function resetAutoPlay() {
+                                    clearInterval(autoPlayInterval);
+                                    startAutoPlay();
+                                }
+
+                                function startAutoPlay() {
+                                    autoPlayInterval = setInterval(changeSlide, 4000); // Cambia cada 4 segundos
+                                }
+
+                                // Iniciar autoplay cuando carga la página
+                                startAutoPlay();
+
+                                // Pausar autoplay cuando el mouse está sobre la imagen
+                                document.getElementById('mainSliderImage').addEventListener('mouseenter', function() {
+                                    clearInterval(autoPlayInterval);
+                                });
+
+                                document.getElementById('mainSliderImage').addEventListener('mouseleave', function() {
+                                    startAutoPlay();
+                                });
+                            </script>
+                            @endif
+                        @else
+                            <div class="main-image-container">
+                                <img src="{{ asset($resolveRestauranteImage($restaurante->nombre)) }}" 
+                                     alt="{{ $restaurante->nombre }}" 
+                                     class="img-fluid w-100 rounded" 
+                                     style="height: 400px; object-fit: cover;">
+                            </div>
                         @endif
                     </div>
 
