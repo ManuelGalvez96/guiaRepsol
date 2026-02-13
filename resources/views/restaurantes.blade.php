@@ -114,7 +114,7 @@
                             @forelse($restaurantesPatrocinados as $patrocinado)
                             <a href="{{ route('restaurante.detalle', $patrocinado->id) }}" style="text-decoration: none; color: inherit;">
                             <article class="article-item">
-                                <img src="{{ asset($resolveRestauranteImage($patrocinado->nombre)) }}" alt="{{ $patrocinado->nombre }}">
+                                <img src="{{ $patrocinado->imagenes->isNotEmpty() ? asset($patrocinado->imagenes->first()->url) : asset($resolveRestauranteImage($patrocinado->nombre)) }}" alt="{{ $patrocinado->imagenes->isNotEmpty() ? $patrocinado->imagenes->first()->alt : $patrocinado->nombre }}">
                                 <div class="article-content">
                                     <h3>{{ $patrocinado->nombre }}</h3>
                                     <p class="article-meta">
@@ -208,7 +208,7 @@
                             <div class="col-md-4">
                                 <a href="{{ route('restaurante.detalle', $restaurante->id) }}" class="text-decoration-none">
                                     <div class="card restaurant-card">
-                                        <img src="{{ asset($resolveRestauranteImage($restaurante->nombre)) }}" class="card-img-top" alt="{{ $restaurante->nombre }}">
+                                        <img src="{{ $restaurante->imagenes->isNotEmpty() ? asset($restaurante->imagenes->first()->url) : asset($resolveRestauranteImage($restaurante->nombre)) }}" class="card-img-top" alt="{{ $restaurante->imagenes->isNotEmpty() ? $restaurante->imagenes->first()->alt : $restaurante->nombre }}">
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $restaurante->nombre }}</h5>
                                             <p class="card-text">
@@ -307,7 +307,7 @@
                             <div class="col-md-3">
                                 <a href="{{ route('restaurante.detalle', $restaurante->id) }}" class="text-decoration-none">
                                     <div class="card place-card">
-                                        <img src="{{ asset($resolveRestauranteImage($restaurante->nombre)) }}" class="card-img-top" alt="{{ $restaurante->nombre }}">
+                                        <img src="{{ $restaurante->imagenes->isNotEmpty() ? asset($restaurante->imagenes->first()->url) : asset($resolveRestauranteImage($restaurante->nombre)) }}" class="card-img-top" alt="{{ $restaurante->imagenes->isNotEmpty() ? $restaurante->imagenes->first()->alt : $restaurante->nombre }}">
                                         <div class="card-body">
                                             <h6 class="card-title">{{ $restaurante->nombre }}</h6>
                                             <p class="card-text small">
