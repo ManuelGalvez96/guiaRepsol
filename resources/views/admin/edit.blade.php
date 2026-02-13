@@ -167,7 +167,7 @@
                 @if($restaurante->imagenes->first())
                     <div class="current-image">
                         <p class="current-image-text">Imagen actual:</p>
-                        <img src="{{ asset('storage/' . $restaurante->imagenes->first()->url) }}" alt="{{ $restaurante->nombre }}">
+                        <img src="{{ asset($restaurante->imagenes->first()->url) }}" alt="{{ $restaurante->nombre }}">
                     </div>
                 @endif
                 <input type="file" id="imagen" name="imagen" accept="image/*" onchange="previewImage(event)" class="mt-10">
