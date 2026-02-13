@@ -58,7 +58,7 @@
   </div>
 
   <div class="hero-img">
-    <img src="{{ asset('images/imagen1.png') }}">
+    <img src="{{ asset('img/inicio//imagen1.png') }}">
   </div>
 </section>
 
@@ -75,7 +75,7 @@
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="momento-card">
         <div class="momento-img">
-          <img src="{{ asset('images/imagen2.png') }}">
+          <img src="{{ asset('img/inicio//imagen2.png') }}">
           <div class="momento-icons">♡ ⤴ 🔖</div>
           <div class="momento-overlay">
             <div class="momento-tag">Reportaje gastronómico</div>
@@ -89,7 +89,7 @@
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="momento-card">
         <div class="momento-img">
-          <img src="{{ asset('images/imagen3.png') }}">
+          <img src="{{ asset('img/inicio//imagen3.png') }}">
           <div class="momento-icons">♡ ⤴ 🔖</div>
           <div class="momento-overlay">
             <div class="momento-tag">Reportaje gastronómico</div>
@@ -103,7 +103,7 @@
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="momento-card">
         <div class="momento-img">
-          <img src="{{ asset('images/imagen4.png') }}">
+          <img src="{{ asset('img/inicio//imagen4.png') }}">
           <div class="momento-icons">♡ ⤴ 🔖</div>
           <div class="momento-overlay">
             <div class="momento-tag">Reportaje gastronómico</div>
@@ -202,7 +202,7 @@
 
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="local-card">
-        <img src="{{ asset('images/imagen5.png') }}">
+        <img src="{{ asset('img/inicio//imagen5.png') }}">
         <div class="local-info">
           <h3>Miga Cana</h3>
           <p>Bar · Madrid, España</p>
@@ -213,7 +213,7 @@
 
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="local-card">
-        <img src="{{ asset('images/imagen6.png') }}">
+        <img src="{{ asset('img/inicio//imagen6.png') }}">
         <div class="local-info">
           <h3>Kitchen 154</h3>
           <p>Restaurante · Madrid, España</p>
@@ -224,7 +224,7 @@
 
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="local-card">
-        <img src="{{ asset('images/imagen7.png') }}">
+        <img src="{{ asset('img/inicio//imagen7.png') }}">
         <div class="local-info">
           <h3>Batch</h3>
           <p>Bar · Madrid, España</p>
@@ -235,7 +235,7 @@
 
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="local-card">
-        <img src="{{ asset('images/imagen8.png') }}">
+        <img src="{{ asset('img/inicio//imagen8.png') }}">
         <div class="local-info">
           <h3>Tori Key</h3>
           <p>Restaurante · Madrid, España</p>
@@ -271,7 +271,7 @@
     <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
     <article class="ultimo-featured">
       <div class="featured-img">
-        <img src="{{ asset('images/imagen9.png') }}">
+        <img src="{{ asset('img/inicio//imagen9.png') }}">
       </div>
 
       <div class="featured-content">
@@ -290,7 +290,7 @@
     <div class="ultimo-grid">
 
       <article class="ultimo-card">
-        <img src="{{ asset('images/imagen10.png') }}">
+        <img src="{{ asset('img/inicio//imagen10.png') }}">
         <div class="card-content">
           <span class="card-tag">ψ Reportaje gastronómico</span>
           <h4>El bar donde los actores toman el vermú con la gente del barrio</h4>
@@ -300,7 +300,7 @@
       </article>
 
       <article class="ultimo-card">
-        <img src="{{ asset('images/imagen11.png') }}">
+        <img src="{{ asset('img/inicio//imagen11.png') }}">
         <div class="card-content">
           <span class="card-tag">ψ Reportaje gastronómico</span>
           <h4>Soletes para celebrar la Feria del libro a cualquier hora del día</h4>
@@ -310,7 +310,7 @@
       </article>
 
       <article class="ultimo-card">
-        <img src="{{ asset('images/imagen12.png') }}">
+        <img src="{{ asset('img/inicio//imagen12.png') }}">
         <div class="card-content">
           <span class="card-tag">ψ Reportaje gastronómico</span>
           <h4>Seis mesas cántabras en la mejor compañía</h4>
@@ -320,7 +320,7 @@
       </article>
 
       <article class="ultimo-card">
-        <img src="{{ asset('images/imagen13.png') }}">
+        <img src="{{ asset('img/inicio//imagen13.png') }}">
         <div class="card-content">
           <span class="card-tag">ψ Reportaje gastronómico</span>
           <h4>Soletes en Galicia para no dejar a tu perro en casa</h4>
@@ -385,28 +385,28 @@
 
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="destacado-item">
-        <img src="{{ asset('images/imagen14.png') }}">
+        <img src="{{ asset('img/inicio//imagen14.png') }}">
         <h3>Cafeterías</h3>
       </article>
       </a>
 
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="destacado-item">
-        <img src="{{ asset('images/imagen15.png') }}">
+        <img src="{{ asset('img/inicio//imagen15.png') }}">
         <h3>Bares</h3>
       </article>
       </a>
 
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="destacado-item">
-        <img src="{{ asset('images/imagen16.png') }}">
+        <img src="{{ asset('img/inicio//imagen16.png') }}">
         <h3>Fast Good</h3>
       </article>
       </a>
 
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="destacado-item">
-        <img src="{{ asset('images/imagen17.png') }}">
+        <img src="{{ asset('img/inicio//imagen17.png') }}">
         <h3>Vinotecas</h3>
       </article>
       </a>
@@ -433,7 +433,7 @@
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="frio-card">
         <div class="frio-img">
-          <img src="{{ asset('images/imagen18.png') }}">
+          <img src="{{ asset('img/inicio//imagen18.png') }}">
           <div class="frio-icons">♡ ⤴ 🔖</div>
           <div class="frio-overlay">
             <span class="frio-tag">ψ Reportaje gastronómico</span>
@@ -447,7 +447,7 @@
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="frio-card">
         <div class="frio-img">
-          <img src="{{ asset('images/imagen19.png') }}">
+          <img src="{{ asset('img/inicio//imagen19.png') }}">
           <div class="frio-icons">♡ ⤴ 🔖</div>
           <div class="frio-overlay">
             <span class="frio-tag">ψ Reportaje gastronómico</span>
@@ -461,7 +461,7 @@
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="frio-card">
         <div class="frio-img">
-          <img src="{{ asset('images/imagen20.png') }}">
+          <img src="{{ asset('img/inicio//imagen20.png') }}">
           <div class="frio-icons">♡ ⤴ 🔖</div>
           <div class="frio-overlay">
             <span class="frio-tag">ψ Reportaje gastronómico</span>
@@ -488,35 +488,35 @@
 
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="comunidad">
-        <img src="{{ asset('images/imagen22.png') }}">
+        <img src="{{ asset('img/inicio//imagen22.png') }}">
         <h3>Madrid</h3>
       </article>
       </a>
 
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="comunidad">
-        <img src="{{ asset('images/imagen23.png') }}">
+        <img src="{{ asset('img/inicio//imagen23.png') }}">
         <h3>Catalunya</h3>
       </article>
       </a>
 
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="comunidad">
-        <img src="{{ asset('images/imagen24.png') }}">
+        <img src="{{ asset('img/inicio//imagen24.png') }}">
         <h3>Comunitat Valenciana</h3>
       </article>
       </a>
 
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="comunidad">
-        <img src="{{ asset('images/imagen25.png') }}">
+        <img src="{{ asset('img/inicio//imagen25.png') }}">
         <h3>Extremadura</h3>
       </article>
       </a>
 
       <a href="{{ route('pre-login') }}" style="text-decoration: none; color: inherit;">
       <article class="comunidad">
-        <img src="{{ asset('images/imagen26.png') }}">
+        <img src="{{ asset('img/inicio//imagen26.png') }}">
         <h3>Euskadi</h3>
       </article>
       </a>

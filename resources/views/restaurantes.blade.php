@@ -28,18 +28,18 @@
         };
 
         $restauranteImageMap = [];
-        foreach (File::files(public_path('img_restaurantes')) as $file) {
+        foreach (File::files(public_path('img/restaurantes')) as $file) {
             $baseName = pathinfo($file->getFilename(), PATHINFO_FILENAME);
             $key = $normalizeRestauranteName($baseName);
             if ($key !== '') {
-                $restauranteImageMap[$key] = 'img_restaurantes/' . $file->getFilename();
+                $restauranteImageMap[$key] = 'img/restaurantes/' . $file->getFilename();
             }
         }
 
         $resolveRestauranteImage = function (string $nombre) use ($normalizeRestauranteName, $restauranteImageMap): string {
             $key = $normalizeRestauranteName($nombre);
 
-            return $restauranteImageMap[$key] ?? 'img_restaurantes/emigrante.webp';
+            return $restauranteImageMap[$key] ?? 'img/restaurantes/emigrante.webp';
         };
     @endphp
     <!-- Header Principal -->
