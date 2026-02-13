@@ -49,7 +49,8 @@
                 <div class="form-group">
                     <label for="email">Correo electrónico</label>
                     <input type="email" id="email" name="email"
-                        class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
+                        class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" >
+                    <span id="error-usuario" class="text-danger" style="font-size: 12px;"></span>
                     @error('email')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
                     @enderror
@@ -59,16 +60,14 @@
                     <label for="password">Contraseña</label>
                     <div class="password-input">
                         <input type="password" id="password" name="password"
-                            class="form-control @error('password') is-invalid @enderror" required>
+                            class="form-control @error('password') is-invalid @enderror" >
                     </div>
+                    <span id="error-contrasena" class="text-danger" style="font-size: 12px;"></span>
                     @error('password')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
                     @enderror
                 </div>
-
-                <a href="#" class="forgot-password">Olvidé mi contraseña</a>
-
-                <button type="submit" class="btn-login">Iniciar Sesión</button>
+                <button type="submit" id="boton_enviar" disabled class="btn-login">Iniciar Sesión</button>
 
                 <div class="divider">
                     <span>o</span>
@@ -123,8 +122,9 @@
             </div>
         </div>
     </div>
+    <script src="{{ asset('js/login/login.js') }}"></script> 
 </body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<link src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></link>
 
 </html>
 

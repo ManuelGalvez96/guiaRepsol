@@ -21,6 +21,9 @@ Route::post('/logout', [AuthUser::class, 'logout'])->name('logout');
 // Rutas del panel de administración
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('index');
+    Route::get('/solicitudes', [AdminController::class, 'solicitudes'])->name('solicitudes');
+    Route::post('/solicitudes/{id}/aprobar', [AdminController::class, 'aprobarSolicitud'])->name('solicitudes.aprobar');
+    Route::delete('/solicitudes/{id}/rechazar', [AdminController::class, 'rechazarSolicitud'])->name('solicitudes.rechazar');
     Route::get('/create', [AdminController::class, 'create'])->name('create');
     Route::post('/', [AdminController::class, 'store'])->name('store');
     Route::get('/{restaurante}/edit', [AdminController::class, 'edit'])->name('edit');
