@@ -70,6 +70,21 @@
             </div>
 
             <div class="form-group">
+                <label for="user_id">Gerente del Restaurante *</label>
+                <select id="user_id" name="user_id" required class="form-select">
+                    <option value="">Seleccione un gerente</option>
+                    @foreach($gerentes as $gerente)
+                        <option value="{{ $gerente->id }}" {{ old('user_id', $restaurante->user_id) == $gerente->id ? 'selected' : '' }}>
+                            {{ $gerente->name }} ({{ $gerente->email }})
+                        </option>
+                    @endforeach
+                </select>
+                @error('user_id')
+                    <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
                 <label for="direccion">Dirección *</label>
                 <input type="text" id="direccion" name="direccion" value="{{ old('direccion', $restaurante->direccion) }}" required>
                 @error('direccion')
@@ -79,18 +94,18 @@
 
             <div class="form-group">
                 <label>Tipos de Comida</label>
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
+                <div class="tipos-comida-grid">
                     @foreach($tiposComida as $tipo)
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <label class="tipos-comida-label">
                             <input 
                                 type="checkbox" 
                                 name="tipos_comida[]" 
                                 value="{{ $tipo->id }}"
                                 {{ (is_array(old('tipos_comida')) && in_array($tipo->id, old('tipos_comida'))) || 
                                    (!old('tipos_comida') && $restaurante->tiposComida->contains($tipo->id)) ? 'checked' : '' }}
-                                style="cursor: pointer;"
+                                class="tipos-comida-checkbox"
                             >
-                            <span style="font-size: 14px; font-weight: normal;">{{ $tipo->nombre }}</span>
+                            <span class="tipos-comida-text">{{ $tipo->nombre }}</span>
                         </label>
                     @endforeach
                 </div>
@@ -151,11 +166,11 @@
                 <label for="imagen">Imagen del Restaurante</label>
                 @if($restaurante->imagenes->first())
                     <div class="current-image">
-                        <p style="font-size: 12px; margin-bottom: 8px; color: #666;">Imagen actual:</p>
+                        <p class="current-image-text">Imagen actual:</p>
                         <img src="{{ asset('storage/' . $restaurante->imagenes->first()->url) }}" alt="{{ $restaurante->nombre }}">
                     </div>
                 @endif
-                <input type="file" id="imagen" name="imagen" accept="image/*" onchange="previewImage(event)" style="margin-top: 10px;">
+                <input type="file" id="imagen" name="imagen" accept="image/*" onchange="previewImage(event)" class="mt-10">
                 @error('imagen')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -166,120 +181,20 @@
 
             <div class="button-group">
                 <button type="submit" class="btn btn-primary" id="submitBtn">Actualizar Restaurante</button>
-                <a href="{{ route('admin.index') }}" class="btn btn-secondary">Cancelar</a>
+                <button type="button" class="btn btn-secondary" onclick="cancelEdit()">Cancelar</button>
             </div>
         </form>
     </div>
 
+    <!-- JavaScript separado para mejor mantenimiento -->
     <script>
-        const form = document.getElementById('editRestauranteForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const alertContainer = document.getElementById('alertContainer');
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-        // Función para previsualizar imagen
-        function previewImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('preview').src = e.target.result;
-                    document.getElementById('imagePreview').classList.add('active');
-                    document.getElementById('imagePreview').style.display = 'block';
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Limpiar errores previos
-            document.querySelectorAll('.error').forEach(el => el.remove());
-            alertContainer.innerHTML = '';
-            
-            // Mostrar estado de carga
-            submitBtn.textContent = 'Actualizando...';
-            submitBtn.disabled = true;
-            form.classList.add('loading');
-            
-            // Preparar datos del formulario
-            const formData = new FormData(form);
-            
-            // Enviar petición AJAX
-            fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json',
-                },
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(data => {
-                        throw data;
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    // Mostrar mensaje de éxito con SweetAlert
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Actualizado!',
-                        text: data.message,
-                        timer: 1500,
-                        showConfirmButton: false
-                    });
-                    
-                    // Redirigir después de 1.5 segundos
-                    setTimeout(() => {
-                        window.location.href = '{{ route("admin.index") }}';
-                    }, 1500);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                
-                // Mostrar errores de validación
-                if (error.errors) {
-                    Object.keys(error.errors).forEach(field => {
-                        const input = document.getElementById(field);
-                        if (input) {
-                            const errorDiv = document.createElement('div');
-                            errorDiv.className = 'error';
-                            errorDiv.textContent = error.errors[field][0];
-                            input.parentNode.appendChild(errorDiv);
-                        }
-                    });
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error de validación',
-                        text: 'Por favor corrige los errores en el formulario',
-                        toast: true,
-                        position: 'top-end',
-                        timer: 3000,
-                        showConfirmButton: false
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: error.message || 'Error al actualizar el restaurante'
-                    });
-                }
-                
-                // Restaurar botón
-                submitBtn.textContent = 'Actualizar Restaurante';
-                submitBtn.disabled = false;
-                form.classList.remove('loading');
-            });
-        });
-
-        // No necesitamos la función showAlert ya que usamos SweetAlert directamente
+        // Pasar configuración de PHP a JavaScript
+        window.editConfig = {
+            csrfToken: '{{ csrf_token() }}',
+            adminIndexRoute: '{{ route("admin.index") }}'
+        };
     </script>
+    @vite(['resources/js/admin_js/admin_edit.js'])
 </body>
 </html>
 

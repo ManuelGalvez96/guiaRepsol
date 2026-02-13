@@ -51,10 +51,19 @@
                     </div>
                 @endif
                 <div class="form-group">
-                    <label for="name">Nombre completo</label>
+                    <label for="name">Nombre</label>
                     <input type="text" id="name" name="name"
                         class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
                     @error('name')
+                        <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="apellidos">Apellidos</label>
+                    <input type="text" id="apellidos" name="apellidos"
+                        class="form-control @error('apellidos') is-invalid @enderror" value="{{ old('apellidos') }}" required>
+                    @error('apellidos')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
                     @enderror
                 </div>

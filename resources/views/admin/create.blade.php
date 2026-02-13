@@ -40,7 +40,7 @@
 
             <div class="form-group">
                 <label for="categoria_id">Categoría *</label>
-                <select id="categoria_id" name="categoria_id" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                <select id="categoria_id" name="categoria_id" required class="form-select">
                     <option value="">Seleccione una categoría</option>
                     @foreach($categorias as $categoria)
                         <option value="{{ $categoria->id }}" {{ old('categoria_id') == $categoria->id ? 'selected' : '' }}>
@@ -55,7 +55,7 @@
 
             <div class="form-group">
                 <label for="ubicacion_id">Ubicación *</label>
-                <select id="ubicacion_id" name="ubicacion_id" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                <select id="ubicacion_id" name="ubicacion_id" required class="form-select">
                     <option value="">Seleccione una ubicación</option>
                     @foreach($ubicaciones as $ubicacion)
                         <option value="{{ $ubicacion->id }}" {{ old('ubicacion_id') == $ubicacion->id ? 'selected' : '' }}>
@@ -64,6 +64,21 @@
                     @endforeach
                 </select>
                 @error('ubicacion_id')
+                    <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="user_id">Gerente del Restaurante *</label>
+                <select id="user_id" name="user_id" required class="form-select">
+                    <option value="">Seleccione un gerente</option>
+                    @foreach($gerentes as $gerente)
+                        <option value="{{ $gerente->id }}" {{ old('user_id') == $gerente->id ? 'selected' : '' }}>
+                            {{ $gerente->name }} ({{ $gerente->email }})
+                        </option>
+                    @endforeach
+                </select>
+                @error('user_id')
                     <div class="error">{{ $message }}</div>
                 @enderror
             </div>
@@ -78,17 +93,17 @@
 
             <div class="form-group">
                 <label>Tipos de Comida</label>
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
+                <div class="tipos-comida-grid">
                     @foreach($tiposComida as $tipo)
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <label class="tipos-comida-label">
                             <input 
                                 type="checkbox" 
                                 name="tipos_comida[]" 
                                 value="{{ $tipo->id }}"
                                 {{ is_array(old('tipos_comida')) && in_array($tipo->id, old('tipos_comida')) ? 'checked' : '' }}
-                                style="cursor: pointer;"
+                                class="tipos-comida-checkbox"
                             >
-                            <span style="font-size: 14px; font-weight: normal;">{{ $tipo->nombre }}</span>
+                            <span class="tipos-comida-text">{{ $tipo->nombre }}</span>
                         </label>
                     @endforeach
                 </div>
@@ -163,117 +178,15 @@
         </form>
     </div>
 
+    <!-- JavaScript separado para mejor mantenimiento -->
     <script>
-        const form = document.getElementById('createRestauranteForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const alertContainer = document.getElementById('alertContainer');
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-        // Función para previsualizar imagen
-        function previewImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('preview').src = e.target.result;
-                    document.getElementById('imagePreview').classList.add('active');
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Limpiar errores previos
-            document.querySelectorAll('.error').forEach(el => el.remove());
-            alertContainer.innerHTML = '';
-            
-            // Mostrar estado de carga
-            submitBtn.textContent = 'Creando...';
-            submitBtn.disabled = true;
-            form.classList.add('loading');
-            
-            // Preparar datos del formulario
-            const formData = new FormData(form);
-            
-            // Enviar petición AJAX
-            fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json',
-                },
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(data => {
-                        throw data;
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    // Mostrar mensaje con SweetAlert
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Éxito!',
-                        text: data.message,
-                        timer: 1500,
-                        showConfirmButton: false
-                    });
-                    
-                    // Limpiar formulario
-                    form.reset();
-                    
-                    // Redirigir después de 1.5 segundos
-                    setTimeout(() => {
-                        window.location.href = '{{ route("admin.index") }}';
-                    }, 1500);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                
-                // Mostrar errores de validación
-                if (error.errors) {
-                    Object.keys(error.errors).forEach(field => {
-                        const input = document.getElementById(field);
-                        if (input) {
-                            const errorDiv = document.createElement('div');
-                            errorDiv.className = 'error';
-                            errorDiv.textContent = error.errors[field][0];
-                            input.parentNode.appendChild(errorDiv);
-                        }
-                    });
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error de validación',
-                        text: 'Por favor corrige los errores en el formulario',
-                        toast: true,
-                        position: 'top-end',
-                        timer: 3000,
-                        showConfirmButton: false
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: error.message || 'Error al crear el restaurante'
-                    });
-                }
-                
-                // Restaurar botón
-                submitBtn.textContent = 'Crear Restaurante';
-                submitBtn.disabled = false;
-                form.classList.remove('loading');
-            });
-        });
-
-     
+        // Pasar configuración de PHP a JavaScript
+        window.createConfig = {
+            csrfToken: '{{ csrf_token() }}',
+            adminIndexRoute: '{{ route("admin.index") }}'
+        };
     </script>
+    @vite(['resources/js/admin_js/admin_create.js'])
 </body>
 </html>
 
