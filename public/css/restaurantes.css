@@ -661,12 +661,49 @@ body {
 }
 
 @media (max-width: 767px) {
+    .header-main {
+        padding: 8px 0;
+    }
+
+    .header-main .container {
+        padding: 0 12px;
+    }
+
     .logo {
-        font-size: 16px;
+        font-size: 14px;
+    }
+
+    .logo-img {
+        height: 24px;
+    }
+
+    .btn-menu,
+    .btn-search {
+        font-size: 20px;
+        padding: 6px;
+    }
+
+    .search-bar {
+        margin: 0 10px;
+        height: 36px;
+    }
+
+    .search-input {
+        font-size: 13px;
+    }
+
+    .btn-acceso {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    .btn-acceso i {
+        display: none;
     }
     
     .banner-gala {
         font-size: 12px;
+        padding: 10px 0;
     }
     
     .gala-text {
@@ -677,9 +714,23 @@ body {
     .btn-add-calendar {
         display: none;
     }
+
+    .tabs-nav .nav-link {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .tabs-nav .nav-link i {
+        font-size: 14px;
+    }
+
+    .main-content {
+        padding: 16px 0;
+    }
     
     .content-section {
         padding: 16px;
+        margin-bottom: 16px;
     }
     
     .article-item {
@@ -693,5 +744,98 @@ body {
     
     .section-header h2 {
         font-size: 18px;
+    }
+
+    .result-count {
+        font-size: 12px;
+    }
+
+    .restaurant-card .card-img-top,
+    .place-card .card-img-top {
+        height: 160px;
+    }
+
+    .restaurant-card .card-title {
+        font-size: 16px;
+    }
+
+    .restaurant-card .card-body,
+    .place-card .card-body {
+        padding: 12px;
+    }
+
+    .filters {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .filters button,
+    .filters select,
+    #formOrdenar select {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+}
+
+@media (max-width: 575px) {
+    .search-bar {
+        max-width: 100%;
+        margin: 10px 0 0 0;
+    }
+
+    .header-main .row {
+        flex-wrap: wrap;
+    }
+
+    .btn-acceso {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .tabs-nav .container {
+        padding: 0;
+    }
+
+    .tabs-nav .nav-tabs {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .tabs-nav .nav-link {
+        width: 100%;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .content-section {
+        padding: 12px;
+    }
+
+    .section-header {
+        margin-bottom: 16px;
+    }
+
+    .article-content h3 {
+        font-size: 14px;
+    }
+
+    .article-meta,
+    .article-excerpt {
+        font-size: 12px;
+    }
+
+    .pagination-section {
+        margin-top: 24px;
+        margin-bottom: 24px;
+    }
+
+    .pagination-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .page-number {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
     }
 }

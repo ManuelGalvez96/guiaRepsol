@@ -33,10 +33,10 @@
         @endif
 
         <!-- Filters -->
-        <form method="GET" action="{{ route('admin.index') }}">
+        <form method="GET" action="{{ route('admin.index') }}" id="filterForm">
             <div class="filters">
                 <select name="tipo_comida" class="filter-select" onchange="this.form.submit()">
-                    <option value="">Tipo de comida</option>
+                    <option value="">🍴 Tipo de comida</option>
                     @foreach($tiposComida as $tipo)
                         <option value="{{ $tipo->id }}" {{ request('tipo_comida') == $tipo->id ? 'selected' : '' }}>
                             {{ $tipo->nombre }}
@@ -60,6 +60,13 @@
                     <option value="20-30" {{ request('precio') == '20-30' ? 'selected' : '' }}>20-30€</option>
                     <option value="30-50" {{ request('precio') == '30-50' ? 'selected' : '' }}>30-50€</option>
                     <option value="50+" {{ request('precio') == '50+' ? 'selected' : '' }}>50€+</option>
+                </select>
+
+                <select name="per_page" class="filter-select" onchange="this.form.submit()">
+                    <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10 por página</option>
+                    <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25 por página</option>
+                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50 por página</option>
+                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100 por página</option>
                 </select>
             </div>
         </form>

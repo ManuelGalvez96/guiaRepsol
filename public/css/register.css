@@ -409,3 +409,178 @@ body {
     display: block;
     margin-top: 4px;
 }
+
+/* ======================================
+   RESPONSIVE - Media Queries
+   ====================================== */
+
+@media (max-width: 992px) {
+    .login-box {
+        max-width: 550px;
+        padding: 35px;
+    }
+
+    .logo {
+        margin-left: 80px;
+    }
+
+    .btn-close-header {
+        margin-right: 80px;
+    }
+}
+
+@media (max-width: 768px) {
+    .login-header {
+        padding: 16px 20px;
+    }
+
+    .logo {
+        width: 120px;
+        margin-left: 40px;
+    }
+
+    .btn-close-header {
+        margin-right: 40px;
+        font-size: 16px;
+    }
+
+    .login-container {
+        padding: 30px 16px;
+    }
+
+    .login-box {
+        padding: 30px;
+        margin-top: 20px;
+    }
+
+    .login-title {
+        font-size: 28px;
+    }
+
+    .login-description {
+        font-size: 14px;
+    }
+
+    .servicios-iconos img {
+        max-width: 100%;
+    }
+
+    .form-control {
+        padding: 11px 14px;
+        font-size: 14px;
+    }
+
+    .btn-login {
+        padding: 13px;
+        font-size: 15px;
+    }
+
+    .btn-social {
+        padding: 11px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .login-header {
+        padding: 12px 16px;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .logo {
+        margin-left: 0;
+        width: 100px;
+    }
+
+    .btn-close-header {
+        margin-right: 0;
+        position: absolute;
+        top: 12px;
+        right: 16px;
+    }
+
+    .login-container {
+        padding: 20px 12px;
+    }
+
+    .login-box {
+        padding: 24px;
+        margin-top: 10px;
+    }
+
+    .login-title {
+        font-size: 24px;
+        margin-bottom: 12px;
+    }
+
+    .login-description {
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+
+    .servicios-iconos {
+        margin: 16px 0 24px;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-control {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .btn-login {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .divider {
+        margin: 8px 0;
+    }
+
+    .btn-social {
+        padding: 10px;
+        font-size: 13px;
+        gap: 8px;
+    }
+
+    .signup-link {
+        font-size: 15px;
+        margin-top: 16px;
+    }
+
+    .modal-body {
+        padding: 16px;
+    }
+
+    .modal-body p {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 380px) {
+    .logo {
+        width: 90px;
+    }
+
+    .login-title {
+        font-size: 22px;
+    }
+
+    .login-box {
+        padding: 20px;
+    }
+
+    .form-control {
+        padding: 9px 11px;
+    }
+
+    .btn-login,
+    .btn-social {
+        font-size: 13px;
+    }
+}

@@ -13,6 +13,7 @@ use App\Models\ImagenRestaurantePendiente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class RestauranteController extends Controller
 {
@@ -181,7 +182,7 @@ class RestauranteController extends Controller
         // Asociar tipos de comida (guardar en tabla tipo_comida_restaurante_pendiente)
         if ($request->has('tipos_comida')) {
             foreach ($request->tipos_comida as $tipoComidaId) {
-                \DB::table('tipo_comida_restaurante_pendiente')->insert([
+                DB::table('tipo_comida_restaurante_pendiente')->insert([
                     'restaurante_pendiente_id' => $restaurantePendiente->id,
                     'tipo_comida_id' => $tipoComidaId,
                     'created_at' => now(),

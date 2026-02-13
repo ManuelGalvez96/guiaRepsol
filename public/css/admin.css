@@ -510,3 +510,331 @@ textarea {
 .modal-content::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 1200px) {
+    .container {
+        padding: 24px;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 24px;
+    }
+}
+
+@media (max-width: 992px) {
+    .header {
+        padding: 12px 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    .container.form-container {
+        padding: 32px;
+        margin: 30px auto;
+    }
+
+    .top-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .filters {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .filter-select {
+        min-width: 120px;
+        font-size: 13px;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 800px;
+    }
+
+    th,
+    td {
+        padding: 12px;
+        font-size: 13px;
+    }
+
+    .restaurant-img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .modal-content {
+        padding: 20px;
+    }
+
+    .modal-content h2 {
+        font-size: 20px;
+    }
+
+    .modal-content h3 {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 10px 16px;
+    }
+
+    .logo {
+        font-size: 16px;
+    }
+
+    .logo::before {
+        font-size: 20px;
+    }
+
+    .logout-btn {
+        padding: 6px 16px;
+        font-size: 13px;
+    }
+
+    .container {
+        padding: 16px;
+    }
+
+    .container.form-container {
+        padding: 24px;
+        margin: 20px 16px;
+    }
+
+    h1 {
+        font-size: 20px;
+        margin-bottom: 24px;
+    }
+
+    .create-btn {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    .filters {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .filter-select {
+        width: 100%;
+    }
+
+    th,
+    td {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+
+    .restaurant-img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .btn-edit,
+    .btn-delete {
+        padding: 5px;
+        font-size: 12px;
+        min-width: 26px;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    label {
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    input[type="number"],
+    input[type="file"],
+    select,
+    textarea {
+        padding: 9px;
+        font-size: 13px;
+    }
+
+    .btn {
+        padding: 10px 24px;
+        font-size: 13px;
+    }
+
+    .button-group {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .button-group .btn {
+        width: 100%;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+        padding: 16px;
+        gap: 6px;
+    }
+
+    .page-link {
+        padding: 6px 10px;
+        font-size: 12px;
+        min-width: 30px;
+    }
+
+    .modal-content {
+        width: 96%;
+        max-width: none;
+        padding: 16px;
+        margin: 5% auto;
+    }
+
+    .modal-content h2 {
+        font-size: 18px;
+        margin-bottom: 16px;
+    }
+
+    .modal-section {
+        padding: 12px;
+        margin-bottom: 16px;
+    }
+
+    .modal-section p {
+        font-size: 13px;
+        margin: 6px 0;
+    }
+
+    .modal-image img {
+        max-height: 200px;
+    }
+
+    .imagenes-adicionales-gallery img {
+        height: 100px;
+    }
+
+    .close {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 576px) {
+    .header {
+        padding: 8px 12px;
+    }
+
+    .logo {
+        font-size: 14px;
+    }
+
+    .logo::before {
+        font-size: 18px;
+    }
+
+    .logout-btn {
+        padding: 5px 12px;
+        font-size: 12px;
+    }
+
+    .container {
+        padding: 12px;
+    }
+
+    .container.form-container {
+        padding: 20px;
+        margin: 16px 12px;
+    }
+
+    h1 {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    .table-container {
+        border-radius: 4px;
+    }
+
+    table {
+        font-size: 11px;
+    }
+
+    th,
+    td {
+        padding: 8px 6px;
+    }
+
+    .restaurant-img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .alert {
+        padding: 12px;
+        font-size: 13px;
+    }
+
+    .image-preview,
+    .current-image {
+        max-width: 100%;
+    }
+
+    .modal-content {
+        padding: 12px;
+    }
+
+    .modal-section {
+        padding: 10px;
+    }
+
+    .imagenes-adicionales-gallery img {
+        height: 80px;
+    }
+
+    .btn-close-modal {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 380px) {
+    .container.form-container {
+        padding: 16px;
+        margin: 12px 8px;
+    }
+
+    h1 {
+        font-size: 16px;
+    }
+
+    .btn {
+        padding: 8px 20px;
+        font-size: 12px;
+    }
+
+    textarea {
+        min-height: 80px;
+    }
+}
