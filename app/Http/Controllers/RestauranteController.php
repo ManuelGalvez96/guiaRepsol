@@ -199,10 +199,15 @@ class RestauranteController extends Controller
 
         // Subir foto principal
         if ($request->hasFile('foto_principal')) {
+<<<<<<< HEAD
             $path = $request->file('foto_principal')->store('img/restaurantes', 'public');
+=======
+            $nombreArchivo = time() . '_' . $request->file('foto_principal')->getClientOriginalName();
+            $request->file('foto_principal')->move(public_path('img/restaurantes'), $nombreArchivo);
+>>>>>>> 580cb6d51f052b49fa078817004a7f106120c719
             ImagenRestaurante::create([
                 'restaurante_id' => $restaurante->id,
-                'url' => $path,
+                'url' => 'img/restaurantes/' . $nombreArchivo,
                 'principal' => true,
                 'orden' => 0
             ]);
@@ -212,10 +217,15 @@ class RestauranteController extends Controller
         if ($request->hasFile('fotos_adicionales')) {
             $orden = 1;
             foreach ($request->file('fotos_adicionales') as $foto) {
+<<<<<<< HEAD
                 $path = $foto->store('img/restaurantes', 'public');
+=======
+                $nombreArchivo = time() . '_' . uniqid() . '_' . $foto->getClientOriginalName();
+                $foto->move(public_path('img/restaurantes'), $nombreArchivo);
+>>>>>>> 580cb6d51f052b49fa078817004a7f106120c719
                 ImagenRestaurante::create([
                     'restaurante_id' => $restaurante->id,
-                    'url' => $path,
+                    'url' => 'img/restaurantes/' . $nombreArchivo,
                     'principal' => false,
                     'orden' => $orden++
                 ]);

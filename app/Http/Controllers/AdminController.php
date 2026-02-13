@@ -128,7 +128,11 @@ class AdminController extends Controller
         // Guardar imagen si se subió
         if ($request->hasFile('imagen')) {
             $imagen = $request->file('imagen');
+<<<<<<< HEAD
             $path = $imagen->store('img/restaurantes', 'public');
+=======
+            $path = $imagen->store('img/restaurantes/', 'public');
+>>>>>>> 580cb6d51f052b49fa078817004a7f106120c719
             
             ImagenRestaurante::create([
                 'restaurante_id' => $restaurante->id,
@@ -207,11 +211,16 @@ class AdminController extends Controller
 
             // Guardar nueva imagen
             $imagen = $request->file('imagen');
+<<<<<<< HEAD
             $path = $imagen->store('img/restaurantes', 'public');
+=======
+            $nombreArchivo = time() . '_' . $imagen->getClientOriginalName();
+            $imagen->move(public_path('img/restaurantes'), $nombreArchivo);
+>>>>>>> 580cb6d51f052b49fa078817004a7f106120c719
             
             ImagenRestaurante::create([
                 'restaurante_id' => $restaurante->id,
-                'url' => $path,
+                'url' => 'img/restaurantes/' . $nombreArchivo,
                 'alt' => $restaurante->nombre,
                 'principal' => true,
                 'orden' => 0
