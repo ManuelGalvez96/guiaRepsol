@@ -178,7 +178,6 @@
     <!-- Cargar funciones para modales -->
     <script src="{{ asset('js/admin_js/admin_create.js') }}"></script>
     <script src="{{ asset('js/admin_js/admin_edit.js') }}"></script>
-    <script src="{{ asset('js/admin_js/admin_index.js') }}"></script>
 </body>
 </html>
 
