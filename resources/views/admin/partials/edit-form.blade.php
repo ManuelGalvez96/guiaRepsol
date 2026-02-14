@@ -147,14 +147,9 @@
             @if($restaurante->imagenes->count() > 0)
                 @foreach($restaurante->imagenes as $imagen)
                     <div class="current-image-item" data-imagen-id="{{ $imagen->id }}" style="position: relative; text-align: center; border: 2px solid #ddd; border-radius: 8px; padding: 5px; background: white; max-width: 170px;">
-                        <button type="button" onclick="eliminarImagenActual({{ $imagen->id }})" style="position: absolute; top: 3px; right: 3px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 1000; box-shadow: 0 2px 6px rgba(0,0,0,0.3);" title="Eliminar imagen" onmouseover="this.style.background='#c0392b';this.style.transform='scale(1.15)'" onmouseout="this.style.background='#e74c3c';this.style.transform='scale(1)'">×</button>
-                        <img src="{{ asset($imagen->url) }}" alt="{{ $restaurante->nombre }}" style="width: 150px; height: 100px; object-fit: cover; border-radius: 5px; display: block;">
-                        <div style="margin-top: 8px;">
-                            <select class="imagen-estado-select" data-imagen-id="{{ $imagen->id }}" onchange="cambiarEstadoImagen({{ $imagen->id }}, this.value)" style="width: 100%; padding: 4px; font-size: 12px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">
-                                <option value="0" {{ !$imagen->principal ? 'selected' : '' }}>Adicional</option>
-                                <option value="1" {{ $imagen->principal ? 'selected' : '' }}>Principal</option>
-                            </select>
-                        </div>
+                        <button type="button" class="btn-eliminar-imagen-existente" data-imagen-id="{{ $imagen->id }}" onclick="removeExistingImage('{{ $imagen->id }}')" style="position: absolute; top: 3px; right: 3px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 1000; box-shadow: 0 2px 6px rgba(0,0,0,0.3);" title="Eliminar imagen" onmouseover="this.style.background='#c0392b';this.style.transform='scale(1.15)'" onmouseout="this.style.background='#e74c3c';this.style.transform='scale(1)'">×</button>
+                        <img src="{{ asset('storage/' . $imagen->url) }}" alt="{{ $restaurante->nombre }}" style="width: 150px; height: 100px; object-fit: cover; border-radius: 5px; display: block;">
+                        <small style="display: block; margin-top: 5px; color: #666; font-size: 11px;">{{ $imagen->principal ? 'Principal' : 'Adicional' }}</small>
                     </div>
                 @endforeach
             @else
@@ -177,84 +172,3 @@
         <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
     </div>
 </form>
-
-<script>
-    // Arrays globales para gestionar cambios
-    if (!window._imagenesAEliminar) {
-        window._imagenesAEliminar = [];
-    }
-    if (!window._imagenesEstadoCambios) {
-        window._imagenesEstadoCambios = {};
-    }
-
-    // Función para eliminar imagen actual (existente en BD)
-    function eliminarImagenActual(imagenId) {
-        var id = imagenId.toString();
-        
-        if (confirm('¿Estás seguro de que quieres eliminar esta imagen?')) {
-            // Agregar a lista de eliminación
-            if (window._imagenesAEliminar.indexOf(id) === -1) {
-                window._imagenesAEliminar.push(id);
-            }
-            
-            // Actualizar input oculto
-            var hiddenInput = document.getElementById('imagenes_eliminar');
-            if (hiddenInput) {
-                hiddenInput.value = window._imagenesAEliminar.join(',');
-            }
-            
-            // ELIMINAR del DOM completamente
-            var imageItem = document.querySelector('.current-image-item[data-imagen-id="' + imagenId + '"]');
-            if (imageItem) {
-                imageItem.remove();
-            }
-            
-            // Si no hay más imágenes, mostrar mensaje
-            var allImages = document.querySelectorAll('.current-image-item');
-            if (allImages.length === 0) {
-                var container = document.getElementById('allImagesContainer');
-                var noImagesMsg = document.getElementById('noImagesMessage');
-                if (!noImagesMsg) {
-                    var msg = document.createElement('p');
-                    msg.id = 'noImagesMessage';
-                    msg.textContent = 'No hay imágenes. Selecciona algunas para añadir.';
-                    msg.style.cssText = 'width: 100%; text-align: center; color: #999; margin: 20px 0;';
-                    container.appendChild(msg);
-                }
-            }
-        }
-    }
-
-    // Función para cambiar estado de imagen (Principal/Adicional)
-    function cambiarEstadoImagen(imagenId, nuevoEstado) {
-        var id = imagenId.toString();
-        
-        // Si intenta cambiar a Adicional (0), verificar que haya otra Principal
-        if (nuevoEstado === '0') {
-            var principalesActuales = document.querySelectorAll('.imagen-estado-select');
-            var tieneOtraPrincipal = false;
-            
-            principalesActuales.forEach(function(select) {
-                if (select.dataset.imagenId != imagenId && select.value === '1') {
-                    tieneOtraPrincipal = true;
-                }
-            });
-            
-            if (!tieneOtraPrincipal) {
-                alert('❌ Error: Debes tener al menos una imagen Principal. No puedes dejar todas como Adicionales.');
-                // Restaurar el select al valor anterior
-                document.querySelector('.imagen-estado-select[data-imagen-id="' + imagenId + '"]').value = '1';
-                return;
-            }
-        }
-        
-        window._imagenesEstadoCambios[id] = nuevoEstado === '1' ? 1 : 0;
-        
-        // Actualizar input oculto con JSON de cambios
-        var hiddenInput = document.getElementById('imagenes_estado');
-        if (hiddenInput) {
-            hiddenInput.value = JSON.stringify(window._imagenesEstadoCambios);
-        }
-    }
-</script>
-

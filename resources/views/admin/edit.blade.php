@@ -168,8 +168,8 @@
                     @if($restaurante->imagenes->count() > 0)
                         @foreach($restaurante->imagenes as $imagen)
                             <div class="current-image-item" data-imagen-id="{{ $imagen->id }}" style="position: relative; text-align: center; border: 2px solid #ddd; border-radius: 8px; padding: 5px; background: white; max-width: 170px;">
-                                <button type="button" class="btn-eliminar-imagen-existente" data-imagen-id="{{ $imagen->id }}" style="position: absolute; top: 3px; right: 3px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 1000; box-shadow: 0 2px 6px rgba(0,0,0,0.3);" title="Eliminar imagen">×</button>
-                                <img src="{{ asset($imagen->url) }}" alt="{{ $restaurante->nombre }}" style="width: 150px; height: 100px; object-fit: cover; border-radius: 5px; display: block;">
+                                <button type="button" class="btn-eliminar-imagen-existente" data-imagen-id="{{ $imagen->id }}" onclick="removeExistingImage('{{ $imagen->id }}')" style="position: absolute; top: 3px; right: 3px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 1000; box-shadow: 0 2px 6px rgba(0,0,0,0.3);" title="Eliminar imagen">×</button>
+                                <img src="{{ asset('storage/' . $imagen->url) }}" alt="{{ $restaurante->nombre }}" style="width: 150px; height: 100px; object-fit: cover; border-radius: 5px; display: block;">
                                 <small style="display: block; margin-top: 5px; color: #666; font-size: 11px;">{{ $imagen->principal ? 'Principal' : 'Adicional' }}</small>
                             </div>
                         @endforeach
@@ -205,6 +205,46 @@
         
         // Array global para imágenes existentes a eliminar
         window.imagenesAEliminar = [];
+
+        // Función para eliminar imagen existente - definida inline para disponibilidad inmediata
+        function removeExistingImage(imagenId) {
+            var id = String(imagenId);
+            var yaExiste = false;
+            for (var i = 0; i < window.imagenesAEliminar.length; i++) {
+                if (String(window.imagenesAEliminar[i]) === id) {
+                    yaExiste = true;
+                    break;
+                }
+            }
+
+            if (!yaExiste) {
+                window.imagenesAEliminar.push(id);
+
+                var hiddenInput = document.getElementById('imagenes_eliminar');
+                if (hiddenInput) {
+                    hiddenInput.value = window.imagenesAEliminar.join(',');
+                }
+
+                var imageItem = document.querySelector('.current-image-item[data-imagen-id="' + id + '"]');
+                if (imageItem) {
+                    imageItem.style.opacity = '0.3';
+                    imageItem.style.transition = 'all 0.3s';
+                    imageItem.style.filter = 'grayscale(100%)';
+                    imageItem.style.pointerEvents = 'none';
+
+                    var deleteIndicator = document.createElement('div');
+                    deleteIndicator.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(231, 76, 60, 0.95); color: white; padding: 8px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; z-index: 15; box-shadow: 0 2px 8px rgba(0,0,0,0.3);';
+                    deleteIndicator.textContent = 'ELIMINADA';
+                    imageItem.appendChild(deleteIndicator);
+
+                    var removeBtn = imageItem.querySelector('.btn-eliminar-imagen-existente');
+                    if (removeBtn) {
+                        removeBtn.style.display = 'none';
+                    }
+                }
+            }
+        }
+        window.removeExistingImage = removeExistingImage;
     </script>
     <script src="{{ asset('js/admin_js/admin_edit.js') }}"></script>
 </body>

@@ -13,6 +13,7 @@ use App\Models\ImagenRestaurantePendiente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -107,7 +108,7 @@ class AdminController extends Controller
         return view('admin.solicitudes', compact('solicitudes'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $this->checkAdmin();
         $categorias = Categoria::all();
@@ -155,8 +156,15 @@ class AdminController extends Controller
         // Guardar imágenes si se subieron
         if ($request->hasFile('imagenes')) {
             $orden = 0;
+            $directory = public_path('img/restaurantes');
+            if (!File::isDirectory($directory)) {
+                File::makeDirectory($directory, 0755, true);
+            }
+
             foreach ($request->file('imagenes') as $imagen) {
-                $path = $imagen->store('restaurantes', 'public');
+                $filename = uniqid('rest_') . '.' . $imagen->getClientOriginalExtension();
+                $imagen->move($directory, $filename);
+                $path = 'img/restaurantes/' . $filename;
                 
                 ImagenRestaurante::create([
                     'restaurante_id' => $restaurante->id,
@@ -319,9 +327,16 @@ class AdminController extends Controller
             
             // Verificar si hay una imagen principal existente
             $tienePrincipal = $restaurante->imagenes()->where('principal', true)->exists();
+
+            $directory = public_path('img/restaurantes');
+            if (!File::isDirectory($directory)) {
+                File::makeDirectory($directory, 0755, true);
+            }
             
             foreach ($request->file('imagenes') as $imagen) {
-                $path = $imagen->store('restaurantes', 'public');
+                $filename = uniqid('rest_') . '.' . $imagen->getClientOriginalExtension();
+                $imagen->move($directory, $filename);
+                $path = 'img/restaurantes/' . $filename;
                 
                 ImagenRestaurante::create([
                     'restaurante_id' => $restaurante->id,

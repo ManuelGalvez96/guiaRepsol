@@ -147,9 +147,7 @@
         @error('imagenes')
             <div class="error">{{ $message }}</div>
         @enderror
-        <div id="imagesPreview" style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; padding: 15px; border: 2px dashed #ddd; border-radius: 8px; min-height: 100px; align-items: flex-start;">
-            <small style="color: #666; width: 100%; text-align: center; margin: 20px 0;">Las imágenes seleccionadas aparecerán aquí</small>
-        </div>
+        
     </div>
 
     <div class="button-group">
