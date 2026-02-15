@@ -148,7 +148,7 @@
                 @foreach($restaurante->imagenes as $imagen)
                     <div class="current-image-item" data-imagen-id="{{ $imagen->id }}" style="position: relative; text-align: center; border: 2px solid #ddd; border-radius: 8px; padding: 5px; background: white; max-width: 170px;">
                         <button type="button" class="btn-eliminar-imagen-existente" data-imagen-id="{{ $imagen->id }}" onclick="removeExistingImage('{{ $imagen->id }}')" style="position: absolute; top: 3px; right: 3px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 1000; box-shadow: 0 2px 6px rgba(0,0,0,0.3);" title="Eliminar imagen" onmouseover="this.style.background='#c0392b';this.style.transform='scale(1.15)'" onmouseout="this.style.background='#e74c3c';this.style.transform='scale(1)'">×</button>
-                        <img src="{{ asset('storage/' . $imagen->url) }}" alt="{{ $restaurante->nombre }}" style="width: 150px; height: 100px; object-fit: cover; border-radius: 5px; display: block;">
+                        <img src="{{ asset($imagen->url) }}" alt="{{ $restaurante->nombre }}" style="width: 150px; height: 100px; object-fit: cover; border-radius: 5px; display: block;">
                         <small style="display: block; margin-top: 5px; color: #666; font-size: 11px;">{{ $imagen->principal ? 'Principal' : 'Adicional' }}</small>
                     </div>
                 @endforeach

@@ -391,20 +391,39 @@ class AdminController extends Controller
                 'activo' => true,
             ]);
             
-            // Migrar imágenes
+            // Si el usuario no es gerente, cambiar su rol a gerente
+            $usuario = \App\Models\User::find($pendiente->user_id);
+            if ($usuario && $usuario->rol !== 'gerente') {
+                $usuario->update(['rol' => 'gerente']);
+            }
+            
+            // Migrar imágenes: trasladar de img/restaurantes/pendiente/ a img/restaurantes/
             $imagenesPendientes = ImagenRestaurantePendiente::where('restaurante_pendiente_id', $id)->get();
             foreach ($imagenesPendientes as $imagenPendiente) {
-                // Copiar la imagen de restaurantes_pendientes a restaurantes
                 $oldPath = $imagenPendiente->url;
-                $newPath = str_replace('restaurantes_pendientes', 'restaurantes', $oldPath);
                 
-                if (Storage::disk('public')->exists($oldPath)) {
-                    Storage::disk('public')->copy($oldPath, $newPath);
+                // Cambiar ruta de: img/restaurantes/pendiente/archivo.jpg a img/restaurantes/archivo.jpg
+                $newPath = str_replace('img/restaurantes/pendiente/', 'img/restaurantes/', $oldPath);
+                
+                // Obtener rutas completas usando public_path()
+                $oldFullPath = public_path($oldPath);
+                $newFullPath = public_path($newPath);
+                
+                // Mover archivo del sistema de archivos
+                if (File::exists($oldFullPath)) {
+                    // Asegurar que la carpeta destino existe
+                    $destDir = dirname($newFullPath);
+                    if (!File::isDirectory($destDir)) {
+                        File::makeDirectory($destDir, 0755, true);
+                    }
+                    // Mover el archivo
+                    File::move($oldFullPath, $newFullPath);
                 }
                 
+                // Crear registro de imagen en tabla restaurantes con la nueva ruta
                 ImagenRestaurante::create([
                     'restaurante_id' => $restaurante->id,
-                    'url' => $newPath,
+                    'url' => $newPath,  // Ruta actualizada en la BD
                     'alt' => $imagenPendiente->alt,
                     'principal' => $imagenPendiente->principal,
                     'orden' => $imagenPendiente->orden,
@@ -417,13 +436,6 @@ class AdminController extends Controller
                 ->pluck('tipo_comida_id');
             
             $restaurante->tiposComida()->attach($tiposComida);
-            
-            // Eliminar imágenes pendientes del storage
-            foreach ($imagenesPendientes as $imagenPendiente) {
-                if (Storage::disk('public')->exists($imagenPendiente->url)) {
-                    Storage::disk('public')->delete($imagenPendiente->url);
-                }
-            }
             
             // Eliminar de tablas pendientes
             DB::table('tipo_comida_restaurante_pendiente')

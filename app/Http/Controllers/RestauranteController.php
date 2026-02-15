@@ -173,7 +173,7 @@ class RestauranteController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string|min:100',
+            'descripcion' => 'required|string|min:100|max:1000',
             'categoria_id' => 'required|exists:categorias,id',
             'direccion' => 'required|string|max:255',
             'ciudad' => 'required|string|max:255',
@@ -193,6 +193,7 @@ class RestauranteController extends Controller
             'nombre.required' => 'El nombre del negocio es obligatorio',
             'descripcion.required' => 'La descripción es obligatoria',
             'descripcion.min' => 'La descripción debe tener al menos 100 caracteres',
+            'descripcion.max' => 'La descripción no puede exceder 1000 caracteres',
             'categoria_id.required' => 'Debe seleccionar una categoría',
             'categoria_id.exists' => 'La categoría seleccionada no es válida',
             'direccion.required' => 'La dirección es obligatoria',
@@ -374,6 +375,31 @@ class RestauranteController extends Controller
     // Vista de restaurantes guardados
     public function guardados(Request $request)
     {
+        $stopwords = ['el', 'la', 'los', 'las', 'de', 'del', 'y', 'the', 'restaurante', 'restaurant', 'l'];
+        $normalizeRestauranteName = function (string $value) use ($stopwords): string {
+            $asciiValue = Str::ascii($value);
+            $cleanValue = preg_replace('/[^a-zA-Z0-9]+/', ' ', $asciiValue) ?? '';
+            $tokens = array_filter(explode(' ', strtolower($cleanValue)));
+            $tokens = array_values(array_filter($tokens, fn ($token) => !in_array($token, $stopwords, true)));
+
+            return implode('', $tokens);
+        };
+
+        $restauranteImageMap = [];
+        foreach (File::files(public_path('img/restaurantes')) as $file) {
+            $baseName = pathinfo($file->getFilename(), PATHINFO_FILENAME);
+            $key = $normalizeRestauranteName($baseName);
+            if ($key !== '') {
+                $restauranteImageMap[$key] = 'img/restaurantes/' . $file->getFilename();
+            }
+        }
+
+        $resolveRestauranteImage = function (string $nombre) use ($normalizeRestauranteName, $restauranteImageMap): string {
+            $key = $normalizeRestauranteName($nombre);
+
+            return $restauranteImageMap[$key] ?? 'img/restaurantes/emigrante.webp';
+        };
+
         $userId = Auth::id();
         
         $query = Restaurante::with(['categoria', 'ubicacion', 'tiposComida', 'imagenes'])
@@ -405,6 +431,6 @@ class RestauranteController extends Controller
 
         $restaurantes = $query->paginate(12);
 
-        return view('restaurantes', compact('restaurantes', 'restaurantesPatrocinados', 'restaurantesGerente'));
+        return view('restaurantes-guardados', compact('restaurantes'));
     }
 }

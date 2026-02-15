@@ -56,17 +56,6 @@ body{
   font-size:22px;
 }
 
-.nav a{
-  margin:0 14px;
-  text-decoration:none;
-  color:var(--black);
-  font-weight:500;
-}
-
-.nav a.active{
-  color:var(--teal);
-}
-
 .top-right{
   display:flex;
   align-items:center;
