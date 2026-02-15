@@ -1,23 +1,14 @@
 // JavaScript para editar restaurantes 
-let csrfToken;
-let ajaxObj;
-const READY_STATE_COMPLETE = 4;
-let selectedFiles = []; // Array para mantener archivos seleccionados
+var csrfToken;
+var ajaxObj;
+var READY_STATE_COMPLETE = 4;
+var selectedFiles = []; // Array para mantener archivos seleccionados
+var processingClick = false; // Flag para evitar clics múltiples
 
 // Usar el array global si existe, sino crear uno nuevo
 if (typeof window.imagenesAEliminar === 'undefined') {
     window.imagenesAEliminar = [];
 }
-
-// Ejecutar cuando el DOM esté listo (solo una vez)
-let formInitialized = false;
-document.addEventListener('DOMContentLoaded', function () {
-    console.log('DOM Content Loaded - Iniciando configuración...');
-    if (!formInitialized) {
-        formInitialized = true;
-        initEditForm();
-    }
-});
 
 // Función de inicialización
 function initEditForm() {
@@ -46,16 +37,10 @@ function initEditForm() {
     }
 
     // Usar delegación de eventos para botones de eliminar imágenes existentes
-    // setupImageDelegation();
+    setupImageDelegation();
 
     console.log('Form de editar cargado completamente');
 }
-
-// Hacer funciones disponibles globalmente
-window.initEditForm = initEditForm;
-window.setupExistingImageDeleteButtons = setupImageDelegation;
-window.removeExistingImage = removeExistingImage;
-window.previewImages = previewImages;
 
 // Delegación de eventos: un solo listener en el contenedor maneja todos los clicks
 function setupImageDelegation() {
@@ -65,84 +50,208 @@ function setupImageDelegation() {
         return;
     }
     
-    // Evitar duplicar el listener usando un flag en el propio elemento
-    if (container._delegationSetup) return;
-    container._delegationSetup = true;
-    
-    console.log('=== Delegación de eventos configurada en #allImagesContainer ===');
+    console.log('=== Configurando delegación de eventos en #allImagesContainer ===');
 
-    container.addEventListener('click', function (e) {
-        // Buscar si se hizo click en un botón de eliminar imagen existente
-        if (e.target.classList.contains('btn-eliminar-imagen-existente')) {
+    // Remover listener anterior si existe
+    if (container._clickHandler) {
+        container.removeEventListener('click', container._clickHandler);
+    }
+
+    // Crear y guardar el handler
+    container._clickHandler = function (e) {
+        // Buscar si se hizo click en el botón (sirve tanto para eliminar como restaurar)
+        const btn = e.target.closest('.btn-eliminar-imagen-existente');
+        if (btn) {
             e.preventDefault();
             e.stopPropagation();
-            const id = e.target.getAttribute('data-imagen-id');
-            console.log('>>> CLICK en botón X, eliminando imagen ID:', id);
+            const id = btn.getAttribute('data-imagen-id');
+            const action = btn.getAttribute('data-action') || 'delete';
+            console.log('>>> CLICK en botón, acción:', action, 'ID:', id);
             removeExistingImage(id);
+            return;
         }
+    };
+    
+    // Agregar el listener
+    container.addEventListener('click', container._clickHandler);
+    
+    // Configurar efectos hover para todos los botones iniciales
+    setupHoverEffects();
+}
+
+// Función para configurar efectos hover en los botones
+function setupHoverEffects() {
+    const buttons = document.querySelectorAll('.btn-eliminar-imagen-existente');
+    buttons.forEach(btn => {
+        const action = btn.getAttribute('data-action') || 'delete';
+        
+        btn.addEventListener('mouseenter', function() {
+            if (this.getAttribute('data-action') === 'restore') {
+                this.style.backgroundColor = '#229954';
+            } else {
+                this.style.backgroundColor = '#c0392b';
+            }
+            this.style.transform = 'scale(1.15)';
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            if (this.getAttribute('data-action') === 'restore') {
+                this.style.backgroundColor = '#27ae60';
+            } else {
+                this.style.backgroundColor = '#e74c3c';
+            }
+            this.style.transform = 'scale(1)';
+        });
     });
 }
 
-// Función para eliminar imagen existente
+// Función para eliminar/restaurar imagen existente (toggle)
 function removeExistingImage(imagenId) {
-    const id = String(imagenId);
-    console.log('removeExistingImage llamado con ID:', id);
+    // Evitar procesamiento múltiple en rápida sucesión
+    if (processingClick) {
+        console.log('Click ignorado - procesamiento en curso');
+        return;
+    }
     
+    processingClick = true;
+    
+    const id = String(imagenId);
     const isAlreadyMarked = window.imagenesAEliminar.some(existingId => String(existingId) === id);
 
     if (!isAlreadyMarked) {
+        // MARCAR PARA ELIMINAR
+        console.log('>>> Marcando imagen para eliminar:', id);
         window.imagenesAEliminar.push(id);
 
         const hiddenInput = document.getElementById('imagenes_eliminar');
         if (hiddenInput) {
             hiddenInput.value = window.imagenesAEliminar.join(',');
-            console.log('imagenes_eliminar actualizado a:', hiddenInput.value);
         }
 
         const imageItem = document.querySelector('.current-image-item[data-imagen-id="' + id + '"]');
-        console.log('Elemento encontrado:', imageItem);
+        console.log('>>> ImageItem encontrado:', imageItem);
         
         if (imageItem) {
-            // Asegurar que el contenedor tiene posición relativa
-            imageItem.style.position = 'relative';
-            imageItem.style.opacity = '0.4';
-            imageItem.style.backgroundColor = '#f0f0f0';
-            
-            // Buscar y ocultar el botón X
-            const removeBtn = imageItem.querySelector('.btn-eliminar-imagen-existente');
-            if (removeBtn) {
-                removeBtn.style.opacity = '0.3';
-                removeBtn.style.pointerEvents = 'none';
-                console.log('Botón X ocultado');
-            }
+            imageItem.style.opacity = '0.3';
+            imageItem.style.transition = 'all 0.3s';
+            imageItem.style.filter = 'grayscale(100%)';
+            imageItem.classList.add('marked-for-deletion');
 
-            // Crear indicador "ELIMINADA"
             const deleteIndicator = document.createElement('div');
             deleteIndicator.className = 'delete-indicator';
+            deleteIndicator.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(231, 76, 60, 0.95); color: white; padding: 8px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; z-index: 15; box-shadow: 0 2px 8px rgba(0,0,0,0.3);';
             deleteIndicator.textContent = 'ELIMINADA';
-            deleteIndicator.style.cssText = `
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: rgba(231, 76, 60, 0.9);
-                color: white;
-                padding: 10px 15px;
-                border-radius: 4px;
-                font-size: 12px;
-                font-weight: bold;
-                z-index: 100;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-                white-space: nowrap;
-            `;
             imageItem.appendChild(deleteIndicator);
-            console.log('Indicador ELIMINADA añadido');
+
+            // Cambiar botón X por botón +
+            const btn = imageItem.querySelector('.btn-eliminar-imagen-existente');
+            console.log('>>> Botón encontrado:', btn);
+            console.log('>>> Estilos actuales del botón:', btn ? btn.style.cssText : 'N/A');
+            
+            if (btn) {
+                // Agregar clase para modo restaurar
+                btn.classList.add('btn-restore');
+                
+                // Aplicar estilos directamente
+                btn.style.position = 'absolute';
+                btn.style.top = '3px';
+                btn.style.right = '3px';
+                btn.style.backgroundColor = '#27ae60';
+                btn.style.color = 'white';
+                btn.style.border = 'none';
+                btn.style.borderRadius = '50%';
+                btn.style.width = '28px';
+                btn.style.height = '28px';
+                btn.style.cursor = 'pointer';
+                btn.style.fontSize = '22px';
+                btn.style.fontWeight = 'bold';
+                btn.style.display = 'flex';
+                btn.style.alignItems = 'center';
+                btn.style.justifyContent = 'center';
+                btn.style.zIndex = '1000';
+                btn.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
+                btn.style.transition = 'all 0.2s ease';
+                
+                btn.innerHTML = '+';
+                btn.title = 'Restaurar imagen';
+                btn.setAttribute('data-action', 'restore');
+                
+                console.log('>>> Botón cambiado a +');
+                console.log('>>> Background aplicado:', btn.style.backgroundColor);
+            } else {
+                console.log('>>> ERROR: No se encontró el botón');
+            }
+            
+            // Reconfigurar hover effects
+            setupHoverEffects();
         } else {
-            console.error('No se encontró el elemento con data-imagen-id=' + id);
+            console.log('>>> ERROR: No se encontró el imageItem');
         }
+        
+        console.log('Imagen marcada para eliminar:', id);
     } else {
-        console.log('Imagen ya marcada para eliminar:', id);
+        // RESTAURAR IMAGEN
+        window.imagenesAEliminar = window.imagenesAEliminar.filter(existingId => String(existingId) !== id);
+
+        const hiddenInput = document.getElementById('imagenes_eliminar');
+        if (hiddenInput) {
+            hiddenInput.value = window.imagenesAEliminar.join(',');
+        }
+
+        const imageItem = document.querySelector('.current-image-item[data-imagen-id="' + id + '"]');
+        if (imageItem) {
+            imageItem.style.opacity = '1';
+            imageItem.style.filter = 'grayscale(0%)';
+            imageItem.classList.remove('marked-for-deletion');
+
+            const deleteIndicator = imageItem.querySelector('.delete-indicator');
+            if (deleteIndicator) {
+                deleteIndicator.remove();
+            }
+
+            // Cambiar botón + por botón X
+            const btn = imageItem.querySelector('.btn-eliminar-imagen-existente');
+            if (btn) {
+                // Remover clase de modo restaurar
+                btn.classList.remove('btn-restore');
+                
+                // Aplicar estilos para modo eliminar
+                btn.style.position = 'absolute';
+                btn.style.top = '3px';
+                btn.style.right = '3px';
+                btn.style.backgroundColor = '#e74c3c';
+                btn.style.color = 'white';
+                btn.style.border = 'none';
+                btn.style.borderRadius = '50%';
+                btn.style.width = '28px';
+                btn.style.height = '28px';
+                btn.style.cursor = 'pointer';
+                btn.style.fontSize = '20px';
+                btn.style.fontWeight = 'bold';
+                btn.style.display = 'flex';
+                btn.style.alignItems = 'center';
+                btn.style.justifyContent = 'center';
+                btn.style.zIndex = '1000';
+                btn.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
+                btn.style.transition = 'all 0.2s ease';
+                
+                btn.innerHTML = '×';
+                btn.title = 'Eliminar imagen';
+                btn.setAttribute('data-action', 'delete');
+                console.log('>>> Botón cambiado a X roja');
+            }
+            
+            // Reconfigurar hover effects
+            setupHoverEffects();
+        }
+        
+        console.log('Imagen restaurada:', id);
     }
+    
+    // Liberar el flag después de un breve delay
+    setTimeout(() => {
+        processingClick = false;
+    }, 300);
 }
 
 // Función AJAX 
@@ -401,10 +510,14 @@ function validateImageFile(file) {
     return true;
 }
 
-// Hacer disponibles globalmente
+
+
+// Hacer disponibles globalmente al final del archivo (después de todas las definiciones)
+window.initEditForm = initEditForm;
 window.previewImages = previewImages;
 window.validateImageFile = validateImageFile;
 window.renderImagePreviews = renderImagePreviews;
 window.updateFileInput = updateFileInput;
 window.removeExistingImage = removeExistingImage;
 window.setupExistingImageDeleteButtons = setupImageDelegation;
+window.setupHoverEffects = setupHoverEffects;

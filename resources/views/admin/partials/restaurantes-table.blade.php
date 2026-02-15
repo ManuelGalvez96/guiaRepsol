@@ -13,6 +13,7 @@
             @endif
         @endif
     </p>
+    <br>
 </div>
 
 <div class="table-container">

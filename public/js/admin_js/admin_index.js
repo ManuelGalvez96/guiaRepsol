@@ -1,7 +1,7 @@
 // JavaScript para panel admin 
-let csrfToken;
-let ajaxObj;
-const READY_STATE_COMPLETE = 4;
+var csrfToken;
+var ajaxObj;
+var READY_STATE_COMPLETE = 4;
 
 window.onload = () => {
     console.log('Iniciando panel admin...');
@@ -99,26 +99,10 @@ function openEditModal(restauranteId) {
                     oldScript.parentNode.replaceChild(newScript, oldScript);
                 });
                 
-                // Inicializar funciones del formulario de edición después de cargar el contenido
-                setTimeout(() => {
-                    console.log('Inicializando formulario de edición en modal...');
-                    
-                    // Llamar a initEditForm si está disponible
-                    if (typeof window.initEditForm === 'function') {
-                        window.initEditForm();
-                    } else if (typeof initEditForm === 'function') {
-                        initEditForm();
-                    }
-                    
-                    // Configurar botones de eliminación de imágenes
-                    if (typeof window.setupExistingImageDeleteButtons === 'function') {
-                        window.setupExistingImageDeleteButtons();
-                    } else if (typeof setupExistingImageDeleteButtons === 'function') {
-                        setupExistingImageDeleteButtons();
-                    }
-                    
-                    console.log('Formulario de edición inicializado en modal');
-                }, 100);
+                // Inicializar el formulario de edición DESPUÉS de cargar el contenido
+                if (typeof window.initEditForm === 'function') {
+                    window.initEditForm();
+                }
             } else {
                 modalBody.innerHTML = '<div style="text-align: center; color: #e74c3c; padding: 20px;">Error al cargar el formulario</div>';
             }
