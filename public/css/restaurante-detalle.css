@@ -1795,6 +1795,26 @@ body {
     .restaurant-image-main {
         height: 250px;
     }
+
+    /* Estilos para botones en mobile */
+    .restaurant-info-box.d-lg-none .btn-guardar,
+    .restaurant-info-box.d-lg-none .btn-favorito,
+    .restaurant-info-box.d-lg-none .btn-editar-gerente {
+        padding: 8px 12px;
+        font-size: 12px;
+        flex: 1;
+        min-width: auto;
+    }
+
+    .restaurant-info-box.d-lg-none .btn-guardar i,
+    .restaurant-info-box.d-lg-none .btn-favorito i,
+    .restaurant-info-box.d-lg-none .btn-editar-gerente i {
+        font-size: 14px;
+    }
+
+    .restaurant-info-box.d-lg-none .btn-favorito span {
+        font-size: 12px;
+    }
 }
 
 /* Estilos para modales y botones de valoración */
