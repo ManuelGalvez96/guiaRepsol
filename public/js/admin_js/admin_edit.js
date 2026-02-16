@@ -17,11 +17,10 @@ function initEditForm() {
     // Resetear array de imágenes a eliminar
     window.imagenesAEliminar = [];
 
-    // Obtener token CSRF
-    if (typeof window.editConfig !== 'undefined') {
-        csrfToken = window.editConfig.csrfToken;
-    } else {
-        const metaToken = document.querySelector('meta[name="csrf-token"]');
+    // Obtener token CSRF del atributo data-csrf del body
+    csrfToken = document.body.getAttribute('data-csrf');
+    if (!csrfToken) {
+        var metaToken = document.querySelector('meta[name="csrf-token"]');
         if (metaToken) {
             csrfToken = metaToken.getAttribute('content');
         }
@@ -44,7 +43,7 @@ function initEditForm() {
 
 // Delegación de eventos: un solo listener en el contenedor maneja todos los clicks
 function setupImageDelegation() {
-    const container = document.getElementById('allImagesContainer');
+    var container = document.getElementById('allImagesContainer');
     if (!container) {
         console.error('No se encontró el contenedor de imágenes');
         return;
@@ -311,7 +310,7 @@ function manejarActualizar() {
                     timer: 1500,
                     showConfirmButton: false
                 }).then(() => {
-                    const adminIndexUrl = window.editConfig?.adminIndexRoute || '/admin';
+                    const adminIndexUrl = document.body.getAttribute('data-route-index') || '/admin';
                     window.location.href = adminIndexUrl;
                 });
             }
@@ -404,14 +403,12 @@ function renderImagePreviews() {
         const reader = new FileReader();
         reader.onload = function (e) {
             const previewDiv = document.createElement('div');
-            previewDiv.className = 'new-image-item'; // Clase para identificar imágenes nuevas
-            previewDiv.style.cssText = 'position: relative; text-align: center; border: 3px solid #ffc107; border-radius: 8px; padding: 5px; background: #fffbf0; max-width: 170px; box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);';
+            previewDiv.className = 'new-image-item';
 
             // Botón X para eliminar imagen NUEVA/SELECCIONADA (no guardada aún)
             const removeBtn = document.createElement('button');
             removeBtn.innerHTML = '×';
             removeBtn.className = 'btn-eliminar-imagen-nueva';
-            removeBtn.style.cssText = 'position: absolute; top: 3px; right: 3px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(0,0,0,0.3);';
             removeBtn.title = 'Quitar imagen seleccionada';
             removeBtn.onclick = (e) => {
                 e.preventDefault();
@@ -419,28 +416,16 @@ function renderImagePreviews() {
                 removeSelectedImage(index);
             };
 
-            // Añadir efectos hover
-            removeBtn.onmouseenter = function () {
-                this.style.background = '#c0392b';
-                this.style.transform = 'scale(1.15)';
-            };
-            removeBtn.onmouseleave = function () {
-                this.style.background = '#e74c3c';
-                this.style.transform = 'scale(1)';
-            };
-
             const img = document.createElement('img');
             img.src = e.target.result;
             img.alt = `Vista previa ${index + 1}`;
-            img.style.cssText = 'width: 150px; height: 100px; object-fit: cover; border-radius: 5px; display: block;';
 
             const fileName = document.createElement('small');
             fileName.textContent = file.name.length > 20 ? file.name.substring(0, 17) + '...' : file.name;
-            fileName.style.cssText = 'display: block; margin-top: 5px; color: #856404; text-align: center; font-size: 11px; font-weight: 600;';
 
             const badge = document.createElement('span');
             badge.textContent = 'NUEVA';
-            badge.style.cssText = 'display: inline-block; background: #ffc107; color: #000; padding: 2px 8px; border-radius: 3px; font-size: 9px; font-weight: bold; margin-top: 3px;';
+            badge.className = 'new-image-badge';
 
             previewDiv.appendChild(removeBtn);
             previewDiv.appendChild(img);

@@ -9,14 +9,24 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
+<body
+    data-csrf="{{ csrf_token() }}"
+    data-buscar="{{ request('buscar', '') }}"
+    data-tipo-comida="{{ request('tipo_comida', '') }}"
+    data-valoracion="{{ request('valoracion', '') }}"
+    data-precio="{{ request('precio', '') }}"
+    data-page="{{ $restaurantes->currentPage() }}"
+    data-route-index="{{ route('admin.index') }}"
+    data-route-create="{{ route('admin.create') }}"
+    data-route-logout="{{ route('logout') }}"
+>
     <!-- Header -->
     <div class="header">
         <div class="logo">guia repsol</div>
         <button type="button" class="logout-btn" onclick="logoutUser()">Cerrar sesión</button>
     </div>
 
-    <!-- Container -->
+    <!-- contenedires  -->
     <div class="container">
         <div class="top-section">
             <h1>Gestión de restaurantes</h1>
@@ -32,13 +42,14 @@
             </div>
         @endif
 
-        <!-- Filters -->
+        <!-- Filtros -->
         <div class="filters">
             <input type="text" name="buscar" class="filter-search" id="filterBuscar" 
                    placeholder="🔍 Buscar restaurante..." 
-                   value="{{ request('buscar') }}">
+                   value="{{ request('buscar') }}"
+                   oninput="filtroConDelay()">
 
-            <select name="tipo_comida" class="filter-select" id="filterTipoComida">
+            <select name="tipo_comida" class="filter-select" id="filterTipoComida" onchange="aplicarFiltros()">
                 <option value="">Tipo de comida</option>
                 @foreach($tiposComida as $tipo)
                     <option value="{{ $tipo->id }}" {{ request('tipo_comida') == $tipo->id ? 'selected' : '' }}>
@@ -47,7 +58,7 @@
                 @endforeach
             </select>
 
-            <select name="valoracion" class="filter-select" id="filterValoracion">
+            <select name="valoracion" class="filter-select" id="filterValoracion" onchange="aplicarFiltros()">
                 <option value="">Valoración</option>
                 <option value="5" {{ request('valoracion') == '5' ? 'selected' : '' }}>5 estrellas</option>
                 <option value="4" {{ request('valoracion') == '4' ? 'selected' : '' }}>4 estrellas</option>
@@ -56,7 +67,7 @@
                 <option value="1" {{ request('valoracion') == '1' ? 'selected' : '' }}>1 estrella</option>
             </select>
 
-            <select name="precio" class="filter-select" id="filterPrecio">
+            <select name="precio" class="filter-select" id="filterPrecio" onchange="aplicarFiltros()">
                 <option value="">Precio</option>
                 <option value="0-10" {{ request('precio') == '0-10' ? 'selected' : '' }}>0-10€</option>
                 <option value="10-20" {{ request('precio') == '10-20' ? 'selected' : '' }}>10-20€</option>
@@ -65,7 +76,7 @@
                 <option value="50+" {{ request('precio') == '50+' ? 'selected' : '' }}>50€+</option>
             </select>
             
-            <button type="button" class="btn btn-reset" id="resetFilters">Limpiar Filtros</button>
+            <button type="button" class="btn btn-reset" id="resetFilters" onclick="resetearFiltros()">Limpiar Filtros</button>
         </div>
 
         <!-- Table Container -->
@@ -87,97 +98,9 @@
         </div>
     </div>
 
-    <!-- JavaScript separado para mejor mantenimiento -->
-    <script>
-        // Pasar variables de PHP a JavaScript
-        window.adminConfig = {
-            csrfToken: '{{ csrf_token() }}',
-            currentFilters: {
-                buscar: '{{ request('buscar', '') }}',
-                tipo_comida: '{{ request('tipo_comida', '') }}',
-                valoracion: '{{ request('valoracion', '') }}',
-                precio: '{{ request('precio', '') }}', 
-                page: {{ $restaurantes->currentPage() }}
-            },
-            routes: {
-                adminIndex: '{{ route('admin.index') }}',
-                adminCreate: '{{ route('admin.create') }}',
-                logout: '{{ route('logout') }}'
-            }
-        };
-    </script>
     <script src="{{ asset('js/admin_js/admin_index.js') }}"></script>
-
-    <style>
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-
-        .modal-hidden {
-            display: none;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 8px;
-            max-width: 800px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
-        }
-
-        .modal-close:hover {
-            color: #333;
-        }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #e74c3c;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
-    
-    <!-- Cargar funciones para modales -->
-    <script src="{{ asset('js/admin_js/admin_create.js') }}"></script>
     <script src="{{ asset('js/admin_js/admin_edit.js') }}"></script>
+    <script src="{{ asset('js/admin_js/admin_create.js') }}"></script>
 </body>
 </html>
 
