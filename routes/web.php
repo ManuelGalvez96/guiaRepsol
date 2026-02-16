@@ -29,6 +29,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/{restaurante}/edit', [AdminController::class, 'edit'])->name('edit');
     Route::put('/{restaurante}', [AdminController::class, 'update'])->name('update');
     Route::delete('/{restaurante}', [AdminController::class, 'destroy'])->name('destroy');
+    Route::get('/{restaurante}/email-preview-modificado', [AdminController::class, 'emailPreviewModificado'])->name('emailPreview.modificado');
+    Route::get('/{restaurante}/email-preview-eliminado', [AdminController::class, 'emailPreviewEliminado'])->name('emailPreview.eliminado');
 });
 
 // Rutas protegidas - Solo accesibles para usuarios autenticados

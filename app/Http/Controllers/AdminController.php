@@ -10,13 +10,16 @@ use App\Models\Ubicacion;
 use App\Models\UbicacionRestaurantePendiente;
 use App\Models\ImagenRestaurante;
 use App\Models\ImagenRestaurantePendiente;
+use App\Mail\Restaurante_Modificado_o_eliminado;
+use App\Mail\Restaurante_Eliminado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -205,6 +208,8 @@ class AdminController extends Controller
 
     public function update(Request $request, Restaurante $restaurante)
     {
+        $this->checkAdmin();
+
         // Si solo se está actualizando el estado activo (aprobar solicitud)
         if ($request->has('activo') && count($request->all()) == 1) {
             $restaurante->update(['activo' => $request->activo]);
@@ -350,6 +355,18 @@ class AdminController extends Controller
             }
         }
 
+        $restaurante->loadMissing('usuario');
+        // Solo los administradores pueden enviar estos correos de notificación
+        $recipientEmail = $restaurante->usuario?->email;
+        if ($recipientEmail) {
+            Mail::to($recipientEmail)->send(new Restaurante_Modificado_o_eliminado($restaurante));
+        } else {
+            Log::warning('No se pudo enviar email: usuario o email no disponible.', [
+                'restaurante_id' => $restaurante->id,
+                'user_id' => $restaurante->user_id,
+            ]);
+        }
+
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'success' => true,
@@ -357,7 +374,6 @@ class AdminController extends Controller
                 'restaurante' => $restaurante->load(['categoria', 'ubicacion', 'imagenes', 'tiposComida'])
             ]);
         }
-
         return Redirect::route('admin.index')->with('success', 'Restaurante actualizado exitosamente');
     }
 
@@ -493,7 +509,31 @@ class AdminController extends Controller
     public function destroy(Request $request, Restaurante $restaurante)
     {
         $this->checkAdmin();
+        
+        $restaurante->loadMissing('usuario');
+        $recipientEmail = $restaurante->usuario?->email;
+        $nombreRestaurante = $restaurante->nombre;
+        $restauranteId = $restaurante->id;
+        $userId = $restaurante->user_id;  // Guardar antes de eliminar
+        
         $restaurante->delete();
+
+        // Enviar email de eliminación solo a administradores
+        if ($recipientEmail) {
+            try {
+                Mail::to($recipientEmail)->send(new Restaurante_Eliminado($nombreRestaurante, $restauranteId));
+            } catch (\Exception $e) {
+                Log::error('Error al enviar email de eliminación: ' . $e->getMessage(), [
+                    'restaurante_id' => $restauranteId,
+                    'user_id' => $userId,
+                ]);
+            }
+        } else {
+            Log::warning('No se pudo enviar email de eliminación: usuario o email no disponible.', [
+                'restaurante_id' => $restauranteId,
+                'user_id' => $userId,
+            ]);
+        }
 
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
@@ -501,7 +541,22 @@ class AdminController extends Controller
                 'message' => 'Restaurante eliminado exitosamente'
             ]);
         }
-
         return Redirect::route('admin.index')->with('success', 'Restaurante eliminado exitosamente');
+    }
+
+    public function emailPreviewModificado(Restaurante $restaurante)
+    {
+        $this->checkAdmin();
+        $restaurante->loadMissing('usuario');
+        return view('emails.restaurante_modificado_o_eliminado', ['restaurante' => $restaurante]);
+    }
+
+    public function emailPreviewEliminado(Restaurante $restaurante)
+    {
+        $this->checkAdmin();
+        return view('emails.restaurante_eliminado', [
+            'nombre' => $restaurante->nombre,
+            'restaurante_id' => $restaurante->id
+        ]);
     }
 }

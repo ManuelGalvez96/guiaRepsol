@@ -128,31 +128,21 @@ function peticionAjax(url, metodo, funcionCallback, esFormulario = false) {
     ajaxObj = new XMLHttpRequest();
     ajaxObj.open(metodo, url);
     
-    // Siempre incluir X-Requested-With para identificar peticiones AJAX
+    // Siempre incluir headers necesarios
     ajaxObj.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    ajaxObj.setRequestHeader('Accept', 'application/json');
+    ajaxObj.setRequestHeader('X-CSRF-TOKEN', csrfToken);
     
     if (metodo === 'POST' || metodo === 'DELETE') {
-        if (esFormulario) {
-            ajaxObj.setRequestHeader('Accept', 'application/json');
-            ajaxObj.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-        } else {
+        if (!esFormulario) {
             ajaxObj.setRequestHeader('Content-Type', 'application/json');
-            ajaxObj.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-            ajaxObj.setRequestHeader('Accept', 'application/json');
         }
-    } else {
-        // Para GET que esperan HTML (para modales)
-        ajaxObj.setRequestHeader('X-CSRF-TOKEN', csrfToken);
     }
     
     ajaxObj.onreadystatechange = funcionCallback;
     
-    if (metodo === 'POST' || metodo === 'DELETE') {
-        if (!esFormulario) {
-            ajaxObj.send(JSON.stringify({}));
-        } else {
-            ajaxObj.send(); // Para FormData se envía sin parámetros
-        }
+    if ((metodo === 'POST' || metodo === 'DELETE') && !esFormulario) {
+        ajaxObj.send(JSON.stringify({}));
     } else {
         ajaxObj.send();
     }

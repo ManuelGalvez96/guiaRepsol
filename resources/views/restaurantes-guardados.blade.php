@@ -55,6 +55,7 @@
                     <img src="{{ asset('img/Guia_Repsol.png') }}" alt="Guía Repsol" class="logo-img">
                 </div>
                 <div class="col">
+                    <!--
                     <div class="search-bar">
                         <button class="btn-close-search" id="restaurant-search-clear">
                             <i class="bi bi-x-lg"></i>
@@ -64,6 +65,7 @@
                             <i class="bi bi-search"></i>
                         </button>
                     </div>
+                    -->
                 </div>
                 <div class="col-auto">
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
@@ -92,9 +94,6 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="{{ route('restaurantes.guardados') }}"><i class="bi bi-bookmark-fill"></i> Guardados</a>
-                </li>
-                <li class="nav-item ms-auto">
-                    <a class="nav-link" href="{{ route('formulario') }}"><i class="bi bi-shop"></i> Da a conocer tu negocio</a>
                 </li>
             </ul>
         </div>

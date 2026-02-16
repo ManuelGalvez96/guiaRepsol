@@ -259,7 +259,8 @@ function peticionAjax(url, metodo, funcionCallback, datos) {
     ajaxObj = new XMLHttpRequest();
     ajaxObj.open(metodo, url);
 
-    if (metodo === 'POST') {
+    // Enviar token CSRF para POST, PUT y DELETE
+    if (metodo === 'POST' || metodo === 'PUT' || metodo === 'DELETE') {
         ajaxObj.setRequestHeader('Accept', 'application/json');
         ajaxObj.setRequestHeader('X-CSRF-TOKEN', csrfToken);
     }
@@ -300,6 +301,9 @@ function manejarActualizar() {
         if (ajaxObj.status == 200) {
             const data = JSON.parse(ajaxObj.responseText);
             if (data.success) {
+                if (typeof window.closeModal === 'function') {
+                    window.closeModal();
+                }
                 Swal.fire({
                     icon: 'success',
                     title: '¡Actualizado!',
