@@ -72,10 +72,10 @@
     <div class="main-detalle">
         <div class="container">
             <div class="row">
-                <!-- Columna Izquierda - Información del Restaurante -->
-                <div class="col-lg-5">
-                    <!-- Info Principal -->
-                    <div class="restaurant-info-box">
+                <!-- Columna Izquierda - Información del Restaurante (desktop) -->
+                <div class="col-lg-5 order-4 order-lg-1">
+                    <!-- Info Principal (solo desktop) -->
+                    <div class="restaurant-info-box d-none d-lg-block">
                         @if($restaurante->soles > 0)
                         <div class="mb-3">
                             @for($i = 0; $i < $restaurante->soles; $i++)
@@ -300,7 +300,7 @@
                 </div>
 
                 <!-- Columna Derecha - Imágenes y Reservas -->
-                <div class="col-lg-7">
+                <div class="col-12 col-lg-7 order-1 order-lg-2">
                     <!-- Imagen Principal -->
                     <div class="image-container">
                         <img src="https://picsum.photos/800/600?random={{ $restaurante->id }}" 
@@ -309,6 +309,45 @@
                         <button class="btn-ver-fotos">
                             <i class="bi bi-images"></i> Mostrar todas las fotos
                         </button>
+                    </div>
+
+                    <!-- Info Principal para Mobile (justo después de la imagen) - solo visible en móvil -->
+                    <div class="restaurant-info-box d-lg-none">
+                        @if($restaurante->soles > 0)
+                        <div class="mb-3">
+                            @for($i = 0; $i < $restaurante->soles; $i++)
+                                <i class="bi bi-sun-fill" style="color: #f7931e; font-size: 28px;"></i>
+                            @endfor
+                        </div>
+                        @endif
+
+                        <p class="fecha-publicacion">Sábado de Verano 2021</p>
+                        <h1 class="restaurant-name-title">{{ $restaurante->nombre }}</h1>
+                        
+                        <p class="restaurant-ubicacion">
+                            <i class="bi bi-geo-alt"></i> {{ $restaurante->direccion }}, {{ $restaurante->ubicacion->codigo_postal }} {{ $restaurante->ubicacion->ciudad }}
+                        </p>
+
+                        <div class="restaurant-tipo">
+                            <span class="tipo-badge">{{ $restaurante->ubicacion->ciudad }}</span>
+                            <span class="tipo-badge">{{ $restaurante->ubicacion->provincia }}</span>
+                            <span class="tipo-badge">{{ $restaurante->categoria->nombre }}</span>
+                            @foreach($restaurante->tiposComida as $tipo)
+                                <span class="tipo-badge">{{ $tipo->nombre }}</span>
+                            @endforeach
+                        </div>
+
+                        <div class="mt-3">
+                            <button class="btn-guardar">
+                                <i class="bi bi-bookmark"></i> Guardar
+                            </button>
+                            <button class="btn-compartir">
+                                <i class="bi bi-share"></i>
+                            </button>
+                            <button class="btn-favorito">
+                                <i class="bi bi-heart"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Reserva -->
@@ -325,7 +364,7 @@
                         </p>
                     </div>
 
-                    <!-- Reportajes Relacionados -->
+                    <!-- Valoraciones de usuarios -->
                     <div class="section-box">
                         <h3 class="section-title">Valoraciones de usuarios</h3>
                         
