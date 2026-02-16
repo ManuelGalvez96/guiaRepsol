@@ -47,7 +47,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <button class="btn-menu">
+                    <button class="btn-menu-detalle">
                         <i class="bi bi-list"></i>
                     </button>
                 </div>
@@ -106,10 +106,14 @@
                     <div class="content-section">
                         <div class="section-header">
                             <div>
-                                <h2>Contenido relacionado</h2>
+                                <h2>Contenido relacionado
+                                    <button class="btn-toggle-sidebar" id="btnToggleSidebar">
+                                        <i class="bi bi-chevron-down"></i>
+                                    </button>
+                                </h2>
                                 <span class="result-count">{{ $totalPatrocinados }} restaurantes patrocinados</span>
                             </div>
-                            <div>
+                            <div class="sidebar-ordenar">
                                 <form method="GET" action="{{ route('restaurantes') }}" id="formOrdenarPatrocinados">
                                     <select name="ordenar_patrocinados" class="btn btn-sm btn-outline-secondary" onchange="document.getElementById('formOrdenarPatrocinados').submit()">
                                         <option value="nombre" {{ request('ordenar_patrocinados') == 'nombre' ? 'selected' : '' }}>Nombre A-Z</option>
@@ -122,7 +126,7 @@
                         </div>
 
                         <!-- Lista de Restaurantes Patrocinados -->
-                        <div class="articles-list">
+                        <div class="articles-list sidebar-content" id="sidebarContent">
                             @forelse($restaurantesPatrocinados as $patrocinado)
                             <a href="{{ route('restaurante.detalle', $patrocinado->id) }}" style="text-decoration: none; color: inherit;">
                             <article class="article-item">

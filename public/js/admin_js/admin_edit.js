@@ -10,9 +10,20 @@ if (typeof window.imagenesAEliminar === 'undefined') {
     window.imagenesAEliminar = [];
 }
 
+<<<<<<< HEAD
 // Función de inicialización
 function initEditForm() {
     console.log('Iniciando formulario de editar...');
+=======
+// Al cargar la pagina
+window.onload = function () {
+    console.log('Iniciando formulario de editar...');
+    // Pequeño delay para asegurar que el DOM esté listo
+    setTimeout(function() {
+        initializeEditForm();
+    }, 100);
+};
+>>>>>>> 79a27df60872bfac1b21c6a6c96ce4c8637936b5
 
     // Resetear array de imágenes a eliminar
     window.imagenesAEliminar = [];
@@ -56,6 +67,7 @@ function setupImageDelegation() {
         container.removeEventListener('click', container._clickHandler);
     }
 
+<<<<<<< HEAD
     // Crear y guardar el handler
     container._clickHandler = function (e) {
         // Buscar si se hizo click en el botón (sirve tanto para eliminar como restaurar)
@@ -67,6 +79,123 @@ function setupImageDelegation() {
             const action = btn.getAttribute('data-action') || 'delete';
             console.log('>>> CLICK en botón, acción:', action, 'ID:', id);
             removeExistingImage(id);
+=======
+// Configurar el submit
+function setupEditFormHandler() {
+    const form = document.getElementById('editRestauranteForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const alertContainer = document.getElementById('alertContainer');
+
+    if (!form) return;
+
+    // Cuando se envie el formulario
+    form.onsubmit = function (e) {
+        e.preventDefault();
+        console.log('Actualizando restaurante...');
+
+        // Quitar errores anteriores
+        document.querySelectorAll('.error').forEach(el => el.remove());
+        if (alertContainer) {
+            alertContainer.innerHTML = '';
+        }
+
+        // Cambiar boton mientras procesa
+        if (submitBtn) {
+            submitBtn.textContent = 'Actualizando...';
+            submitBtn.disabled = true;
+        }
+        form.classList.add('loading');
+
+        // Preparar datos
+        const formData = new FormData(form);
+
+        // Enviar con AJAX
+        fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+            },
+            body: formData
+        })
+            .then(response => {
+                console.log('Respuesta recibida:', response.status);
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw data;
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    console.log('Restaurante actualizado correctamente!');
+
+                    // Mensaje de exito
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Actualizado!',
+                        text: data.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    // Volver al panel después de 1.5seg
+                    setTimeout(() => {
+                        const adminIndexUrl = window.editConfig?.adminIndexRoute || '/admin';
+                        window.location.href = adminIndexUrl;
+                    }, 1500);
+                }
+            })
+            .catch(error => {
+                console.error('Error al actualizar:', error);
+
+                // Si hay errores de validacion
+                if (error.errors) {
+                    Object.keys(error.errors).forEach(field => {
+                        const input = document.getElementById(field);
+                        if (input) {
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'error';
+                            errorDiv.textContent = error.errors[field][0];
+                            input.parentNode.appendChild(errorDiv);
+                        }
+                    });
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error de validación',
+                        text: 'Por favor corrige los errores en el formulario',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message || 'Error al actualizar el restaurante'
+                    });
+                }
+
+                // Restaurar boton
+                if (submitBtn) {
+                    submitBtn.textContent = 'Actualizar Restaurante';
+                    submitBtn.disabled = false;
+                }
+                form.classList.remove('loading');
+            });
+    };
+}
+
+// Preview de imagen nueva
+function previewImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+        // Validar archivo antes de preview
+        if (!validateImageFile(file)) {
+            event.target.value = ''; // Limpiar input
+>>>>>>> 79a27df60872bfac1b21c6a6c96ce4c8637936b5
             return;
         }
     };
@@ -500,6 +629,7 @@ function validateImageFile(file) {
 }
 
 
+<<<<<<< HEAD
 
 // Hacer disponibles globalmente al final del archivo (después de todas las definiciones)
 window.initEditForm = initEditForm;
@@ -510,3 +640,7 @@ window.updateFileInput = updateFileInput;
 window.removeExistingImage = removeExistingImage;
 window.setupExistingImageDeleteButtons = setupImageDelegation;
 window.setupHoverEffects = setupHoverEffects;
+=======
+// Guardar valores al cargar
+// Nota: Esta función se llama desde initializeEditForm() que ya está en window.onload
+>>>>>>> 79a27df60872bfac1b21c6a6c96ce4c8637936b5
