@@ -6,11 +6,10 @@ const READY_STATE_COMPLETE = 4;
 window.onload = () => {
     console.log('Iniciando panel admin...');
     
-    // Obtener token CSRF
-    if (typeof window.adminConfig !== 'undefined') {
-        csrfToken = window.adminConfig.csrfToken;
-    } else {
-        const metaToken = document.querySelector('meta[name="csrf-token"]');
+    // Obtener token CSRF del atributo data-csrf del body
+    csrfToken = document.body.getAttribute('data-csrf');
+    if (!csrfToken) {
+        var metaToken = document.querySelector('meta[name="csrf-token"]');
         if (metaToken) {
             csrfToken = metaToken.getAttribute('content');
         }
@@ -87,7 +86,7 @@ function openEditModal(restauranteId) {
             if (ajaxObj.status === 200) {
                 modalBody.innerHTML = ajaxObj.responseText;
                 
-                // Ejecutar scripts que vienen en el HTML inyectado (innerHTML no los ejecuta)
+                // Ejecutar scripts que vienen en el HTML inyectado
                 var scripts = modalBody.querySelectorAll('script');
                 scripts.forEach(function(oldScript) {
                     var newScript = document.createElement('script');
@@ -249,7 +248,7 @@ function logoutUser() {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            const logoutUrl = window.adminConfig?.routes?.logout || '/logout';
+            const logoutUrl = document.body.getAttribute('data-route-logout') || '/logout';
             peticionAjax(logoutUrl, 'POST', manejarLogout);
         }
     });
@@ -299,40 +298,30 @@ window.showAlert = showAlert;
 let filtroTimeout = null;
 
 function initFiltros() {
-    const inputBuscar = document.getElementById('filterBuscar');
-    const selectTipo = document.getElementById('filterTipoComida');
-    const selectValoracion = document.getElementById('filterValoracion');
-    const selectPrecio = document.getElementById('filterPrecio');
-    const btnReset = document.getElementById('resetFilters');
+    // Los eventos se asignan inline en el HTML (oninput, onchange, onclick)
+    console.log('Filtros inicializados');
+}
 
-    if (inputBuscar) {
-        inputBuscar.addEventListener('input', function() {
-            clearTimeout(filtroTimeout);
-            filtroTimeout = setTimeout(() => aplicarFiltros(), 400);
-        });
-    }
+// Función para el input de búsqueda con delay
+function filtroConDelay() {
+    clearTimeout(filtroTimeout);
+    filtroTimeout = setTimeout(function() {
+        aplicarFiltros();
+    }, 400);
+}
 
-    if (selectTipo) {
-        selectTipo.addEventListener('change', () => aplicarFiltros());
-    }
+// Función para resetear todos los filtros
+function resetearFiltros() {
+    var inputBuscar = document.getElementById('filterBuscar');
+    var selectTipo = document.getElementById('filterTipoComida');
+    var selectValoracion = document.getElementById('filterValoracion');
+    var selectPrecio = document.getElementById('filterPrecio');
 
-    if (selectValoracion) {
-        selectValoracion.addEventListener('change', () => aplicarFiltros());
-    }
-
-    if (selectPrecio) {
-        selectPrecio.addEventListener('change', () => aplicarFiltros());
-    }
-
-    if (btnReset) {
-        btnReset.addEventListener('click', function() {
-            if (inputBuscar) inputBuscar.value = '';
-            if (selectTipo) selectTipo.value = '';
-            if (selectValoracion) selectValoracion.value = '';
-            if (selectPrecio) selectPrecio.value = '';
-            aplicarFiltros();
-        });
-    }
+    if (inputBuscar) inputBuscar.value = '';
+    if (selectTipo) selectTipo.value = '';
+    if (selectValoracion) selectValoracion.value = '';
+    if (selectPrecio) selectPrecio.value = '';
+    aplicarFiltros();
 }
 
 function aplicarFiltros(page) {
@@ -348,7 +337,7 @@ function aplicarFiltros(page) {
     if (precio) params.append('precio', precio);
     if (page) params.append('page', page);
 
-    const url = (window.adminConfig?.routes?.adminIndex || '/admin') + '?' + params.toString();
+    const url = (document.body.getAttribute('data-route-index') || '/admin') + '?' + params.toString();
 
     // Actualizar URL del navegador sin recargar
     window.history.replaceState({}, '', url);
@@ -381,15 +370,17 @@ function aplicarFiltros(page) {
 }
 
 function vincularPaginacion() {
-    const links = document.querySelectorAll('#restaurantesContainer .pagination a');
-    links.forEach(function(link) {
-        link.addEventListener('click', function(e) {
+    var links = document.querySelectorAll('#restaurantesContainer .pagination a');
+    for (var i = 0; i < links.length; i++) {
+        links[i].onclick = function(e) {
             e.preventDefault();
-            const url = new URL(this.href);
-            const page = url.searchParams.get('page');
+            var url = new URL(this.href);
+            var page = url.searchParams.get('page');
             aplicarFiltros(page);
-        });
-    });
+        };
+    }
 }
 
 window.aplicarFiltros = aplicarFiltros;
+window.filtroConDelay = filtroConDelay;
+window.resetearFiltros = resetearFiltros;

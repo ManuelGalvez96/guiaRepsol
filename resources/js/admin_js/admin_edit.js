@@ -9,15 +9,15 @@ if (typeof window.imagenesAEliminar === 'undefined') {
     window.imagenesAEliminar = [];
 }
 
-// Ejecutar cuando el DOM esté listo (solo una vez)
+// Ejecutar cuando la página esté lista (solo una vez)
 let formInitialized = false;
-document.addEventListener('DOMContentLoaded', function () {
-    console.log('DOM Content Loaded - Iniciando configuración...');
+window.onload = function () {
+    console.log('Página cargada - Iniciando configuración...');
     if (!formInitialized) {
         formInitialized = true;
         initEditForm();
     }
-});
+};
 
 // Función de inicialización
 function initEditForm() {
@@ -26,11 +26,10 @@ function initEditForm() {
     // Resetear array de imágenes a eliminar
     window.imagenesAEliminar = [];
 
-    // Obtener token CSRF
-    if (typeof window.editConfig !== 'undefined') {
-        csrfToken = window.editConfig.csrfToken;
-    } else {
-        const metaToken = document.querySelector('meta[name="csrf-token"]');
+    // Obtener token CSRF del atributo data-csrf del body
+    csrfToken = document.body.getAttribute('data-csrf');
+    if (!csrfToken) {
+        var metaToken = document.querySelector('meta[name="csrf-token"]');
         if (metaToken) {
             csrfToken = metaToken.getAttribute('content');
         }
@@ -57,31 +56,31 @@ window.setupExistingImageDeleteButtons = setupImageDelegation;
 window.removeExistingImage = removeExistingImage;
 window.previewImages = previewImages;
 
-// Delegación de eventos: un solo listener en el contenedor maneja todos los clicks
+// Delegación de eventos: asignar onclick al contenedor para manejar todos los clicks
 function setupImageDelegation() {
-    const container = document.getElementById('allImagesContainer');
+    var container = document.getElementById('allImagesContainer');
     if (!container) {
         console.error('No se encontró el contenedor de imágenes');
         return;
     }
     
-    // Evitar duplicar el listener usando un flag en el propio elemento
+    // Evitar duplicar usando un flag en el propio elemento
     if (container._delegationSetup) return;
     container._delegationSetup = true;
     
     console.log('=== Delegación de eventos configurada en #allImagesContainer ===');
 
-    container.addEventListener('click', function (e) {
+    container.onclick = function (e) {
         // Buscar si se hizo click en un botón de eliminar imagen existente (o dentro de él)
-        const btn = e.target.closest('.btn-eliminar-imagen-existente');
+        var btn = e.target.closest('.btn-eliminar-imagen-existente');
         if (btn) {
             e.preventDefault();
             e.stopPropagation();
-            const id = btn.getAttribute('data-imagen-id');
+            var id = btn.getAttribute('data-imagen-id');
             console.log('>>> CLICK delegado en botón X, eliminando imagen ID:', id);
             removeExistingImage(id);
         }
-    });
+    };
 }
 
 // Función para eliminar imagen existente
@@ -99,13 +98,10 @@ function removeExistingImage(imagenId) {
 
         const imageItem = document.querySelector('.current-image-item[data-imagen-id="' + id + '"]');
         if (imageItem) {
-            imageItem.style.opacity = '0.3';
-            imageItem.style.transition = 'all 0.3s';
-            imageItem.style.filter = 'grayscale(100%)';
-            imageItem.style.pointerEvents = 'none';
+            imageItem.className = 'current-image-item image-marked-delete';
 
             const deleteIndicator = document.createElement('div');
-            deleteIndicator.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(231, 76, 60, 0.95); color: white; padding: 8px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; z-index: 15; box-shadow: 0 2px 8px rgba(0,0,0,0.3);';
+            deleteIndicator.className = 'delete-indicator';
             deleteIndicator.textContent = 'ELIMINADA';
             imageItem.appendChild(deleteIndicator);
 
@@ -170,7 +166,7 @@ function manejarActualizar() {
                     timer: 1500,
                     showConfirmButton: false
                 }).then(() => {
-                    const adminIndexUrl = window.editConfig?.adminIndexRoute || '/admin';
+                    const adminIndexUrl = document.body.getAttribute('data-route-index') || '/admin';
                     window.location.href = adminIndexUrl;
                 });
             }
@@ -263,14 +259,12 @@ function renderImagePreviews() {
         const reader = new FileReader();
         reader.onload = function (e) {
             const previewDiv = document.createElement('div');
-            previewDiv.className = 'new-image-item'; // Clase para identificar imágenes nuevas
-            previewDiv.style.cssText = 'position: relative; text-align: center; border: 3px solid #ffc107; border-radius: 8px; padding: 5px; background: #fffbf0; max-width: 170px; box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);';
+            previewDiv.className = 'new-image-item';
 
             // Botón X para eliminar imagen NUEVA/SELECCIONADA (no guardada aún)
             const removeBtn = document.createElement('button');
             removeBtn.innerHTML = '×';
             removeBtn.className = 'btn-eliminar-imagen-nueva';
-            removeBtn.style.cssText = 'position: absolute; top: 3px; right: 3px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(0,0,0,0.3);';
             removeBtn.title = 'Quitar imagen seleccionada';
             removeBtn.onclick = (e) => {
                 e.preventDefault();
@@ -278,28 +272,16 @@ function renderImagePreviews() {
                 removeSelectedImage(index);
             };
 
-            // Añadir efectos hover
-            removeBtn.onmouseenter = function () {
-                this.style.background = '#c0392b';
-                this.style.transform = 'scale(1.15)';
-            };
-            removeBtn.onmouseleave = function () {
-                this.style.background = '#e74c3c';
-                this.style.transform = 'scale(1)';
-            };
-
             const img = document.createElement('img');
             img.src = e.target.result;
             img.alt = `Vista previa ${index + 1}`;
-            img.style.cssText = 'width: 150px; height: 100px; object-fit: cover; border-radius: 5px; display: block;';
 
             const fileName = document.createElement('small');
             fileName.textContent = file.name.length > 20 ? file.name.substring(0, 17) + '...' : file.name;
-            fileName.style.cssText = 'display: block; margin-top: 5px; color: #856404; text-align: center; font-size: 11px; font-weight: 600;';
 
             const badge = document.createElement('span');
             badge.textContent = 'NUEVA';
-            badge.style.cssText = 'display: inline-block; background: #ffc107; color: #000; padding: 2px 8px; border-radius: 3px; font-size: 9px; font-weight: bold; margin-top: 3px;';
+            badge.className = 'new-image-badge';
 
             previewDiv.appendChild(removeBtn);
             previewDiv.appendChild(img);
@@ -373,6 +355,12 @@ function validateImageFile(file) {
     return true;
 }
 
+// Función para cancelar edición y volver al index
+function cancelEdit() {
+    const adminIndexUrl = document.body.getAttribute('data-route-index') || '/admin';
+    window.location.href = adminIndexUrl;
+}
+
 // Hacer disponibles globalmente
 window.previewImages = previewImages;
 window.validateImageFile = validateImageFile;
@@ -380,3 +368,4 @@ window.renderImagePreviews = renderImagePreviews;
 window.updateFileInput = updateFileInput;
 window.removeExistingImage = removeExistingImage;
 window.setupExistingImageDeleteButtons = setupImageDelegation;
+window.cancelEdit = cancelEdit;

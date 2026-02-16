@@ -862,3 +862,191 @@ textarea:focus {
     text-align: center;
     word-break: break-all;
 }
+
+/* ==================== CONTENEDOR DE IMÁGENES ==================== */
+.images-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 10px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    min-height: 140px;
+}
+
+/* Imagen existente */
+.current-image-item {
+    position: relative;
+    text-align: center;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 5px;
+    background: white;
+    max-width: 170px;
+}
+
+.current-image-item img {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    display: block;
+}
+
+.current-image-item small {
+    display: block;
+    margin-top: 5px;
+    color: #666;
+    font-size: 11px;
+}
+
+/* Botón eliminar imagen existente */
+.btn-eliminar-imagen-existente {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+}
+
+.btn-eliminar-imagen-existente:hover {
+    background: #c0392b;
+    transform: scale(1.15);
+}
+
+/* Mensaje sin imágenes */
+#noImagesMessage {
+    width: 100%;
+    text-align: center;
+    color: #999;
+    margin: 20px 0;
+}
+
+/* Sección añadir imágenes */
+.add-images-section {
+    margin-top: 15px;
+}
+
+.add-images-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #495057;
+}
+
+.add-images-input {
+    margin-top: 5px;
+}
+
+/* Hint de búsqueda */
+.search-hint {
+    color: #666;
+    margin-top: 10px;
+    display: block;
+}
+
+/* ==================== IMÁGENES NUEVAS (creadas por JS) ==================== */
+.new-image-item {
+    position: relative;
+    text-align: center;
+    border: 3px solid #ffc107;
+    border-radius: 8px;
+    padding: 5px;
+    background: #fffbf0;
+    max-width: 170px;
+    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+}
+
+.new-image-item img {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    display: block;
+}
+
+.new-image-item small {
+    display: block;
+    margin-top: 5px;
+    color: #856404;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* Botón eliminar imagen nueva */
+.btn-eliminar-imagen-nueva {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.btn-eliminar-imagen-nueva:hover {
+    background: #c0392b;
+    transform: scale(1.15);
+}
+
+/* Badge "NUEVA" */
+.new-image-badge {
+    display: inline-block;
+    background: #ffc107;
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: bold;
+    margin-top: 3px;
+}
+
+/* Indicador imagen eliminada */
+.delete-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(231, 76, 60, 0.95);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    z-index: 15;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* Estado imagen marcada para eliminar */
+.image-marked-delete {
+    opacity: 0.3;
+    transition: all 0.3s;
+    filter: grayscale(100%);
+    pointer-events: none;
+}
