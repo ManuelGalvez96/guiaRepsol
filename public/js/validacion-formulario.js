@@ -353,3 +353,6 @@ window.onload = function () {
         contadorDescripcion.style.color = longitud >= 100 ? '#28a745' : '#666';
     }
 };
+
+// Inicializar menú móvil
+initializeMobileMenu();

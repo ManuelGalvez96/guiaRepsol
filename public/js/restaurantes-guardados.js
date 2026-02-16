@@ -34,3 +34,6 @@ window.onload = function() {
         };
     }
 };
+
+// Inicializar menú móvil
+initializeMobileMenu();

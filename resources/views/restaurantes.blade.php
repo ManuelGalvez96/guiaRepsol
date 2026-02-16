@@ -51,7 +51,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <button class="btn-menu-detalle" id="btnToggleMenu">
+                    <button class="btn-menu-detalle" id="btnToggleMenu" onclick="toggleMobileMenu()">
                         <i class="bi bi-list"></i>
                     </button>
                 </div>
@@ -464,25 +464,10 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/mobile-menu.js') }}"></script>
     <script src="{{ asset('js/restaurantes.js') }}"></script>
 
-    <script>
-        // Toggle Mobile Menu
-        const btnToggleMenu = document.getElementById('btnToggleMenu');
-        const mobileMenu = document.getElementById('mobileMenu');
 
-        btnToggleMenu.addEventListener('click', function() {
-            mobileMenu.classList.toggle('active');
-        });
-
-        // Cerrar menú cuando se hace click en un link
-        const menuLinks = mobileMenu.querySelectorAll('a');
-        menuLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                mobileMenu.classList.remove('active');
-            });
-        });
-    </script>
 </body>
 
 </html>
