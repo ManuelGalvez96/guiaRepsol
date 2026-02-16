@@ -333,11 +333,6 @@
                                  alt="{{ $restaurante->nombre }}" 
                                  class="restaurant-image-main">
                         @endif
-                        @if($imagenesAdicionales->count() > 0)
-                        <button class="btn-ver-fotos" data-bs-toggle="modal" data-bs-target="#modalGaleria">
-                            <i class="bi bi-images"></i> Mostrar todas las fotos ({{ $imagenesAdicionales->count() + 1 }})
-                        </button>
-                        @endif
                     </div>
 
                     <!-- Slider de Miniaturas -->

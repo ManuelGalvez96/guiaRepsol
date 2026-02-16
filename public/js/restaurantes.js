@@ -33,6 +33,17 @@ window.onload = function() {
             }
         };
     }
+
+    // Acordeón del sidebar de contenido relacionado en responsive
+    const btnToggleSidebar = document.getElementById('btnToggleSidebar');
+    const sidebarContent = document.getElementById('sidebarContent');
+    
+    if (btnToggleSidebar && sidebarContent) {
+        btnToggleSidebar.onclick = function() {
+            sidebarContent.classList.toggle('show');
+            btnToggleSidebar.classList.toggle('active');
+        };
+    }
 };
 
 // Funcionalidad para la página de restaurantes
@@ -119,12 +130,77 @@ const updateCount = (total, term) => {
 	}
 };
 
-const togglePagination = (term) => {
+const updatePagination = (data) => {
 	if (!pagination) {
 		return;
 	}
 
-	pagination.style.display = term ? 'none' : '';
+	// Si no hay páginas o solo hay una página, ocultar la paginación
+	if (!data.last_page || data.last_page <= 1) {
+		pagination.innerHTML = '';
+		return;
+	}
+
+	const currentPage = data.current_page || 1;
+	const lastPage = data.last_page || 1;
+
+	// Construir HTML de la paginación
+	let paginationHtml = '<div class="d-flex justify-content-center align-items-center gap-3">';
+	
+	// Flecha Anterior
+	if (currentPage === 1) {
+		paginationHtml += `
+			<span class="pagination-arrow disabled">
+				<i class="bi bi-chevron-left" style="font-size: 60px; color: #333;"></i>
+			</span>
+		`;
+	} else {
+		paginationHtml += `
+			<a href="#" class="pagination-arrow" data-page="${currentPage - 1}">
+				<i class="bi bi-chevron-left" style="font-size: 60px; color: #333;"></i>
+			</a>
+		`;
+	}
+
+	// Números de página
+	paginationHtml += '<div class="d-flex gap-2">';
+	for (let page = 1; page <= lastPage; page++) {
+		if (page === currentPage) {
+			paginationHtml += `<span class="page-number active">${page}</span>`;
+		} else {
+			paginationHtml += `<a href="#" class="page-number" data-page="${page}">${page}</a>`;
+		}
+	}
+	paginationHtml += '</div>';
+
+	// Flecha Siguiente
+	if (currentPage === lastPage) {
+		paginationHtml += `
+			<span class="pagination-arrow disabled">
+				<i class="bi bi-chevron-right" style="font-size: 60px; color: #ccc;"></i>
+			</span>
+		`;
+	} else {
+		paginationHtml += `
+			<a href="#" class="pagination-arrow" data-page="${currentPage + 1}">
+				<i class="bi bi-chevron-right" style="font-size: 60px; color: #00a3e0;"></i>
+			</a>
+		`;
+	}
+
+	paginationHtml += '</div>';
+
+	pagination.innerHTML = paginationHtml;
+
+	// Añadir eventos onclick a los enlaces de paginación
+	const pageLinks = pagination.querySelectorAll('a[data-page]');
+	pageLinks.forEach(function(link) {
+		link.onclick = function(e) {
+			e.preventDefault();
+			const pageNum = this.getAttribute('data-page');
+			fetchResultsPage(searchInput ? searchInput.value.trim() : '', pageNum);
+		};
+	});
 };
 
 const fetchResults = (term) => {
@@ -142,7 +218,28 @@ const fetchResults = (term) => {
 		.then((data) => {
 			renderCards(data.items);
 			updateCount(data.total, data.term);
-			togglePagination(data.term);
+			updatePagination(data);
+		});
+};
+
+const fetchResultsPage = (term, page) => {
+	if (!searchUrl) {
+		return;
+	}
+
+	const url = `${searchUrl}?buscar=${encodeURIComponent(term)}&page=${page}`;
+	fetch(url, {
+		headers: {
+			'X-Requested-With': 'XMLHttpRequest'
+		}
+	})
+		.then((response) => response.json())
+		.then((data) => {
+			renderCards(data.items);
+			updateCount(data.total, data.term);
+			updatePagination(data);
+			// Scroll suave hacia arriba
+			window.scrollTo({ top: 0, behavior: 'smooth' });
 		});
 };
 

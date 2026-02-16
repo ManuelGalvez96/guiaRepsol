@@ -225,6 +225,11 @@
         width: 100%;
     }
 
+    /* Mostrar botón hamburguesa en responsive */
+    .btn-menu-detalle {
+        display: block;
+    }
+
     /* Ocultar el menú por defecto en móvil */
     .tabs-nav {
         max-height: 0;
@@ -443,6 +448,8 @@
     color: var(--color-text);
     cursor: pointer;
     padding: 8px;
+    display: none;
+    transition: color 0.3s ease;
 }
 
 .btn-acceso-detalle {
@@ -498,6 +505,12 @@
     color: var(--color-secondary);
     border-bottom-color: var(--color-secondary);
     background-color: transparent;
+}
+
+/* Estilos para el botón hamburguesa */
+.btn-menu-detalle:hover,
+.btn-menu-detalle.active {
+    color: var(--color-secondary);
 }
 
 /* Mejoras adicionales para el menú hamburguesa */

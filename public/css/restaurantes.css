@@ -295,6 +295,23 @@ body {
     gap: 12px;
 }
 
+/* Botón toggle para sidebar responsive */
+.btn-toggle-sidebar {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--color-text);
+    cursor: pointer;
+    padding: 0;
+    margin-left: 8px;
+    display: none;
+    transition: transform 0.3s ease;
+}
+
+.btn-toggle-sidebar.active i {
+    transform: rotate(180deg);
+}
+
 .section-header h2 {
     font-size: 20px;
     font-weight: 600;
@@ -681,6 +698,15 @@ body {
     }
 }
 
+/* Garantizar que las columnas lg se muestren lado a lado en desktop */
+@media (min-width: 992px) {
+    .main-content .col-lg-4,
+    .main-content .col-lg-8 {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
 @media (max-width: 767px) {
     .header-main {
         padding: 8px 0;
@@ -779,6 +805,27 @@ body {
 
     .main-content {
         padding: 16px 0;
+    }
+
+    /* Mostrar botón toggle en responsive */
+    .btn-toggle-sidebar {
+        display: inline-block;
+    }
+
+    /* Ocultar contenido del sidebar por defecto en responsive */
+    .sidebar-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+    }
+
+    .sidebar-content.show {
+        max-height: 5000px;
+    }
+
+    /* Ocultar select de ordenar en responsive */
+    .sidebar-ordenar {
+        display: none;
     }
     
     .content-section {
