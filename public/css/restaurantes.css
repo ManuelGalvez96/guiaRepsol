@@ -698,6 +698,15 @@ body {
     }
 }
 
+/* Garantizar que las columnas lg se muestren lado a lado en desktop */
+@media (min-width: 992px) {
+    .main-content .col-lg-4,
+    .main-content .col-lg-8 {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
 @media (max-width: 767px) {
     .header-main {
         padding: 8px 0;
