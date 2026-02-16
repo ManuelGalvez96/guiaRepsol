@@ -1,20 +1,10 @@
 // JavaScript para crear restaurantes 
-let csrfToken;
-let ajaxObj;
+var csrfToken;
+var ajaxObj;
 const READY_STATE_COMPLETE = 4;
-let selectedFiles = []; // Array para mantener archivos seleccionados
+var selectedFiles = []; // Array para mantener archivos seleccionados
 
-<<<<<<< HEAD
 window.onload = () => {
-    console.log('Inicializando formulario de crear...');
-=======
-// Al cargar la página
-window.onload = function () {
-    console.log('Inicializando formulario de crear...');
-    initializeCreateForm();
-};
->>>>>>> 79a27df60872bfac1b21c6a6c96ce4c8637936b5
-
     // Obtener token CSRF del atributo data-csrf del body
     csrfToken = document.body.getAttribute('data-csrf');
     if (!csrfToken) {
@@ -62,123 +52,17 @@ function crearRestaurante() {
     // Limpiar errores anteriores
     document.querySelectorAll('.error').forEach(el => el.remove());
 
-<<<<<<< HEAD
     // Cambiar botón
     if (submitBtn) {
         submitBtn.textContent = 'Creando...';
         submitBtn.disabled = true;
     }
-=======
-    // Cuando se envíe el form
-    form.onsubmit = function (e) {
-        e.preventDefault();
-        console.log('Enviando formulario...');
->>>>>>> 79a27df60872bfac1b21c6a6c96ce4c8637936b5
 
     // Preparar datos
     const formData = new FormData(form);
 
-<<<<<<< HEAD
     // AJAX con patrón 
     peticionAjax(form.action, 'POST', manejarCrear, formData);
-=======
-        // Cambiar botón a "Creando..."
-        if (submitBtn) {
-            submitBtn.textContent = 'Creando...';
-            submitBtn.disabled = true;
-        }
-        form.classList.add('loading');
-
-        // Preparar datos
-        const formData = new FormData(form);
-
-        // Enviar con AJAX
-        fetch(form.action, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json',
-            },
-            body: formData
-        })
-            .then(response => {
-                console.log('Respuesta recibida:', response.status);
-                if (!response.ok) {
-                    return response.json().then(data => {
-                        throw data;
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    console.log('Restaurante creado!');
-
-                    // Mostrar mensaje bonito
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Éxito!',
-                        text: data.message,
-                        timer: 1500,
-                        showConfirmButton: false
-                    });
-
-                    // Limpiar form
-                    form.reset();
-
-                    // Quitar preview de imagen si hay
-                    const imagePreview = document.getElementById('imagePreview');
-                    if (imagePreview) {
-                        imagePreview.classList.remove('active');
-                    }
-
-                    // Volver al índice después de 1.5 seg
-                    setTimeout(() => {
-                        const adminIndexUrl = window.createConfig?.adminIndexRoute || '/admin';
-                        window.location.href = adminIndexUrl;
-                    }, 1500);
-                }
-            })
-            .catch(error => {
-                console.error('Error creando restaurante:', error);
-
-                // Si hay errores de validación del servidor
-                if (error.errors) {
-                    Object.keys(error.errors).forEach(field => {
-                        const input = document.getElementById(field);
-                        if (input) {
-                            const errorDiv = document.createElement('div');
-                            errorDiv.className = 'error';
-                            errorDiv.textContent = error.errors[field][0];
-                            input.parentNode.appendChild(errorDiv);
-                        }
-                    });
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error de validación',
-                        text: 'Por favor corrige los errores en el formulario',
-                        toast: true,
-                        position: 'top-end',
-                        timer: 3000,
-                        showConfirmButton: false
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: error.message || 'Error al crear el restaurante'
-                    });
-                }
-
-                // Restaurar el botón
-                if (submitBtn) {
-                    submitBtn.textContent = 'Crear Restaurante';
-                    submitBtn.disabled = false;
-                }
-                form.classList.remove('loading');
-            });
-    };
->>>>>>> 79a27df60872bfac1b21c6a6c96ce4c8637936b5
 }
 
 function manejarCrear() {

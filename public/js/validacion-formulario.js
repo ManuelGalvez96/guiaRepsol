@@ -1,9 +1,20 @@
-// Validación del formulario de dar a conocer negocio
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('formCrearNegocio');
-    if (!form) return;
+window.onload = function () {
+    // Elementos de error
+    const eNombre = document.getElementById("error-nombre");
+    const eCategoria = document.getElementById("error-categoria");
+    const ePrecio = document.getElementById("error-precio");
+    const eDescripcion = document.getElementById("error-descripcion");
+    const eDireccion = document.getElementById("error-direccion");
+    const eCiudad = document.getElementById("error-ciudad");
+    const eProvincia = document.getElementById("error-provincia");
+    const eCodigoPostal = document.getElementById("error-codigo-postal");
+    const eComunidad = document.getElementById("error-comunidad");
+    const eEmail = document.getElementById("error-email");
+    const eTelefono = document.getElementById("error-telefono");
+    const eWeb = document.getElementById("error-web");
+    const eFotoPrincipal = document.getElementById("error-foto-principal");
 
-    // Campos del formulario
+    // Inputs del formulario
     const nombreInput = document.querySelector('[name="nombre"]');
     const categoriaSelect = document.querySelector('[name="categoria_id"]');
     const precioInput = document.querySelector('[name="precio"]');
@@ -17,9 +28,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const telefonoInput = document.querySelector('[name="telefono"]');
     const webInput = document.querySelector('[name="web"]');
     const fotoPrincipalInput = document.querySelector('[name="foto_principal"]');
-    const btnSubmit = document.querySelector('button[type="submit"]');
+    const botonEnviar = document.getElementById('btnEnviarFormulario');
 
-    // Contador de caracteres para descripción
+    // Contador de descripción
     const contadorDescripcion = document.createElement('small');
     contadorDescripcion.style.cssText = 'display: block; margin-top: 5px; color: #666;';
     if (descripcionTextarea) {
@@ -27,266 +38,318 @@ document.addEventListener('DOMContentLoaded', function () {
         actualizarContador();
     }
 
-    // Event listeners
-    if (nombreInput) nombreInput.addEventListener('blur', validarNombre);
-    if (categoriaSelect) categoriaSelect.addEventListener('change', validarCategoria);
-    if (precioInput) precioInput.addEventListener('blur', validarPrecio);
+    comprobarBoton();
+
+    // Event listeners onblur
+    if (nombreInput) nombreInput.onblur = comprobarNombre;
+    if (categoriaSelect) categoriaSelect.onblur = comprobarCategoria;
+    if (precioInput) precioInput.onblur = comprobarPrecio;
+    if (descripcionTextarea) descripcionTextarea.onblur = comprobarDescripcion;
+    if (direccionInput) direccionInput.onblur = comprobarDireccion;
+    if (ciudadInput) ciudadInput.onblur = comprobarCiudad;
+    if (provinciaInput) provinciaInput.onblur = comprobarProvincia;
+    if (codigoPostalInput) codigoPostalInput.onblur = comprobarCodigoPostal;
+    if (comunidadInput) comunidadInput.onblur = comprobarComunidad;
+    if (emailInput) emailInput.onblur = comprobarEmail;
+    if (telefonoInput) telefonoInput.onblur = comprobarTelefono;
+    if (webInput) webInput.onblur = comprobarWeb;
+    if (fotoPrincipalInput) fotoPrincipalInput.onchange = comprobarFotoPrincipal;
+
+    // Event listeners oninput
+    if (nombreInput) {
+        nombreInput.oninput = function() {
+            comprobarNombre();
+        };
+    }
+    if (categoriaSelect) {
+        categoriaSelect.onchange = function() {
+            comprobarCategoria();
+        };
+    }
+    if (precioInput) {
+        precioInput.oninput = function() {
+            comprobarPrecio();
+        };
+    }
     if (descripcionTextarea) {
-        descripcionTextarea.addEventListener('blur', validarDescripcion);
-        descripcionTextarea.addEventListener('input', actualizarContador);
+        descripcionTextarea.oninput = function() {
+            comprobarDescripcion();
+            actualizarContador();
+        };
     }
-    if (direccionInput) direccionInput.addEventListener('blur', validarDireccion);
-    if (ciudadInput) ciudadInput.addEventListener('blur', validarCiudad);
-    if (provinciaInput) provinciaInput.addEventListener('blur', validarProvincia);
-    if (codigoPostalInput) codigoPostalInput.addEventListener('blur', validarCodigoPostal);
-    if (comunidadInput) comunidadInput.addEventListener('blur', validarComunidad);
-    if (emailInput) emailInput.addEventListener('blur', validarEmail);
-    if (telefonoInput) telefonoInput.addEventListener('blur', validarTelefono);
-    if (webInput) webInput.addEventListener('blur', validarWeb);
-    if (fotoPrincipalInput) fotoPrincipalInput.addEventListener('change', validarFotoPrincipal);
-
-    // Validar al enviar
-    form.addEventListener('submit', function(e) {
-        let esValido = true;
-        
-        esValido = validarNombre() && esValido;
-        esValido = validarCategoria() && esValido;
-        esValido = validarPrecio() && esValido;
-        esValido = validarDescripcion() && esValido;
-        esValido = validarDireccion() && esValido;
-        esValido = validarCiudad() && esValido;
-        esValido = validarProvincia() && esValido;
-        esValido = validarCodigoPostal() && esValido;
-        esValido = validarComunidad() && esValido;
-        esValido = validarEmail() && esValido;
-        esValido = validarTelefono() && esValido;
-        esValido = validarWeb() && esValido;
-        esValido = validarFotoPrincipal() && esValido;
-
-        if (!esValido) {
-            e.preventDefault();
-            mostrarAlerta('Por favor, corrige los errores antes de enviar el formulario.');
-        }
-    });
-
-    // Funciones de validación
-    function validarNombre() {
-        const valor = nombreInput.value.trim();
-        if (valor === '') {
-            mostrarError(nombreInput, 'El nombre del negocio es obligatorio');
-            return false;
-        }
-        if (valor.length < 3) {
-            mostrarError(nombreInput, 'El nombre debe tener al menos 3 caracteres');
-            return false;
-        }
-        if (valor.length > 255) {
-            mostrarError(nombreInput, 'El nombre no puede exceder 255 caracteres');
-            return false;
-        }
-        limpiarError(nombreInput);
-        return true;
+    if (direccionInput) {
+        direccionInput.oninput = function() {
+            comprobarDireccion();
+        };
+    }
+    if (ciudadInput) {
+        ciudadInput.oninput = function() {
+            comprobarCiudad();
+        };
+    }
+    if (provinciaInput) {
+        provinciaInput.oninput = function() {
+            comprobarProvincia();
+        };
+    }
+    if (codigoPostalInput) {
+        codigoPostalInput.oninput = function() {
+            comprobarCodigoPostal();
+        };
+    }
+    if (comunidadInput) {
+        comunidadInput.oninput = function() {
+            comprobarComunidad();
+        };
+    }
+    if (emailInput) {
+        emailInput.oninput = function() {
+            comprobarEmail();
+        };
+    }
+    if (telefonoInput) {
+        telefonoInput.oninput = function() {
+            comprobarTelefono();
+        };
+    }
+    if (webInput) {
+        webInput.oninput = function() {
+            comprobarWeb();
+        };
     }
 
-    function validarCategoria() {
-        const valor = categoriaSelect.value;
-        if (valor === '' || valor === '0') {
-            mostrarError(categoriaSelect, 'Debes seleccionar una categoría');
-            return false;
+    function comprobarBoton() {
+        // Verificar que no haya errores mostrados (trim para eliminar espacios)
+        const hayErrores = (eNombre && eNombre.innerText.trim() !== '') || 
+                          (eCategoria && eCategoria.innerText.trim() !== '') || 
+                          (ePrecio && ePrecio.innerText.trim() !== '') || 
+                          (eDescripcion && eDescripcion.innerText.trim() !== '') || 
+                          (eDireccion && eDireccion.innerText.trim() !== '') || 
+                          (eCiudad && eCiudad.innerText.trim() !== '') || 
+                          (eProvincia && eProvincia.innerText.trim() !== '') || 
+                          (eCodigoPostal && eCodigoPostal.innerText.trim() !== '') || 
+                          (eComunidad && eComunidad.innerText.trim() !== '') || 
+                          (eEmail && eEmail.innerText.trim() !== '') || 
+                          (eTelefono && eTelefono.innerText.trim() !== '') || 
+                          (eWeb && eWeb.innerText.trim() !== '') || 
+                          (eFotoPrincipal && eFotoPrincipal.innerText.trim() !== '');
+
+        // Verificar que todos los campos obligatorios estén llenos
+        const nombre = nombreInput ? nombreInput.value.trim() : '';
+        const categoria = categoriaSelect ? categoriaSelect.value : '';
+        const precio = precioInput ? precioInput.value.trim() : '';
+        const descripcion = descripcionTextarea ? descripcionTextarea.value.trim() : '';
+        const direccion = direccionInput ? direccionInput.value.trim() : '';
+        const ciudad = ciudadInput ? ciudadInput.value.trim() : '';
+        const provincia = provinciaInput ? provinciaInput.value.trim() : '';
+        const codigoPostal = codigoPostalInput ? codigoPostalInput.value.trim() : '';
+        const comunidad = comunidadInput ? comunidadInput.value.trim() : '';
+        const email = emailInput ? emailInput.value.trim() : '';
+        const fotoPrincipal = fotoPrincipalInput ? fotoPrincipalInput.files.length > 0 : false;
+
+        const todoRellenado = nombre !== '' && 
+                             categoria !== '' && categoria !== '0' &&
+                             precio !== '' && 
+                             descripcion !== '' && 
+                             direccion !== '' && 
+                             ciudad !== '' && 
+                             provincia !== '' && 
+                             codigoPostal !== '' && 
+                             comunidad !== '' && 
+                             email !== '' && 
+                             fotoPrincipal;
+
+        // Habilitar el botón solo si todo está rellenado y no hay errores
+        if (todoRellenado && !hayErrores) {
+            botonEnviar.disabled = false;
+            botonEnviar.removeAttribute('style'); // Quitar estilos inline
+        } else {
+            botonEnviar.disabled = true;
+            botonEnviar.style.cssText = 'opacity: 0.5; cursor: not-allowed;'; // Aplicar estilos de deshabilitado
         }
-        limpiarError(categoriaSelect);
-        return true;
     }
 
-    function validarPrecio() {
-        const valor = precioInput.value.trim();
-        if (valor === '') {
-            mostrarError(precioInput, 'El precio es obligatorio');
-            return false;
+    function comprobarNombre() {
+        const nombre = nombreInput.value.trim();
+
+        if (nombre === '') {
+            eNombre.innerText = 'El nombre del negocio es obligatorio.';
+        } else if (nombre.length < 3) {
+            eNombre.innerText = 'El nombre debe tener al menos 3 caracteres.';
+        } else if (nombre.length > 255) {
+            eNombre.innerText = 'El nombre no puede exceder 255 caracteres.';
+        } else {
+            eNombre.innerText = '';
         }
-        const precio = parseFloat(valor);
-        if (isNaN(precio) || precio <= 0) {
-            mostrarError(precioInput, 'El precio debe ser mayor que 0');
-            return false;
-        }
-        if (precio > 9999.99) {
-            mostrarError(precioInput, 'El precio no puede exceder 9999.99€');
-            return false;
-        }
-        limpiarError(precioInput);
-        return true;
+        comprobarBoton();
     }
 
-    function validarDescripcion() {
-        const valor = descripcionTextarea.value.trim();
-        if (valor === '') {
-            mostrarError(descripcionTextarea, 'La descripción es obligatoria');
-            return false;
+    function comprobarCategoria() {
+        const categoria = categoriaSelect.value;
+
+        if (categoria === '' || categoria === '0') {
+            eCategoria.innerText = 'Debes seleccionar una categoría.';
+        } else {
+            eCategoria.innerText = '';
         }
-        if (valor.length < 100) {
-            mostrarError(descripcionTextarea, 'La descripción debe tener al menos 100 caracteres');
-            return false;
-        }
-        if (valor.length > 1000) {
-            mostrarError(descripcionTextarea, 'La descripción no puede exceder 1000 caracteres');
-            return false;
-        }
-        limpiarError(descripcionTextarea);
-        return true;
+        comprobarBoton();
     }
 
-    function validarDireccion() {
-        const valor = direccionInput.value.trim();
-        if (valor === '') {
-            mostrarError(direccionInput, 'La dirección es obligatoria');
-            return false;
+    function comprobarPrecio() {
+        const precio = precioInput.value.trim();
+
+        if (precio === '') {
+            ePrecio.innerText = 'El precio es obligatorio.';
+        } else if (isNaN(precio) || parseFloat(precio) <= 0) {
+            ePrecio.innerText = 'El precio debe ser mayor que 0.';
+        } else if (parseFloat(precio) > 9999.99) {
+            ePrecio.innerText = 'El precio no puede exceder 9999.99€.';
+        } else {
+            ePrecio.innerText = '';
         }
-        if (valor.length < 5) {
-            mostrarError(direccionInput, 'La dirección debe tener al menos 5 caracteres');
-            return false;
-        }
-        limpiarError(direccionInput);
-        return true;
+        comprobarBoton();
     }
 
-    function validarCiudad() {
-        const valor = ciudadInput.value.trim();
-        if (valor === '') {
-            mostrarError(ciudadInput, 'La ciudad es obligatoria');
-            return false;
+    function comprobarDescripcion() {
+        const descripcion = descripcionTextarea.value.trim();
+
+        if (descripcion === '') {
+            eDescripcion.innerText = 'La descripción es obligatoria.';
+        } else if (descripcion.length < 100) {
+            eDescripcion.innerText = 'La descripción debe tener al menos 100 caracteres.';
+        } else if (descripcion.length > 1000) {
+            eDescripcion.innerText = 'La descripción no puede exceder 1000 caracteres.';
+        } else {
+            eDescripcion.innerText = '';
         }
-        limpiarError(ciudadInput);
-        return true;
+        comprobarBoton();
     }
 
-    function validarProvincia() {
-        const valor = provinciaInput.value.trim();
-        if (valor === '') {
-            mostrarError(provinciaInput, 'La provincia es obligatoria');
-            return false;
+    function comprobarDireccion() {
+        const direccion = direccionInput.value.trim();
+
+        if (direccion === '') {
+            eDireccion.innerText = 'La dirección es obligatoria.';
+        } else if (direccion.length < 5) {
+            eDireccion.innerText = 'La dirección debe tener al menos 5 caracteres.';
+        } else {
+            eDireccion.innerText = '';
         }
-        limpiarError(provinciaInput);
-        return true;
+        comprobarBoton();
     }
 
-    function validarCodigoPostal() {
-        const valor = codigoPostalInput.value.trim();
-        if (valor === '') {
-            mostrarError(codigoPostalInput, 'El código postal es obligatorio');
-            return false;
+    function comprobarCiudad() {
+        const ciudad = ciudadInput.value.trim();
+
+        if (ciudad === '') {
+            eCiudad.innerText = 'La ciudad es obligatoria.';
+        } else {
+            eCiudad.innerText = '';
         }
-        const regex = /^\d{5}$/;
-        if (!regex.test(valor)) {
-            mostrarError(codigoPostalInput, 'El código postal debe tener 5 dígitos');
-            return false;
-        }
-        limpiarError(codigoPostalInput);
-        return true;
+        comprobarBoton();
     }
 
-    function validarComunidad() {
-        const valor = comunidadInput.value.trim();
-        if (valor === '') {
-            mostrarError(comunidadInput, 'La comunidad autónoma es obligatoria');
-            return false;
+    function comprobarProvincia() {
+        const provincia = provinciaInput.value.trim();
+
+        if (provincia === '') {
+            eProvincia.innerText = 'La provincia es obligatoria.';
+        } else {
+            eProvincia.innerText = '';
         }
-        limpiarError(comunidadInput);
-        return true;
+        comprobarBoton();
     }
 
-    function validarEmail() {
-        const valor = emailInput.value.trim();
-        if (valor === '') {
-            mostrarError(emailInput, 'El email es obligatorio');
-            return false;
+    function comprobarCodigoPostal() {
+        const codigoPostal = codigoPostalInput.value.trim();
+        const codigoPostalFormato = /^\d{5}$/;
+
+        if (codigoPostal === '') {
+            eCodigoPostal.innerText = 'El código postal es obligatorio.';
+        } else if (!codigoPostalFormato.test(codigoPostal)) {
+            eCodigoPostal.innerText = 'El código postal debe tener 5 dígitos.';
+        } else {
+            eCodigoPostal.innerText = '';
         }
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!regex.test(valor)) {
-            mostrarError(emailInput, 'El email no es válido');
-            return false;
-        }
-        limpiarError(emailInput);
-        return true;
+        comprobarBoton();
     }
 
-    function validarTelefono() {
-        const valor = telefonoInput.value.trim();
-        // El teléfono es opcional
-        if (valor === '') {
-            limpiarError(telefonoInput);
-            return true;
+    function comprobarComunidad() {
+        const comunidad = comunidadInput.value.trim();
+
+        if (comunidad === '') {
+            eComunidad.innerText = 'La comunidad autónoma es obligatoria.';
+        } else {
+            eComunidad.innerText = '';
         }
-        const regex = /^[0-9+\-\s()]{9,}$/;
-        if (!regex.test(valor)) {
-            mostrarError(telefonoInput, 'El teléfono debe tener al menos 9 dígitos');
-            return false;
-        }
-        limpiarError(telefonoInput);
-        return true;
+        comprobarBoton();
     }
 
-    function validarWeb() {
-        const valor = webInput.value.trim();
-        // La web es opcional
-        if (valor === '') {
-            limpiarError(webInput);
-            return true;
+    function comprobarEmail() {
+        const email = emailInput.value.trim();
+        const emailFormato = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (email === '') {
+            eEmail.innerText = 'El email es obligatorio.';
+        } else if (!emailFormato.test(email)) {
+            eEmail.innerText = 'El email no es válido.';
+        } else {
+            eEmail.innerText = '';
         }
-        const regex = /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
-        if (!regex.test(valor)) {
-            mostrarError(webInput, 'La URL no es válida (ej: https://ejemplo.com)');
-            return false;
-        }
-        limpiarError(webInput);
-        return true;
+        comprobarBoton();
     }
 
-    function validarFotoPrincipal() {
+    function comprobarTelefono() {
+        const telefono = telefonoInput.value.trim();
+        const telefonoFormato = /^[0-9+\-\s()]{9,}$/;
+
+        if (telefono === '') {
+            eTelefono.innerText = '';
+        } else if (!telefonoFormato.test(telefono)) {
+            eTelefono.innerText = 'El teléfono debe tener al menos 9 dígitos.';
+        } else {
+            eTelefono.innerText = '';
+        }
+        comprobarBoton();
+    }
+
+    function comprobarWeb() {
+        const web = webInput.value.trim();
+        const webFormato = /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
+
+        if (web === '') {
+            eWeb.innerText = '';
+        } else if (!webFormato.test(web)) {
+            eWeb.innerText = 'La URL no es válida (ej: https://ejemplo.com).';
+        } else {
+            eWeb.innerText = '';
+        }
+        comprobarBoton();
+    }
+
+    function comprobarFotoPrincipal() {
         if (!fotoPrincipalInput.files || fotoPrincipalInput.files.length === 0) {
-            mostrarError(fotoPrincipalInput, 'La foto principal es obligatoria');
-            return false;
+            eFotoPrincipal.innerText = 'La foto principal es obligatoria.';
+            comprobarBoton();
+            return;
         }
+
         const archivo = fotoPrincipalInput.files[0];
         const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+        
         if (!tiposPermitidos.includes(archivo.type)) {
-            mostrarError(fotoPrincipalInput, 'Solo se permiten imágenes JPG, PNG, GIF o WEBP');
-            return false;
+            eFotoPrincipal.innerText = 'Solo se permiten imágenes JPG, PNG, GIF o WEBP.';
+        } else if (archivo.size > 5 * 1024 * 1024) {
+            eFotoPrincipal.innerText = 'La imagen no puede superar 5MB.';
+        } else {
+            eFotoPrincipal.innerText = '';
         }
-        const maxSize = 5 * 1024 * 1024; // 5MB
-        if (archivo.size > maxSize) {
-            mostrarError(fotoPrincipalInput, 'La imagen no puede superar 5MB');
-            return false;
-        }
-        limpiarError(fotoPrincipalInput);
-        return true;
+        comprobarBoton();
     }
 
     function actualizarContador() {
         const longitud = descripcionTextarea.value.length;
-        contadorDescripcion.textContent = `${longitud} caracteres (mínimo 100)`;
+        contadorDescripcion.textContent = `${longitud} / 1000 caracteres (mínimo 100)`;
         contadorDescripcion.style.color = longitud >= 100 ? '#28a745' : '#666';
     }
-
-    function mostrarError(elemento, mensaje) {
-        limpiarError(elemento);
-        elemento.classList.add('error');
-        const errorDiv = document.createElement('small');
-        errorDiv.className = 'error-message';
-        errorDiv.style.cssText = 'color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;';
-        errorDiv.textContent = mensaje;
-        elemento.parentNode.appendChild(errorDiv);
-    }
-
-    function limpiarError(elemento) {
-        elemento.classList.remove('error');
-        const errorExistente = elemento.parentNode.querySelector('.error-message');
-        if (errorExistente) {
-            errorExistente.remove();
-        }
-    }
-
-    function mostrarAlerta(mensaje) {
-        alert(mensaje);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-});
+};

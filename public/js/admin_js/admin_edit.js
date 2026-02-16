@@ -10,11 +10,6 @@ if (typeof window.imagenesAEliminar === 'undefined') {
     window.imagenesAEliminar = [];
 }
 
-<<<<<<< HEAD
-// Función de inicialización
-function initEditForm() {
-    console.log('Iniciando formulario de editar...');
-=======
 // Al cargar la pagina
 window.onload = function () {
     console.log('Iniciando formulario de editar...');
@@ -23,8 +18,8 @@ window.onload = function () {
         initializeEditForm();
     }, 100);
 };
->>>>>>> 79a27df60872bfac1b21c6a6c96ce4c8637936b5
 
+function initializeEditForm() {
     // Resetear array de imágenes a eliminar
     window.imagenesAEliminar = [];
 
@@ -61,25 +56,9 @@ function setupImageDelegation() {
     }
     
     console.log('=== Configurando delegación de eventos en #allImagesContainer ===');
+}
 
-    // Remover listener anterior si existe
-    if (container._clickHandler) {
-        container.removeEventListener('click', container._clickHandler);
-    }
 
-<<<<<<< HEAD
-    // Crear y guardar el handler
-    container._clickHandler = function (e) {
-        // Buscar si se hizo click en el botón (sirve tanto para eliminar como restaurar)
-        const btn = e.target.closest('.btn-eliminar-imagen-existente');
-        if (btn) {
-            e.preventDefault();
-            e.stopPropagation();
-            const id = btn.getAttribute('data-imagen-id');
-            const action = btn.getAttribute('data-action') || 'delete';
-            console.log('>>> CLICK en botón, acción:', action, 'ID:', id);
-            removeExistingImage(id);
-=======
 // Configurar el submit
 function setupEditFormHandler() {
     const form = document.getElementById('editRestauranteForm');
@@ -195,16 +174,9 @@ function previewImage(event) {
         // Validar archivo antes de preview
         if (!validateImageFile(file)) {
             event.target.value = ''; // Limpiar input
->>>>>>> 79a27df60872bfac1b21c6a6c96ce4c8637936b5
             return;
         }
-    };
-    
-    // Agregar el listener
-    container.addEventListener('click', container._clickHandler);
-    
-    // Configurar efectos hover para todos los botones iniciales
-    setupHoverEffects();
+    }
 }
 
 // Función para configurar efectos hover en los botones
@@ -213,23 +185,23 @@ function setupHoverEffects() {
     buttons.forEach(btn => {
         const action = btn.getAttribute('data-action') || 'delete';
         
-        btn.addEventListener('mouseenter', function() {
+        btn.onmouseenter = function() {
             if (this.getAttribute('data-action') === 'restore') {
                 this.style.backgroundColor = '#229954';
             } else {
                 this.style.backgroundColor = '#c0392b';
             }
             this.style.transform = 'scale(1.15)';
-        });
+        };
         
-        btn.addEventListener('mouseleave', function() {
+        btn.onmouseleave = function() {
             if (this.getAttribute('data-action') === 'restore') {
                 this.style.backgroundColor = '#27ae60';
             } else {
                 this.style.backgroundColor = '#e74c3c';
             }
             this.style.transform = 'scale(1)';
-        });
+        };
     });
 }
 
@@ -629,10 +601,9 @@ function validateImageFile(file) {
 }
 
 
-<<<<<<< HEAD
 
 // Hacer disponibles globalmente al final del archivo (después de todas las definiciones)
-window.initEditForm = initEditForm;
+window.initializeEditForm = initializeEditForm;
 window.previewImages = previewImages;
 window.validateImageFile = validateImageFile;
 window.renderImagePreviews = renderImagePreviews;
@@ -640,7 +611,3 @@ window.updateFileInput = updateFileInput;
 window.removeExistingImage = removeExistingImage;
 window.setupExistingImageDeleteButtons = setupImageDelegation;
 window.setupHoverEffects = setupHoverEffects;
-=======
-// Guardar valores al cargar
-// Nota: Esta función se llama desde initializeEditForm() que ya está en window.onload
->>>>>>> 79a27df60872bfac1b21c6a6c96ce4c8637936b5
