@@ -52,7 +52,7 @@ body {
     margin: 0;
 }
 
-.btn-menu,
+.btn-menu-detalle,
 .btn-search {
     background: none;
     border: none;
@@ -63,7 +63,7 @@ body {
     transition: color 0.3s ease;
 }
 
-.btn-menu:hover,
+.btn-menu-detalle:hover,
 .btn-search:hover {
     color: var(--color-primary);
 }
@@ -242,6 +242,7 @@ body {
     background-color: var(--color-white);
     border-bottom: 1px solid var(--color-border);
     padding: 0;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
 .tabs-nav .nav-tabs {
@@ -697,7 +698,7 @@ body {
         height: 24px;
     }
 
-    .btn-menu,
+    .btn-menu-detalle,
     .btn-search {
         font-size: 20px;
         padding: 6px;
@@ -742,6 +743,38 @@ body {
 
     .tabs-nav .nav-link i {
         font-size: 14px;
+    }
+
+    /* Ocultar el menú por defecto en móvil */
+    .tabs-nav {
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        border-bottom: none;
+    }
+
+    /* Mostrar el menú cuando está activo */
+    .tabs-nav.show {
+        max-height: 500px;
+        opacity: 1;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .tabs-nav .nav-tabs {
+        flex-direction: column;
+    }
+
+    .tabs-nav .nav-link {
+        width: 100%;
+        text-align: left;
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .tabs-nav .nav-link.active {
+        border-bottom: 1px solid var(--color-border);
+        border-left: 3px solid var(--color-secondary);
+        background-color: rgba(0, 163, 224, 0.05);
     }
 
     .main-content {
@@ -858,4 +891,10 @@ body {
         height: 28px;
         font-size: 12px;
     }
+}
+
+/* Mejoras adicionales para el menú hamburguesa */
+.btn-menu-detalle:hover,
+.btn-menu-detalle.active {
+    color: var(--color-secondary);
 }

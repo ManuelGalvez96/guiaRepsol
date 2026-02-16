@@ -309,21 +309,6 @@
                         </div>
                     </div>
 
-                    <!-- Call to Action - Da a conocer tu negocio -->
-                    <div class="section-box cta-box">
-                        <div class="cta-content">
-                            <div class="cta-icon">
-                                <i class="bi bi-shop" style="font-size: 64px; color: #00a3e0;"></i>
-                            </div>
-                            <h3 class="cta-title">Da a conocer tu negocio</h3>
-                            <p class="cta-description">
-                                ¿Eres dueño de un restaurante? Regístralo en la Guía Repsol y llega a miles de clientes que buscan experiencias gastronómicas únicas.
-                            </p>
-                            <a href="{{ route('formulario') }}" class="btn-cta">
-                                Registrar mi restaurante
-                            </a>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Columna Derecha - Imágenes y Reservas -->

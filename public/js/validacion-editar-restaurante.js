@@ -1,5 +1,19 @@
 // Validación del formulario de editar restaurante (Gerentes)
-document.addEventListener('DOMContentLoaded', function () {
+// Ejecutar cuando el DOM esté listo
+(function() {
+    // Esperar a que el DOM esté completamente cargado
+    if (document.readyState === 'loading') {
+        document.onreadystatechange = function() {
+            if (document.readyState === 'complete') {
+                initValidacionEditarRestaurante();
+            }
+        };
+    } else {
+        initValidacionEditarRestaurante();
+    }
+})();
+
+function initValidacionEditarRestaurante() {
     const form = document.getElementById('formEditarRestaurante');
     
     // Solo ejecutar si el formulario existe (es decir, si es gerente)
@@ -171,4 +185,4 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         comprobarBoton();
     }
-});
+};
