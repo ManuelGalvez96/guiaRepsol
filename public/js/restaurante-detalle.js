@@ -1,9 +1,9 @@
 // Función para el horario desplegable
-document.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
     // Horario desplegable
     const horarioToggle = document.querySelector('.horario-toggle');
     if (horarioToggle) {
-        horarioToggle.addEventListener('click', function() {
+        horarioToggle.onclick = function() {
             const detalle = document.getElementById('horarioDetalle');
             const icon = document.querySelector('.horario-icon');
             
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 icon.classList.remove('bi-chevron-up');
                 icon.classList.add('bi-chevron-down');
             }
-        });
+        };
     }
 
     // Sistema de calificación con estrellas
@@ -38,29 +38,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
         stars.forEach(star => {
             // Efecto hover
-            star.addEventListener('mouseenter', function() {
+            star.onmouseenter = function() {
                 const value = parseInt(this.getAttribute('data-value'));
                 highlightStars(stars, value);
-            });
+            };
 
             // Al hacer clic
-            star.addEventListener('click', function() {
+            star.onclick = function() {
                 selectedRating = parseInt(this.getAttribute('data-value'));
                 if (puntuacionInput) {
                     puntuacionInput.value = selectedRating;
                 }
                 highlightStars(stars, selectedRating);
-            });
+            };
         });
 
         // Restaurar selección al salir del hover
-        container.addEventListener('mouseleave', function() {
+        container.onmouseleave = function() {
             if (selectedRating > 0) {
                 highlightStars(stars, selectedRating);
             } else {
                 clearStars(stars);
             }
-        });
+        };
     });
 
     function highlightStars(stars, count) {
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Manejar botones de guardar valoración
     const botonesGuardar = document.querySelectorAll('.btn-guardar-valoracion');
     botonesGuardar.forEach(boton => {
-        boton.addEventListener('click', function() {
+        boton.onclick = function() {
             const valoracionId = this.getAttribute('data-valoracion-id');
             const restauranteId = this.getAttribute('data-restaurante-id');
             const form = document.getElementById(`form-editar-valoracion-${valoracionId}`);
@@ -152,13 +152,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     confirmButtonColor: '#00a3e0'
                 });
             });
-        });
+        };
     });
 
     // Manejar botones de eliminar valoración
     const botonesEliminar = document.querySelectorAll('.btn-eliminar-valoracion');
     botonesEliminar.forEach(boton => {
-        boton.addEventListener('click', function() {
+        boton.onclick = function() {
             const valoracionId = this.getAttribute('data-valoracion-id');
             
             Swal.fire({
@@ -215,13 +215,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 }
             });
-        });
+        };
     });
 
     // Manejar botón de favorito (like)
     const btnFavorito = document.getElementById('btn-favorito');
     if (btnFavorito) {
-        btnFavorito.addEventListener('click', function() {
+        btnFavorito.onclick = function() {
             const restauranteId = this.getAttribute('data-restaurante-id');
             
             fetch(`/restaurante/${restauranteId}/like`, {
@@ -262,13 +262,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     confirmButtonColor: '#00a3e0'
                 });
             });
-        });
+        };
     }
 
     // Manejar botón de guardar
     const btnGuardar = document.getElementById('btn-guardar');
     if (btnGuardar) {
-        btnGuardar.addEventListener('click', function() {
+        btnGuardar.onclick = function() {
             const restauranteId = this.getAttribute('data-restaurante-id');
             
             fetch(`/restaurante/${restauranteId}/guardar`, {
@@ -320,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     confirmButtonColor: '#00a3e0'
                 });
             });
-        });
+        };
     }
-});
+};
 
