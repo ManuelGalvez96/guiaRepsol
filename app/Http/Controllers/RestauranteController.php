@@ -137,6 +137,11 @@ class RestauranteController extends Controller
                 'items' => $items,
                 'total' => $restaurantes->total(),
                 'term' => $buscar,
+                'current_page' => $restaurantes->currentPage(),
+                'last_page' => $restaurantes->lastPage(),
+                'per_page' => $restaurantes->perPage(),
+                'from' => $restaurantes->firstItem(),
+                'to' => $restaurantes->lastItem(),
             ]);
         }
 
