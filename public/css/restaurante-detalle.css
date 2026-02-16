@@ -551,6 +551,11 @@ body {
         background-color: rgba(0, 163, 224, 0.05);
     }
 
+    /* Ocultar botones del slider en responsive */
+    .thumbnail-nav-btn {
+        display: none;
+    }
+
     .banner-gala-detalle {
         padding: 10px 0;
         font-size: 12px;
