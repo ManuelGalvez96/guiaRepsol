@@ -72,6 +72,17 @@
         <p>Completa el formulario para que tu establecimiento forme parte de la Guía Repsol Soletes</p>
     </div>
 
+    @if ($errors->any())
+        <div class="alert alert-danger" style="background-color: #ffe6e6; border: 1px solid #ff4444; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <strong style="color: #cc0000;">⚠️ Por favor, corrija los siguientes errores:</strong>
+            <ul style="margin: 10px 0 0 20px; color: #cc0000;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form action="{{ route('restaurantes.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
@@ -81,7 +92,11 @@
 
             <div class="form-group">
                 <label>Nombre del negocio <span class="required">*</span></label>
-                <input type="text" name="nombre" required placeholder="Ej: Mesón El Rincón" value="{{ old('nombre') }}">
+                <input type="text" name="nombre" required placeholder="Ej: Mesón El Rincón" value="{{ old('nombre') }}"
+                    class="@error('nombre') error @enderror">
+                @error('nombre')
+                    <small style="color: #e74c3c;">{{ $message }}</small>
+                @enderror
             </div>
 
             <div class="form-row">
@@ -99,15 +114,18 @@
 
                 <div class="form-group">
                     <label>Precio promedio <span class="required">*</span></label>
-                    <input type="number" name="precio" required placeholder="Ej: 25.00" step="0.01" min="0" value="{{ old('precio') }}">
-                    <small>Precio promedio por persona en euros</small>
+                    <input type="number" name="precio" required placeholder="Ej: 25.00" step="0.01" min="0.01" max="9999.99" value="{{ old('precio') }}">
+                    <small>Precio promedio por persona en euros (máximo 9999.99€)</small>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Descripción del negocio <span class="required">*</span></label>
-                <textarea name="descripcion" required placeholder="Describe tu negocio, su ambiente, especialidades, historia...">{{ old('descripcion') }}</textarea>
+                <textarea name="descripcion" required placeholder="Describe tu negocio, su ambiente, especialidades, historia..." class="@error('descripcion') error @enderror">{{ old('descripcion') }}</textarea>
                 <small>Mínimo 100 caracteres</small>
+                @error('descripcion')
+                    <small style="color: #e74c3c; display: block;">{{ $message }}</small>
+                @enderror
             </div>
         </div>
 
@@ -157,7 +175,10 @@
 
                 <div class="form-group">
                     <label>Email <span class="required">*</span></label>
-                    <input type="email" name="email" required placeholder="contacto@tunegocio.com" value="{{ old('email') }}">
+                    <input type="email" name="email" required placeholder="contacto@tunegocio.com" value="{{ old('email') }}" class="@error('email') error @enderror">
+                    @error('email')
+                        <small style="color: #e74c3c;">{{ $message }}</small>
+                    @enderror
                 </div>
             </div>
 
@@ -191,7 +212,7 @@
 
             <div class="form-group">
                 <label>Foto principal del negocio <span class="required">*</span></label>
-                <div class="file-upload" onclick="document.getElementById('foto_principal').click()">
+                <div class="file-upload @error('foto_principal') error @enderror" onclick="document.getElementById('foto_principal').click()">
                     <div class="file-upload-icon">📷</div>
                     <div class="file-upload-text">
                         <strong>Haz clic para subir</strong> o arrastra la imagen aquí
@@ -199,10 +220,13 @@
                     </div>
                     <input type="file" id="foto_principal" name="foto_principal" accept="image/*" required>
                 </div>
+                @error('foto_principal')
+                    <small style="color: #e74c3c;">{{ $message }}</small>
+                @enderror
             </div>
 
             <div class="form-group">
-                <label>Imágenes adicionales (máximo 5)</label>
+                <label>Imágenes adicionales (máximo 8)</label>
                 <div class="file-upload" onclick="document.getElementById('fotos_adicionales').click()">
                     <div class="file-upload-icon">🖼️</div>
                     <div class="file-upload-text">
@@ -216,7 +240,7 @@
 
         <!-- BOTONES -->
         <div class="form-actions">
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('home') }}'">Cancelar</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('restaurantes') }}'">Cancelar</button>
             <button type="submit" class="btn btn-primary">Enviar solicitud</button>
         </div>
     </form>
@@ -228,6 +252,7 @@
 
 <!-- Scripts de Bootstrap -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="{{ asset('js/formulario-validacion.js') }}"></script>
 
 </body>
 </html>

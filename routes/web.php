@@ -21,6 +21,9 @@ Route::post('/logout', [AuthUser::class, 'logout'])->name('logout');
 // Rutas del panel de administración
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('index');
+    Route::get('/solicitudes', [AdminController::class, 'solicitudes'])->name('solicitudes');
+    Route::post('/solicitudes/{id}/aprobar', [AdminController::class, 'aprobarSolicitud'])->name('solicitudes.aprobar');
+    Route::delete('/solicitudes/{id}/rechazar', [AdminController::class, 'rechazarSolicitud'])->name('solicitudes.rechazar');
     Route::get('/create', [AdminController::class, 'create'])->name('create');
     Route::post('/', [AdminController::class, 'store'])->name('store');
     Route::get('/{restaurante}/edit', [AdminController::class, 'edit'])->name('edit');
@@ -44,6 +47,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/restaurante/{id}/like', [RestauranteController::class, 'toggleLike'])->name('restaurante.like');
     Route::post('/restaurante/{id}/guardar', [RestauranteController::class, 'toggleGuardar'])->name('restaurante.guardar');
     Route::get('/restaurantes-guardados', [RestauranteController::class, 'guardados'])->name('restaurantes.guardados');
+    
+    // Ruta para actualizar restaurante (solo gerentes)
+    Route::post('/restaurante/{id}', [RestauranteController::class, 'update'])->name('restaurante.update');
+    Route::delete('/imagen-slider/{id}', [RestauranteController::class, 'eliminarImagenSlider'])->name('imagen.slider.delete');
 });
 
 // Rutas para formulario de registro de restaurantes

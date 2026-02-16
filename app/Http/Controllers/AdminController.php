@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Restaurante;
+use App\Models\RestaurantePendiente;
 use App\Models\Categoria;
 use App\Models\TipoComida;
 use App\Models\Ubicacion;
+use App\Models\UbicacionRestaurantePendiente;
 use App\Models\ImagenRestaurante;
+use App\Models\ImagenRestaurantePendiente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 
 class AdminController extends Controller
@@ -75,10 +79,36 @@ class AdminController extends Controller
         }
 
         // Para peticiones normales, devolver la vista completa
+        $perPage = $request->input('per_page', 10);
+        $restaurantes = $query->paginate($perPage)->appends($request->except('page'));
         $categorias = Categoria::all();
         $tiposComida = TipoComida::all();
 
         return view('admin.index', compact('restaurantes', 'categorias', 'tiposComida'));
+    }
+
+    public function solicitudes(Request $request)
+    {
+        $perPage = $request->input('per_page', 10);
+        
+        // Obtener restaurantes pendientes de aprobación de la tabla restaurante_pendiente
+        $solicitudes = RestaurantePendiente::with(['categoria', 'ubicacionPendiente', 'usuario'])
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage)->appends($request->except('page'));
+
+        // Cargar imágenes manualmente para cada solicitud
+        foreach ($solicitudes as $solicitud) {
+            $solicitud->imagenes = ImagenRestaurantePendiente::where('restaurante_pendiente_id', $solicitud->id)->get();
+            
+            // Cargar tipos de comida
+            $solicitud->tiposComida = DB::table('tipo_comida_restaurante_pendiente')
+                ->join('tipo_comida', 'tipo_comida_restaurante_pendiente.tipo_comida_id', '=', 'tipo_comida.id')
+                ->where('tipo_comida_restaurante_pendiente.restaurante_pendiente_id', $solicitud->id)
+                ->select('tipo_comida.*')
+                ->get();
+        }
+
+        return view('admin.solicitudes', compact('solicitudes'));
     }
 
     public function create(Request $request)
@@ -169,6 +199,16 @@ class AdminController extends Controller
     public function update(Request $request, Restaurante $restaurante)
     {
         $this->checkAdmin();
+        // Si solo se está actualizando el estado activo (aprobar solicitud)
+        if ($request->has('activo') && count($request->all()) == 1) {
+            $restaurante->update(['activo' => $request->activo]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Estado actualizado exitosamente'
+            ]);
+        }
+
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
@@ -228,6 +268,123 @@ class AdminController extends Controller
         }
 
         return Redirect::route('admin.index')->with('success', 'Restaurante actualizado exitosamente');
+    }
+
+    public function aprobarSolicitud($id)
+    {
+        try {
+            $pendiente = RestaurantePendiente::with(['ubicacionPendiente'])->findOrFail($id);
+            
+            // Crear o encontrar ubicación en la tabla principal
+            $ubicacion = Ubicacion::firstOrCreate([
+                'comunidad_autonoma' => $pendiente->ubicacionPendiente->comunidad_autonoma,
+                'provincia' => $pendiente->ubicacionPendiente->provincia,
+                'ciudad' => $pendiente->ubicacionPendiente->ciudad,
+                'codigo_postal' => $pendiente->ubicacionPendiente->codigo_postal,
+            ]);
+            
+            // Crear restaurante en tabla principal
+            $restaurante = Restaurante::create([
+                'nombre' => $pendiente->nombre,
+                'descripcion' => $pendiente->descripcion,
+                'user_id' => $pendiente->user_id,
+                'categoria_id' => $pendiente->categoria_id,
+                'ubicacion_id' => $ubicacion->id,
+                'direccion' => $pendiente->direccion,
+                'telefono' => $pendiente->telefono,
+                'email' => $pendiente->email,
+                'web' => $pendiente->web,
+                'precio' => $pendiente->precio,
+                'soles' => 0,
+                'valoracion_promedio' => 0,
+                'activo' => true,
+            ]);
+            
+            // Migrar imágenes
+            $imagenesPendientes = ImagenRestaurantePendiente::where('restaurante_pendiente_id', $id)->get();
+            foreach ($imagenesPendientes as $imagenPendiente) {
+                // Copiar la imagen de restaurantes_pendientes a restaurantes
+                $oldPath = $imagenPendiente->url;
+                $newPath = str_replace('restaurantes_pendientes', 'restaurantes', $oldPath);
+                
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->copy($oldPath, $newPath);
+                }
+                
+                ImagenRestaurante::create([
+                    'restaurante_id' => $restaurante->id,
+                    'url' => $newPath,
+                    'alt' => $imagenPendiente->alt,
+                    'principal' => $imagenPendiente->principal,
+                    'orden' => $imagenPendiente->orden,
+                ]);
+            }
+            
+            // Migrar tipos de comida
+            $tiposComida = DB::table('tipo_comida_restaurante_pendiente')
+                ->where('restaurante_pendiente_id', $id)
+                ->pluck('tipo_comida_id');
+            
+            $restaurante->tiposComida()->attach($tiposComida);
+            
+            // Eliminar imágenes pendientes del storage
+            foreach ($imagenesPendientes as $imagenPendiente) {
+                if (Storage::disk('public')->exists($imagenPendiente->url)) {
+                    Storage::disk('public')->delete($imagenPendiente->url);
+                }
+            }
+            
+            // Eliminar de tablas pendientes
+            DB::table('tipo_comida_restaurante_pendiente')
+                ->where('restaurante_pendiente_id', $id)
+                ->delete();
+            ImagenRestaurantePendiente::where('restaurante_pendiente_id', $id)->delete();
+            $pendiente->delete();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Solicitud aprobada exitosamente'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al aprobar la solicitud: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    public function rechazarSolicitud($id)
+    {
+        try {
+            $pendiente = RestaurantePendiente::findOrFail($id);
+            
+            // Eliminar imágenes del storage
+            $imagenes = ImagenRestaurantePendiente::where('restaurante_pendiente_id', $id)->get();
+            foreach ($imagenes as $imagen) {
+                if (Storage::disk('public')->exists($imagen->url)) {
+                    Storage::disk('public')->delete($imagen->url);
+                }
+            }
+            
+            // Eliminar de tablas relacionadas
+            DB::table('tipo_comida_restaurante_pendiente')
+                ->where('restaurante_pendiente_id', $id)
+                ->delete();
+            ImagenRestaurantePendiente::where('restaurante_pendiente_id', $id)->delete();
+            $pendiente->delete();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Solicitud rechazada exitosamente'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al rechazar la solicitud: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function destroy(Request $request, Restaurante $restaurante)

@@ -212,6 +212,170 @@
     .checkbox-group {
         grid-template-columns: 1fr;
     }
+
+    .form-section h2 {
+        font-size: 18px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-container {
+        padding: 20px;
+        margin: 16px;
+        border-radius: 8px;
+    }
+
+    .form-header {
+        margin-bottom: 32px;
+    }
+
+    .form-header h1 {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+    .form-header p {
+        font-size: 14px;
+    }
+
+    .form-section {
+        margin-bottom: 28px;
+    }
+
+    .form-section h2 {
+        font-size: 16px;
+        margin-bottom: 16px;
+        padding-bottom: 10px;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+
+    .form-group textarea {
+        min-height: 100px;
+    }
+
+    .form-group small {
+        font-size: 11px;
+    }
+
+    .checkbox-group {
+        gap: 10px;
+    }
+
+    .checkbox-item {
+        gap: 6px;
+    }
+
+    .checkbox-item label {
+        font-size: 13px;
+    }
+
+    .file-upload {
+        padding: 24px;
+    }
+
+    .file-upload-icon {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    .file-upload-text {
+        font-size: 13px;
+    }
+
+    .form-actions {
+        gap: 12px;
+        margin-top: 32px;
+        padding-top: 28px;
+    }
+
+    .btn {
+        padding: 12px 28px;
+        font-size: 14px;
+    }
+
+    .form-footer {
+        padding: 32px 16px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 380px) {
+    .form-container {
+        padding: 16px;
+        margin: 12px;
+    }
+
+    .form-header h1 {
+        font-size: 20px;
+    }
+
+    .form-section h2 {
+        font-size: 15px;
+    }
+
+    .btn {
+        padding: 11px 24px;
+        font-size: 13px;
+    }
+
+    .file-upload {
+        padding: 20px;
+    }
+}
+
+/* Estilos para validación de errores */
+.error, input.error, select.error, textarea.error {
+    border-color: #e74c3c !important;
+}
+
+.alert-danger {
+    background-color: #ffe6e6;
+    border: 1px solid #ff4444;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.alert-danger strong {
+    color: #cc0000;
+}
+
+.alert-danger ul {
+    margin: 10px 0 0 20px;
+    color: #cc0000;
+}
+
+.form-group small.error-message {
+    color: #e74c3c;
+    display: block;
+    margin-top: 5px;
+}
+
+.file-upload.error {
+    border-color: #e74c3c !important;
 }
 
 /* Variables para el header y tabs */

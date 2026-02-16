@@ -485,20 +485,447 @@ body {
     .sitios-grid {
         grid-template-columns: 1fr;
     }
+
+    .main-detalle .container {
+        padding: 0 20px;
+    }
+
+    .restaurant-info-box,
+    .section-box,
+    .reserva-box {
+        padding: 20px;
+    }
+
+    .restaurant-image-main {
+        height: 300px;
+    }
 }
 
-@media (max-width: 767px) {
-    .restaurant-name-title {
-        font-size: 24px;
+@media (max-width: 768px) {
+    .header-detalle {
+        padding: 12px 0;
+    }
+
+    .logo-detalle {
+        height: 24px;
+    }
+
+    .btn-menu-detalle {
+        font-size: 20px;
+    }
+
+    .btn-acceso-detalle {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    .banner-gala-detalle {
+        padding: 10px 0;
+        font-size: 12px;
     }
 
     .gala-content {
         flex-direction: column;
         gap: 10px;
+        text-align: center;
+    }
+
+    .gala-left {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .gala-links {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .gala-links a {
+        margin: 0;
+    }
+
+    .btn-calendar {
+        display: block;
+        margin: 8px auto 0;
+    }
+
+    .main-detalle {
+        padding: 20px 0;
+    }
+
+    .main-detalle .container {
+        padding: 0 16px;
+    }
+
+    .restaurant-name-title {
+        font-size: 24px;
+        margin-bottom: 12px;
+    }
+
+    .restaurant-ubicacion {
+        font-size: 14px;
+    }
+
+    .section-title {
+        font-size: 18px;
+        margin-bottom: 16px;
+    }
+
+    .restaurant-tipo {
+        gap: 8px;
+    }
+
+    .tipo-badge {
+        font-size: 12px;
+        padding: 3px 10px;
+    }
+
+    .btn-guardar,
+    .btn-compartir,
+    .btn-favorito {
+        padding: 8px 20px;
+        font-size: 13px;
     }
 
     .restaurant-image-main {
         height: 250px;
+    }
+
+    .btn-ver-fotos {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+
+    .reserva-box {
+        margin-bottom: 16px;
+    }
+
+    .reserva-title {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+
+    .btn-reserva {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .resena-item {
+        padding: 16px;
+    }
+
+    .resena-text {
+        font-size: 13px;
+    }
+
+    .resena-icon {
+        font-size: 32px;
+    }
+
+    .opciones-menu-item {
+        padding: 12px 0;
+    }
+
+    .menu-titulo {
+        font-size: 15px;
+    }
+
+    .menu-descripcion {
+        font-size: 13px;
+    }
+
+    .servicio-item {
+        padding: 8px 0;
+    }
+
+    .contacto-item {
+        margin-bottom: 16px;
+    }
+
+    .contacto-label {
+        font-size: 13px;
+    }
+
+    .contacto-valor {
+        font-size: 13px;
+    }
+
+    .btn-contacto {
+        padding: 7px 18px;
+        font-size: 12px;
+    }
+
+    .mapa-container {
+        height: 250px;
+    }
+
+    .reportaje-item {
+        gap: 12px;
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+    }
+
+    .reportaje-image {
+        width: 100px;
+        height: 75px;
+    }
+
+    .reportaje-tipo {
+        font-size: 10px;
+    }
+
+    .reportaje-titulo {
+        font-size: 13px;
+    }
+
+    .reportaje-subtitulo {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 576px) {
+    .header-detalle .container {
+        padding: 0 12px;
+    }
+
+    .btn-acceso-detalle {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .btn-acceso-detalle span {
+        display: none;
+    }
+
+    .banner-gala-detalle {
+        font-size: 11px;
+        padding: 8px 0;
+    }
+
+    .icon-sol {
+        width: 22px;
+        height: 22px;
+    }
+
+    .gala-text {
+        font-size: 11px;
+    }
+
+    .btn-calendar {
+        font-size: 11px;
+        padding: 5px 12px;
+    }
+
+    .main-detalle .container {
+        padding: 0 12px;
+    }
+
+    .restaurant-info-box,
+    .section-box,
+    .reserva-box {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+
+    .fecha-publicacion {
+        font-size: 12px;
+    }
+
+    .restaurant-name-title {
+        font-size: 20px;
+    }
+
+    .restaurant-ubicacion {
+        font-size: 13px;
+    }
+
+    .section-title {
+        font-size: 16px;
+    }
+
+    .restaurant-tipo {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .tipo-badge {
+        font-size: 11px;
+        padding: 3px 8px;
+    }
+
+    .btn-guardar {
+        padding: 7px 16px;
+        font-size: 12px;
+    }
+
+    .btn-compartir,
+    .btn-favorito {
+        padding: 7px;
+        margin-left: 6px;
+    }
+
+    .restaurant-image-main {
+        height: 200px;
+    }
+
+    .btn-ver-fotos {
+        padding: 7px 14px;
+        font-size: 11px;
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .reserva-title {
+        font-size: 15px;
+    }
+
+    .btn-reserva {
+        padding: 9px;
+        font-size: 12px;
+    }
+
+    .reserva-info {
+        font-size: 11px;
+    }
+
+    .resena-item {
+        padding: 14px;
+    }
+
+    .resena-icon {
+        font-size: 28px;
+        top: 8px;
+        right: 8px;
+    }
+
+    .resena-text {
+        font-size: 12px;
+    }
+
+    .resena-buttons {
+        gap: 8px;
+        margin-top: 12px;
+    }
+
+    .btn-guardar-sm {
+        padding: 5px 14px;
+        font-size: 11px;
+    }
+
+    .opciones-menu-item {
+        padding: 10px 0;
+    }
+
+    .menu-titulo {
+        font-size: 14px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .menu-descripcion {
+        font-size: 12px;
+    }
+
+    .servicio-item {
+        padding: 6px 0;
+        font-size: 13px;
+    }
+
+    .servicio-icon {
+        font-size: 16px;
+    }
+
+    .contacto-item {
+        margin-bottom: 14px;
+    }
+
+    .contacto-label,
+    .contacto-valor {
+        font-size: 12px;
+    }
+
+    .btn-contacto {
+        padding: 6px 16px;
+        font-size: 11px;
+    }
+
+    .mapa-container {
+        height: 200px;
+    }
+
+    .sitios-grid {
+        gap: 12px;
+    }
+
+    .sitio-item {
+        padding: 8px;
+    }
+
+    .sitio-icon {
+        font-size: 32px;
+    }
+
+    .sitio-info h4 {
+        font-size: 13px;
+    }
+
+    .sitio-info p {
+        font-size: 11px;
+    }
+
+    .reportaje-item {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .reportaje-image {
+        width: 100%;
+        height: 150px;
+    }
+
+    .reportaje-tipo {
+        font-size: 10px;
+    }
+
+    .reportaje-titulo {
+        font-size: 14px;
+    }
+
+    .reportaje-subtitulo {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 380px) {
+    .restaurant-name-title {
+        font-size: 18px;
+    }
+
+    .restaurant-info-box,
+    .section-box,
+    .reserva-box {
+        padding: 14px;
+    }
+
+    .section-title {
+        font-size: 15px;
+    }
+
+    .btn-guardar,
+    .btn-compartir,
+    .btn-favorito {
+        font-size: 11px;
+        padding: 6px 12px;
+    }
+
+    .restaurant-image-main {
+        height: 180px;
+    }
+
+    .mapa-container {
+        height: 180px;
     }
 }
 
@@ -1511,7 +1938,7 @@ body {
 
 
 
-/* Slider de Imágenes */
+/* Slider de Imï¿½genes */
 .image-slider {
     position: relative;
 }
@@ -1581,7 +2008,7 @@ body {
     opacity: 0.9;
 }
 
-/* Botones de navegación de miniaturas */
+/* Botones de navegaciï¿½n de miniaturas */
 .thumbnail-nav-btn {
     position: absolute;
     top: 50%;
@@ -1614,4 +2041,270 @@ body {
     right: 5px;
 }
 
+/* Modal de GalerÃ­a */
+#modalGaleria .modal-dialog {
+    max-width: 90vw;
+}
 
+#modalGaleria .carousel-inner {
+    background-color: #000;
+}
+
+#modalGaleria .carousel-item img {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
+}
+
+#modalGaleria .carousel-control-prev-icon,
+#modalGaleria .carousel-control-next-icon {
+    background-color: rgba(0, 163, 224, 0.8);
+    border-radius: 50%;
+    padding: 20px;
+}
+
+#modalGaleria .carousel-control-prev-icon:hover,
+#modalGaleria .carousel-control-next-icon:hover {
+    background-color: rgba(0, 163, 224, 1);
+}
+
+#modalGaleria .carousel-indicators button {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+#modalGaleria .carousel-indicators button.active {
+    background-color: var(--color-secondary);
+}
+
+/* Slider de Miniaturas */
+.thumbnails-slider-container {
+    position: relative;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.thumbnails-slider {
+    overflow: hidden;
+    padding: 0 50px;
+}
+
+.thumbnails-wrapper {
+    display: flex;
+    gap: 10px;
+    transition: transform 0.3s ease;
+}
+
+.thumbnail-item {
+    min-width: calc(25% - 7.5px);
+    aspect-ratio: 4/3;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.thumbnail-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.thumbnail-item:hover {
+    border-color: var(--color-secondary);
+    transform: translateY(-2px);
+}
+
+.thumbnail-item:hover img {
+    transform: scale(1.05);
+}
+
+.thumbnail-item.active {
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 2px rgba(0, 163, 224, 0.3);
+}
+
+.thumbnail-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 163, 224, 0.9);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.thumbnail-nav-btn:hover {
+    background-color: var(--color-secondary);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.thumbnail-nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.thumbnail-prev {
+    left: 0;
+}
+
+.thumbnail-next {
+    right: 0;
+}
+
+/* Responsive para miniaturas */
+@media (max-width: 768px) {
+    .thumbnail-item {
+        min-width: calc(33.333% - 6.67px);
+    }
+}
+
+@media (max-width: 480px) {
+    .thumbnail-item {
+        min-width: calc(50% - 5px);
+    }
+    
+    .thumbnails-slider {
+        padding: 0 40px;
+    }
+    
+    .thumbnail-nav-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+}
+
+/* BotÃ³n Editar para Gerentes */
+.btn-editar-gerente {
+    background-color: #ffd500;
+    color: #000;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+
+.btn-editar-gerente:hover {
+    background-color: #e6c000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para el Modal de EdiciÃ³n - Usando estilos de admin */
+#modalEditarRestaurante .modal-content {
+    border-radius: 8px;
+}
+
+#modalEditarRestaurante .modal-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+}
+
+#modalEditarRestaurante .modal-title {
+    font-weight: 600;
+    color: #003087;
+}
+
+#modalEditarRestaurante .form-label {
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #000;
+}
+
+#modalEditarRestaurante .form-control {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+#modalEditarRestaurante .form-control:focus {
+    outline: none;
+    border-color: #ffd500;
+    box-shadow: 0 0 0 2px rgba(255, 213, 0, 0.2);
+}
+
+#modalEditarRestaurante .text-danger {
+    color: #e74c3c;
+}
+
+#modalEditarRestaurante .tipos-comida-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+#modalEditarRestaurante .tipos-comida-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+#modalEditarRestaurante .tipos-comida-label:hover {
+    background-color: #f8f9fa;
+}
+
+#modalEditarRestaurante .tipos-comida-checkbox {
+    cursor: pointer;
+}
+
+#modalEditarRestaurante .tipos-comida-text {
+    font-size: 14px;
+    font-weight: normal;
+    user-select: none;
+}
+
+#modalEditarRestaurante .img-thumbnail {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+#modalEditarRestaurante .imagen-actual-item {
+    position: relative;
+    display: inline-block;
+}
+
+#modalEditarRestaurante .btn-eliminar-imagen-slider {
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 10;
+}
+
+#modalEditarRestaurante .imagen-actual-item:hover .btn-eliminar-imagen-slider {
+    opacity: 1;
+}
+
+#modalEditarRestaurante .imagen-actual-item .img-thumbnail {
+    transition: all 0.2s;
+}
+
+#modalEditarRestaurante .imagen-actual-item:hover .img-thumbnail {
+    opacity: 0.8;
+}

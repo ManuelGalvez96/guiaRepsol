@@ -20,7 +20,10 @@
     <div class="container">
         <div class="top-section">
             <h1>Gestión de restaurantes</h1>
-            <button type="button" class="create-btn" onclick="openCreateModal()">Crear Restaurante</button>
+            <div style="display: flex; gap: 10px;">
+                <a href="{{ route('admin.solicitudes') }}" class="create-btn" style="background-color: #f39c12;">Solicitudes de negocio</a>
+                <a href="{{ route('admin.create') }}" class="create-btn">Crear Restaurante</a>
+            </div>
         </div>
 
         @if(session('success'))
@@ -30,10 +33,16 @@
         @endif
 
         <!-- Filters -->
-        <div class="filters">
-            <input type="text" name="buscar" class="filter-search" id="filterBuscar" 
-                   placeholder="🔍 Buscar restaurante..." 
-                   value="{{ request('buscar') }}">
+        <form method="GET" action="{{ route('admin.index') }}" id="filterForm">
+            <div class="filters">
+                <select name="tipo_comida" class="filter-select" onchange="this.form.submit()">
+                    <option value="">🍴 Tipo de comida</option>
+                    @foreach($tiposComida as $tipo)
+                        <option value="{{ $tipo->id }}" {{ request('tipo_comida') == $tipo->id ? 'selected' : '' }}>
+                            {{ $tipo->nombre }}
+                        </option>
+                    @endforeach
+                </select>
 
             <select name="tipo_comida" class="filter-select" id="filterTipoComida">
                 <option value="">Tipo de comida</option>

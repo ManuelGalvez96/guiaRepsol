@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Restaurante;
+use App\Models\RestaurantePendiente;
 use App\Models\Categoria;
 use App\Models\TipoComida;
 use App\Models\Ubicacion;
+use App\Models\UbicacionRestaurantePendiente;
 use App\Models\ImagenRestaurante;
 use App\Models\LikeRestaurante;
 use App\Models\GuardarRestaurante;
@@ -14,6 +16,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use App\Models\ImagenRestaurantePendiente;
+use Illuminate\Support\Facades\DB;
 
 class RestauranteController extends Controller
 {
@@ -147,9 +151,15 @@ class RestauranteController extends Controller
             'tiposComida', 
             'valoraciones.usuario',
             'imagenes' => function($query) {
-                $query->where('principal', false)->orderBy('orden', 'asc');
+                $query->orderBy('principal', 'desc')->orderBy('orden', 'asc');
             }
         ])->findOrFail($id);
+
+        // Obtener imagen principal
+        $imagenPrincipal = $restaurante->imagenes->where('principal', true)->first();
+        
+        // Obtener imágenes adicionales
+        $imagenesAdicionales = $restaurante->imagenes->where('principal', false);
 
         // Verificar si el usuario ha dado like o guardado el restaurante
         $userHasLiked = Auth::check() && LikeRestaurante::where('user_id', Auth::id())
@@ -162,7 +172,155 @@ class RestauranteController extends Controller
             
         $totalLikes = LikeRestaurante::where('restaurante_id', $id)->count();
 
-        return view('restaurante-detalle', compact('restaurante', 'userHasLiked', 'userHasSaved', 'totalLikes'));
+        return view('restaurante-detalle', compact('restaurante', 'imagenPrincipal', 'imagenesAdicionales', 'userHasLiked', 'userHasSaved', 'totalLikes'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $restaurante = Restaurante::findOrFail($id);
+        
+        // Verificar que el usuario autenticado es el gerente del restaurante
+        if (!Auth::check() || Auth::id() !== $restaurante->user_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tienes permisos para editar este restaurante'
+            ], 403);
+        }
+
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'categoria_id' => 'required|exists:categorias,id',
+            'direccion' => 'required|string',
+            'telefono' => 'nullable|string',
+            'email' => 'required|email|unique:restaurantes,email,' . $restaurante->id,
+            'web' => 'nullable|url',
+            'precio' => 'required|numeric',
+            'tipos_comida' => 'nullable|array',
+            'tipos_comida.*' => 'exists:tipo_comida,id',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'fotos_adicionales' => 'nullable|array|max:8',
+            'fotos_adicionales.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120',
+        ]);
+
+        // Actualizar datos básicos del restaurante
+        $restaurante->update([
+            'nombre' => $validated['nombre'],
+            'descripcion' => $validated['descripcion'] ?? null,
+            'categoria_id' => $validated['categoria_id'],
+            'direccion' => $validated['direccion'],
+            'telefono' => $validated['telefono'] ?? null,
+            'email' => $validated['email'],
+            'web' => $validated['web'] ?? null,
+            'precio' => $validated['precio'],
+        ]);
+
+        // Sincronizar tipos de comida
+        if ($request->has('tipos_comida')) {
+            $restaurante->tiposComida()->sync($request->tipos_comida);
+        } else {
+            $restaurante->tiposComida()->detach();
+        }
+
+        // Actualizar imagen si se subió una nueva
+        if ($request->hasFile('imagen')) {
+            // Eliminar imagen anterior si existe
+            $imagenAnterior = $restaurante->imagenes()->where('principal', true)->first();
+            if ($imagenAnterior) {
+                $rutaAnterior = $imagenAnterior->url;
+                // Si la imagen está en storage, eliminarla
+                if (str_starts_with($rutaAnterior, 'restaurantes/')) {
+                    Storage::disk('public')->delete($rutaAnterior);
+                } elseif (str_starts_with($rutaAnterior, 'img/restaurantes/')) {
+                    // Si está en public/img, eliminarla también
+                    $rutaPublica = public_path($rutaAnterior);
+                    if (file_exists($rutaPublica)) {
+                        unlink($rutaPublica);
+                    }
+                }
+                $imagenAnterior->delete();
+            }
+
+            // Guardar nueva imagen
+            $imagen = $request->file('imagen');
+            $nombreArchivo = time() . '_' . $imagen->getClientOriginalName();
+            $imagen->move(public_path('img/restaurantes'), $nombreArchivo);
+            
+            ImagenRestaurante::create([
+                'restaurante_id' => $restaurante->id,
+                'url' => 'img/restaurantes/' . $nombreArchivo,
+                'alt' => $restaurante->nombre,
+                'principal' => true,
+                'orden' => 0
+            ]);
+        }
+
+        // Agregar fotos adicionales si se subieron
+        if ($request->hasFile('fotos_adicionales')) {
+            // Obtener el último orden de las imágenes adicionales actuales
+            $ultimoOrden = $restaurante->imagenes()->where('principal', false)->max('orden') ?? 0;
+            
+            foreach ($request->file('fotos_adicionales') as $foto) {
+                $ultimoOrden++;
+                $nombreArchivo = time() . '_' . uniqid() . '_' . $foto->getClientOriginalName();
+                $foto->move(public_path('img/restaurantes'), $nombreArchivo);
+                
+                ImagenRestaurante::create([
+                    'restaurante_id' => $restaurante->id,
+                    'url' => 'img/restaurantes/' . $nombreArchivo,
+                    'alt' => $restaurante->nombre . ' - Foto ' . $ultimoOrden,
+                    'principal' => false,
+                    'orden' => $ultimoOrden
+                ]);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Restaurante actualizado exitosamente',
+            'restaurante' => $restaurante->load(['categoria', 'ubicacion', 'imagenes', 'tiposComida'])
+        ]);
+    }
+
+    public function eliminarImagenSlider(Request $request, $id)
+    {
+        $imagen = ImagenRestaurante::findOrFail($id);
+        $restaurante = $imagen->restaurante;
+        
+        // Verificar que el usuario autenticado es el gerente del restaurante
+        if (!Auth::check() || Auth::id() !== $restaurante->user_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tienes permisos para eliminar esta imagen'
+            ], 403);
+        }
+
+        // No permitir eliminar la imagen principal
+        if ($imagen->principal) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se puede eliminar la imagen principal desde aquí'
+            ], 400);
+        }
+
+        // Eliminar el archivo físico
+        $rutaImagen = $imagen->url;
+        if (str_starts_with($rutaImagen, 'restaurantes/')) {
+            Storage::disk('public')->delete($rutaImagen);
+        } elseif (str_starts_with($rutaImagen, 'img/restaurantes/')) {
+            $rutaPublica = public_path($rutaImagen);
+            if (file_exists($rutaPublica)) {
+                unlink($rutaPublica);
+            }
+        }
+
+        // Eliminar el registro de la base de datos
+        $imagen->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Imagen eliminada exitosamente'
+        ]);
     }
 
     public function create()
@@ -177,53 +335,82 @@ class RestauranteController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'descripcion' => 'nullable|string',
+            'descripcion' => 'required|string|min:100',
             'categoria_id' => 'required|exists:categorias,id',
             'direccion' => 'required|string|max:255',
             'ciudad' => 'required|string|max:255',
             'provincia' => 'required|string|max:255',
-            'codigo_postal' => 'required|string|max:10',
+            'codigo_postal' => 'required|string|size:5|regex:/^[0-9]{5}$/',
             'comunidad_autonoma' => 'required|string|max:255',
             'telefono' => 'nullable|string|max:20',
-            'email' => 'required|email|unique:restaurantes,email',
+            'email' => 'required|email|unique:restaurante_pendiente,email',
             'web' => 'nullable|url',
-            'precio' => 'required|numeric|min:0',
-            'foto_principal' => 'required|image|max:5120',
-            'fotos_adicionales.*' => 'nullable|image|max:5120',
+            'precio' => 'required|numeric|min:0.01|max:9999.99',
+            'foto_principal' => 'required|image|mimes:jpeg,jpg,png,webp|max:5120',
+            'fotos_adicionales' => 'nullable|array|max:8',
+            'fotos_adicionales.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120',
             'tipos_comida' => 'nullable|array',
             'tipos_comida.*' => 'exists:tipo_comida,id'
+        ], [
+            'nombre.required' => 'El nombre del negocio es obligatorio',
+            'descripcion.required' => 'La descripción es obligatoria',
+            'descripcion.min' => 'La descripción debe tener al menos 100 caracteres',
+            'categoria_id.required' => 'Debe seleccionar una categoría',
+            'categoria_id.exists' => 'La categoría seleccionada no es válida',
+            'direccion.required' => 'La dirección es obligatoria',
+            'ciudad.required' => 'La ciudad es obligatoria',
+            'provincia.required' => 'La provincia es obligatoria',
+            'codigo_postal.required' => 'El código postal es obligatorio',
+            'codigo_postal.size' => 'El código postal debe tener exactamente 5 dígitos',
+            'codigo_postal.regex' => 'El código postal debe contener solo números',
+            'comunidad_autonoma.required' => 'La comunidad autónoma es obligatoria',
+            'email.required' => 'El email es obligatorio',
+            'email.email' => 'El email debe ser una dirección válida',
+            'email.unique' => 'Este email ya está registrado',
+            'web.url' => 'La dirección web debe ser una URL válida',
+            'precio.required' => 'El precio es obligatorio',
+            'precio.min' => 'El precio debe ser mayor a 0',
+            'precio.max' => 'El precio no puede superar los 9999.99€',
+            'foto_principal.required' => 'Debe subir una foto principal',
+            'foto_principal.image' => 'El archivo debe ser una imagen',
+            'foto_principal.mimes' => 'La foto debe ser formato JPG, PNG o WEBP',
+            'foto_principal.max' => 'La foto principal no puede superar los 5MB',
+            'fotos_adicionales.max' => 'Puede subir máximo 8 fotos adicionales',
+            'fotos_adicionales.*.image' => 'Todos los archivos deben ser imágenes',
+            'fotos_adicionales.*.mimes' => 'Las fotos deben ser formato JPG, PNG o WEBP',
+            'fotos_adicionales.*.max' => 'Cada foto adicional no puede superar los 5MB',
+            'tipos_comida.*.exists' => 'Uno o más tipos de comida seleccionados no son válidos',
         ]);
 
-        // Crear o encontrar la ubicación
-        $ubicacion = Ubicacion::firstOrCreate([
+        // Crear ubicación pendiente
+        $ubicacionPendiente = UbicacionRestaurantePendiente::create([
             'comunidad_autonoma' => $request->comunidad_autonoma,
             'provincia' => $request->provincia,
             'ciudad' => $request->ciudad,
             'codigo_postal' => $request->codigo_postal,
         ]);
 
-        // Crear el restaurante
-        $restaurante = Restaurante::create([
+        // Crear el restaurante pendiente
+        $restaurantePendiente = RestaurantePendiente::create([
             'nombre' => $request->nombre,
             'descripcion' => $request->descripcion,
             'user_id' => Auth::id() ?? 1, // Si no hay usuario autenticado, usar ID 1
             'categoria_id' => $request->categoria_id,
-            'ubicacion_id' => $ubicacion->id,
+            'ubicacion_pendiente_id' => $ubicacionPendiente->id,
             'direccion' => $request->direccion,
             'telefono' => $request->telefono,
             'email' => $request->email,
             'web' => $request->web,
             'precio' => $request->precio,
-            'activo' => false, // Pendiente de aprobación
+            'activo' => true, // En tabla pendiente, activo = true indica que está pendiente
         ]);
 
         // Subir foto principal
         if ($request->hasFile('foto_principal')) {
-            $nombreArchivo = time() . '_' . $request->file('foto_principal')->getClientOriginalName();
-            $request->file('foto_principal')->move(public_path('img/restaurantes'), $nombreArchivo);
-            ImagenRestaurante::create([
-                'restaurante_id' => $restaurante->id,
-                'url' => 'img/restaurantes/' . $nombreArchivo,
+            $path = $request->file('foto_principal')->store('restaurantes_pendientes', 'public');
+            ImagenRestaurantePendiente::create([
+                'restaurante_pendiente_id' => $restaurantePendiente->id,
+                'url' => $path,
                 'principal' => true,
                 'orden' => 0
             ]);
@@ -233,23 +420,34 @@ class RestauranteController extends Controller
         if ($request->hasFile('fotos_adicionales')) {
             $orden = 1;
             foreach ($request->file('fotos_adicionales') as $foto) {
-                $nombreArchivo = time() . '_' . uniqid() . '_' . $foto->getClientOriginalName();
-                $foto->move(public_path('img/restaurantes'), $nombreArchivo);
-                ImagenRestaurante::create([
-                    'restaurante_id' => $restaurante->id,
-                    'url' => 'img/restaurantes/' . $nombreArchivo,
+                $path = $foto->store('restaurantes_pendientes', 'public');
+                ImagenRestaurantePendiente::create([
+                    'restaurante_pendiente_id' => $restaurantePendiente->id,
+                    'url' => $path,
                     'principal' => false,
                     'orden' => $orden++
                 ]);
             }
         }
 
-        // Asociar tipos de comida
+        // Asociar tipos de comida (guardar en tabla tipo_comida_restaurante_pendiente)
         if ($request->has('tipos_comida')) {
-            $restaurante->tiposComida()->attach($request->tipos_comida);
+            foreach ($request->tipos_comida as $tipoComidaId) {
+                DB::table('tipo_comida_restaurante_pendiente')->insert([
+                    'restaurante_pendiente_id' => $restaurantePendiente->id,
+                    'tipo_comida_id' => $tipoComidaId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         }
 
-        return redirect()->route('home')->with('success', '¡Solicitud enviada! Tu restaurante será revisado pronto.');
+        // Redirigir según si el usuario está autenticado o no
+        if (Auth::check()) {
+            return redirect()->route('restaurantes')->with('success', '¡Solicitud enviada! Tu restaurante será revisado pronto.');
+        }
+        
+        return redirect('/')->with('success', '¡Solicitud enviada! Tu restaurante será revisado pronto.');
     }
 
     // Toggle like (dar/quitar like a un restaurante)
