@@ -161,12 +161,14 @@
                         <div class="mt-3">
                             <button class="btn-guardar {{ $userHasSaved ? 'active' : '' }}" 
                                     id="btn-guardar" 
-                                    data-restaurante-id="{{ $restaurante->id }}">
+                                    data-restaurante-id="{{ $restaurante->id }}"
+                                    onclick="saveRestaurant({{ $restaurante->id }}, 'desktop')">
                                 <i class="bi bi-bookmark{{ $userHasSaved ? '-fill' : '' }}"></i> Guardar
                             </button>
                             <button class="btn-favorito {{ $userHasLiked ? 'active' : '' }}" 
                                     id="btn-favorito" 
-                                    data-restaurante-id="{{ $restaurante->id }}">
+                                    data-restaurante-id="{{ $restaurante->id }}"
+                                    onclick="likeRestaurant({{ $restaurante->id }}, 'desktop')">
                                 <i class="bi bi-heart{{ $userHasLiked ? '-fill' : '' }}"></i>
                                 <span id="like-count">{{ $totalLikes }}</span>
                             </button>
@@ -174,7 +176,8 @@
                                 @if(Auth::id() === $restaurante->user_id)
                                     <button class="btn-editar-gerente" 
                                             id="btn-editar-restaurante" 
-                                            data-restaurante-id="{{ $restaurante->id }}">
+                                            data-restaurante-id="{{ $restaurante->id }}"
+                                            onclick="editRestaurant({{ $restaurante->id }})">
                                         <i class="bi bi-pencil-square"></i> Editar
                                     </button>
                                 @endif
@@ -411,12 +414,14 @@
                         <div class="mt-3 d-flex flex-wrap gap-2">
                             <button class="btn-guardar {{ $userHasSaved ? 'active' : '' }}" 
                                     id="btn-guardar-mobile" 
-                                    data-restaurante-id="{{ $restaurante->id }}">
+                                    data-restaurante-id="{{ $restaurante->id }}"
+                                    onclick="saveRestaurant({{ $restaurante->id }}, 'mobile')">
                                 <i class="bi bi-bookmark{{ $userHasSaved ? '-fill' : '' }}"></i> Guardar
                             </button>
                             <button class="btn-favorito {{ $userHasLiked ? 'active' : '' }}" 
                                     id="btn-favorito-mobile" 
-                                    data-restaurante-id="{{ $restaurante->id }}">
+                                    data-restaurante-id="{{ $restaurante->id }}"
+                                    onclick="likeRestaurant({{ $restaurante->id }}, 'mobile')">
                                 <i class="bi bi-heart{{ $userHasLiked ? '-fill' : '' }}"></i>
                                 <span id="like-count-mobile">{{ $totalLikes }}</span>
                             </button>
@@ -424,7 +429,8 @@
                                 @if(Auth::id() === $restaurante->user_id)
                                     <button class="btn-editar-gerente" 
                                             id="btn-editar-restaurante-mobile" 
-                                            data-restaurante-id="{{ $restaurante->id }}">
+                                            data-restaurante-id="{{ $restaurante->id }}"
+                                            onclick="editRestaurant({{ $restaurante->id }})">
                                         <i class="bi bi-pencil-square"></i> Editar
                                     </button>
                                 @endif
@@ -910,145 +916,7 @@
     <script src="{{ asset('js/validacion-editar-restaurante.js') }}"></script>
     <script src="{{ asset('js/restaurante-detalle.js') }}"></script>
 
-    <script>
-        // Toggle Mobile Menu
-        const btnToggleMenu = document.getElementById('btnToggleMenu');
-        const mobileMenu = document.getElementById('mobileMenu');
 
-        if (btnToggleMenu && mobileMenu) {
-            btnToggleMenu.addEventListener('click', function() {
-                mobileMenu.classList.toggle('active');
-            });
-
-            // Cerrar menú cuando se hace click en un link
-            const menuLinks = mobileMenu.querySelectorAll('a');
-            menuLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    mobileMenu.classList.remove('active');
-                });
-            });
-        }
-
-        // Manejar botón de favorito mobile (like)
-        const btnFavoritoMobile = document.getElementById('btn-favorito-mobile');
-        if (btnFavoritoMobile) {
-            btnFavoritoMobile.onclick = function() {
-                const restauranteId = this.getAttribute('data-restaurante-id');
-                
-                fetch(`/restaurante/${restauranteId}/like`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Accept': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const icon = this.querySelector('i');
-                        const likeCountMobile = document.getElementById('like-count-mobile');
-                        
-                        if (data.liked) {
-                            this.classList.add('active');
-                            icon.classList.remove('bi-heart');
-                            icon.classList.add('bi-heart-fill');
-                        } else {
-                            this.classList.remove('active');
-                            icon.classList.remove('bi-heart-fill');
-                            icon.classList.add('bi-heart');
-                        }
-                        
-                        if (likeCountMobile) {
-                            likeCountMobile.textContent = data.totalLikes;
-                        }
-
-                        // Sincronizar desktop si existe
-                        const btnFavoritoDesktop = document.getElementById('btn-favorito');
-                        if (btnFavoritoDesktop) {
-                            const iconDesktop = btnFavoritoDesktop.querySelector('i');
-                            if (data.liked) {
-                                btnFavoritoDesktop.classList.add('active');
-                                iconDesktop.classList.remove('bi-heart');
-                                iconDesktop.classList.add('bi-heart-fill');
-                            } else {
-                                btnFavoritoDesktop.classList.remove('active');
-                                iconDesktop.classList.remove('bi-heart-fill');
-                                iconDesktop.classList.add('bi-heart');
-                            }
-                            const likeCountDesktop = document.getElementById('like-count');
-                            if (likeCountDesktop) {
-                                likeCountDesktop.textContent = data.totalLikes;
-                            }
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            };
-        }
-
-        // Manejar botón de guardar mobile
-        const btnGuardarMobile = document.getElementById('btn-guardar-mobile');
-        if (btnGuardarMobile) {
-            btnGuardarMobile.onclick = function() {
-                const restauranteId = this.getAttribute('data-restaurante-id');
-                
-                fetch(`/restaurante/${restauranteId}/guardar`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Accept': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const icon = this.querySelector('i');
-                        
-                        if (data.saved) {
-                            this.classList.add('active');
-                            icon.classList.remove('bi-bookmark');
-                            icon.classList.add('bi-bookmark-fill');
-                        } else {
-                            this.classList.remove('active');
-                            icon.classList.remove('bi-bookmark-fill');
-                            icon.classList.add('bi-bookmark');
-                        }
-
-                        // Sincronizar desktop si existe
-                        const btnGuardarDesktop = document.getElementById('btn-guardar');
-                        if (btnGuardarDesktop) {
-                            const iconDesktop = btnGuardarDesktop.querySelector('i');
-                            if (data.saved) {
-                                btnGuardarDesktop.classList.add('active');
-                                iconDesktop.classList.remove('bi-bookmark');
-                                iconDesktop.classList.add('bi-bookmark-fill');
-                            } else {
-                                btnGuardarDesktop.classList.remove('active');
-                                iconDesktop.classList.remove('bi-bookmark-fill');
-                                iconDesktop.classList.add('bi-bookmark');
-                            }
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            };
-        }
-
-        // Manejar botón de editar restaurante mobile (para gerentes)
-        const btnEditarRestauranteMobile = document.getElementById('btn-editar-restaurante-mobile');
-        if (btnEditarRestauranteMobile) {
-            btnEditarRestauranteMobile.onclick = function() {
-                const modal = new bootstrap.Modal(document.getElementById('modalEditarRestaurante'));
-                modal.show();
-            };
-        }
-    </script>
 </body>
 </html>
 
