@@ -53,14 +53,14 @@ class RestauranteController extends Controller
         // Obtener restaurantes del gerente si está autenticado y es gerente
         $restaurantesGerente = null;
         if (Auth::check() && Auth::user()->rol === 'gerente') {
-            $restaurantesGerente = Restaurante::with(['categoria', 'ubicacion', 'tiposComida'])
+            $restaurantesGerente = Restaurante::with(['categoria', 'ubicacion', 'tiposComida', 'imagenes'])
                 ->where('user_id', Auth::id())
                 ->where('activo', true)
                 ->paginate(4, ['*'], 'gerente_page');
         }
 
         // Obtener restaurantes patrocinados
-        $patrocinadosQuery = Restaurante::with(['categoria', 'ubicacion', 'tiposComida'])
+        $patrocinadosQuery = Restaurante::with(['categoria', 'ubicacion', 'tiposComida', 'imagenes'])
             ->where('patrocinados', true)
             ->where('activo', true);
         $totalPatrocinados = (clone $patrocinadosQuery)->count();
@@ -340,7 +340,7 @@ class RestauranteController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string|min:100',
+            'descripcion' => 'required|string|min:100|max:1000',
             'categoria_id' => 'required|exists:categorias,id',
             'direccion' => 'required|string|max:255',
             'ciudad' => 'required|string|max:255',
@@ -360,6 +360,7 @@ class RestauranteController extends Controller
             'nombre.required' => 'El nombre del negocio es obligatorio',
             'descripcion.required' => 'La descripción es obligatoria',
             'descripcion.min' => 'La descripción debe tener al menos 100 caracteres',
+            'descripcion.max' => 'La descripción no puede exceder 1000 caracteres',
             'categoria_id.required' => 'Debe seleccionar una categoría',
             'categoria_id.exists' => 'La categoría seleccionada no es válida',
             'direccion.required' => 'La dirección es obligatoria',
@@ -412,7 +413,17 @@ class RestauranteController extends Controller
 
         // Subir foto principal
         if ($request->hasFile('foto_principal')) {
-            $path = $request->file('foto_principal')->store('restaurantes_pendientes', 'public');
+            $file = $request->file('foto_principal');
+            $directory = public_path('img/restaurantes/pendiente');
+
+            if (!File::isDirectory($directory)) {
+                File::makeDirectory($directory, 0755, true);
+            }
+
+            $filename = uniqid('rest_p_') . '.' . $file->getClientOriginalExtension();
+            $file->move($directory, $filename);
+            $path = 'img/restaurantes/pendiente/' . $filename;
+
             ImagenRestaurantePendiente::create([
                 'restaurante_pendiente_id' => $restaurantePendiente->id,
                 'url' => $path,
@@ -424,8 +435,17 @@ class RestauranteController extends Controller
         // Subir fotos adicionales
         if ($request->hasFile('fotos_adicionales')) {
             $orden = 1;
+            $directory = public_path('img/restaurantes/pendiente');
+
+            if (!File::isDirectory($directory)) {
+                File::makeDirectory($directory, 0755, true);
+            }
+
             foreach ($request->file('fotos_adicionales') as $foto) {
-                $path = $foto->store('restaurantes_pendientes', 'public');
+                $filename = uniqid('rest_p_') . '.' . $foto->getClientOriginalExtension();
+                $foto->move($directory, $filename);
+                $path = 'img/restaurantes/pendiente/' . $filename;
+
                 ImagenRestaurantePendiente::create([
                     'restaurante_pendiente_id' => $restaurantePendiente->id,
                     'url' => $path,
@@ -522,6 +542,31 @@ class RestauranteController extends Controller
     // Vista de restaurantes guardados
     public function guardados(Request $request)
     {
+        $stopwords = ['el', 'la', 'los', 'las', 'de', 'del', 'y', 'the', 'restaurante', 'restaurant', 'l'];
+        $normalizeRestauranteName = function (string $value) use ($stopwords): string {
+            $asciiValue = Str::ascii($value);
+            $cleanValue = preg_replace('/[^a-zA-Z0-9]+/', ' ', $asciiValue) ?? '';
+            $tokens = array_filter(explode(' ', strtolower($cleanValue)));
+            $tokens = array_values(array_filter($tokens, fn ($token) => !in_array($token, $stopwords, true)));
+
+            return implode('', $tokens);
+        };
+
+        $restauranteImageMap = [];
+        foreach (File::files(public_path('img/restaurantes')) as $file) {
+            $baseName = pathinfo($file->getFilename(), PATHINFO_FILENAME);
+            $key = $normalizeRestauranteName($baseName);
+            if ($key !== '') {
+                $restauranteImageMap[$key] = 'img/restaurantes/' . $file->getFilename();
+            }
+        }
+
+        $resolveRestauranteImage = function (string $nombre) use ($normalizeRestauranteName, $restauranteImageMap): string {
+            $key = $normalizeRestauranteName($nombre);
+
+            return $restauranteImageMap[$key] ?? 'img/restaurantes/emigrante.webp';
+        };
+
         $userId = Auth::id();
         
         $query = Restaurante::with(['categoria', 'ubicacion', 'tiposComida', 'imagenes'])

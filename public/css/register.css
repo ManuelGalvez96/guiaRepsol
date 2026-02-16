@@ -236,14 +236,26 @@ body {
     border-radius: 4px;
     font-size: 16px;
     font-weight: 500;
-    cursor: not-allowed;
+    cursor: pointer;
     transition: background-color .2s;
+}
+
+.btn-login:hover:not(:disabled) {
+    background-color: #015363;
+}
+
+.btn-login-desabilitado,
+.btn-login:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 
 /* ======================================
    DIVISOR - Separador "o" entre opciones
-   ====================================== */
+   ======================================*/
 
 .divider {
     text-align: center;

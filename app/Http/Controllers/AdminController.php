@@ -10,12 +10,16 @@ use App\Models\Ubicacion;
 use App\Models\UbicacionRestaurantePendiente;
 use App\Models\ImagenRestaurante;
 use App\Models\ImagenRestaurantePendiente;
+use App\Mail\Restaurante_Modificado_o_eliminado;
+use App\Mail\Restaurante_Eliminado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -145,7 +149,8 @@ class AdminController extends Controller
             'valoracion_promedio' => 'nullable|numeric|min:0|max:5',
             'tipos_comida' => 'nullable|array',
             'tipos_comida.*' => 'exists:tipo_comida,id',
-            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'imagenes' => 'nullable|array',
+            'imagenes.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
         $restaurante = Restaurante::create($validated);
@@ -155,18 +160,27 @@ class AdminController extends Controller
             $restaurante->tiposComida()->sync($request->tipos_comida);
         }
 
-        // Guardar imagen si se subió
-        if ($request->hasFile('imagen')) {
-            $imagen = $request->file('imagen');
-            $path = $imagen->store('img/restaurantes/', 'public');
-            
-            ImagenRestaurante::create([
-                'restaurante_id' => $restaurante->id,
-                'url' => $path,
-                'alt' => $restaurante->nombre,
-                'principal' => true,
-                'orden' => 0
-            ]);
+        // Guardar imágenes si se subieron
+        if ($request->hasFile('imagenes')) {
+            $orden = 0;
+            $directory = public_path('img/restaurantes');
+            if (!File::isDirectory($directory)) {
+                File::makeDirectory($directory, 0755, true);
+            }
+
+            foreach ($request->file('imagenes') as $imagen) {
+                $filename = uniqid('rest_') . '.' . $imagen->getClientOriginalExtension();
+                $imagen->move($directory, $filename);
+                $path = 'img/restaurantes/' . $filename;
+                
+                ImagenRestaurante::create([
+                    'restaurante_id' => $restaurante->id,
+                    'url' => $path,
+                    'alt' => $restaurante->nombre,
+                    'principal' => $orden === 0, // Primera imagen es principal
+                    'orden' => $orden++
+                ]);
+            }
         }
 
         if ($request->ajax() || $request->wantsJson()) {
@@ -224,7 +238,10 @@ class AdminController extends Controller
             'valoracion_promedio' => 'nullable|numeric|min:0|max:5',
             'tipos_comida' => 'nullable|array',
             'tipos_comida.*' => 'exists:tipo_comida,id',
-            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'imagenes' => 'nullable|array',
+            'imagenes.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'imagenes_eliminar' => 'nullable|string', // IDs separados por comas
+            'imagenes_estado' => 'nullable|string', // JSON con cambios de estado
         ]);
 
         $restaurante->update($validated);
@@ -236,26 +253,120 @@ class AdminController extends Controller
             $restaurante->tiposComida()->detach();
         }
 
-        // Actualizar imagen si se subió una nueva
-        if ($request->hasFile('imagen')) {
-            // Eliminar imagen anterior si existe
-            $imagenAnterior = $restaurante->imagenes->first();
-            if ($imagenAnterior) {
-                Storage::disk('public')->delete($imagenAnterior->url);
-                $imagenAnterior->delete();
-            }
-
-            // Guardar nueva imagen
-            $imagen = $request->file('imagen');
-            $nombreArchivo = time() . '_' . $imagen->getClientOriginalName();
-            $imagen->move(public_path('img/restaurantes'), $nombreArchivo);
+        // Manejar eliminación de imágenes específicas
+        if ($request->filled('imagenes_eliminar')) {
+            $imagenesAEliminar = explode(',', $request->imagenes_eliminar);
+            $imagenesAEliminar = array_filter($imagenesAEliminar, 'is_numeric'); // Filtrar solo números
             
-            ImagenRestaurante::create([
+            if (!empty($imagenesAEliminar)) {
+                $imagenesExistentes = ImagenRestaurante::where('restaurante_id', $restaurante->id)
+                    ->whereIn('id', $imagenesAEliminar)
+                    ->get();
+                    
+                foreach ($imagenesExistentes as $imagen) {
+                    // Eliminar archivo físico
+                    if (Storage::disk('public')->exists($imagen->url)) {
+                        Storage::disk('public')->delete($imagen->url);
+                    }
+                    // Eliminar registro de BD
+                    $imagen->delete();
+                }
+            }
+        }
+
+        // Manejar cambios de estado (Principal/Adicional) de imágenes existentes
+        if ($request->filled('imagenes_estado')) {
+            $cambiosEstado = json_decode($request->imagenes_estado, true);
+            
+            if (is_array($cambiosEstado)) {
+                // Verificar que siempre haya al menos una imagen Principal
+                $tienePrincipal = false;
+                $imagenesActuales = $restaurante->imagenes()->pluck('id')->toArray();
+                
+                // Contar cuántas serán principales después de los cambios
+                foreach ($cambiosEstado as $imagenId => $estado) {
+                    if ((int)$estado === 1) {
+                        $tienePrincipal = true;
+                        break;
+                    }
+                }
+                
+                // Si no hay principal en los cambios, verificar que no se eliminen todas las principales
+                if (!$tienePrincipal) {
+                    // Verificar si hay alguna principal que no esté siendo modificada
+                    $principalSinCambios = $restaurante->imagenes()
+                        ->where('principal', true)
+                        ->whereNotIn('id', array_keys($cambiosEstado))
+                        ->exists();
+                    
+                    if (!$principalSinCambios) {
+                        return back()->withErrors(['imagenes' => 'Debes tener al menos una imagen Principal. No puedes dejar todas como Adicionales.'])->withInput();
+                    }
+                }
+                
+                foreach ($cambiosEstado as $imagenId => $estado) {
+                    $imagen = ImagenRestaurante::where('restaurante_id', $restaurante->id)
+                        ->where('id', (int)$imagenId)
+                        ->first();
+                    
+                    if ($imagen) {
+                        // Si se marcó como principal, quitar principal de otras imágenes
+                        if ($estado == 1 && !$imagen->principal) {
+                            $restaurante->imagenes()->update(['principal' => false]);
+                            $imagen->update(['principal' => true]);
+                        } elseif ($estado == 0 && $imagen->principal) {
+                            // Si hay otras imágenes, asignar principal a la primera
+                            $imagen->update(['principal' => false]);
+                            $primeraImagen = $restaurante->imagenes()->where('id', '!=', $imagenId)->first();
+                            if ($primeraImagen) {
+                                $primeraImagen->update(['principal' => true]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Agregar nuevas imágenes si se subieron
+        if ($request->hasFile('imagenes')) {
+            // Obtener el orden máximo actual para continuar la numeración
+            $maxOrden = $restaurante->imagenes()->max('orden') ?? -1;
+            $orden = $maxOrden + 1;
+            
+            // Verificar si hay una imagen principal existente
+            $tienePrincipal = $restaurante->imagenes()->where('principal', true)->exists();
+
+            $directory = public_path('img/restaurantes');
+            if (!File::isDirectory($directory)) {
+                File::makeDirectory($directory, 0755, true);
+            }
+            
+            foreach ($request->file('imagenes') as $imagen) {
+                $filename = uniqid('rest_') . '.' . $imagen->getClientOriginalExtension();
+                $imagen->move($directory, $filename);
+                $path = 'img/restaurantes/' . $filename;
+                
+                ImagenRestaurante::create([
+                    'restaurante_id' => $restaurante->id,
+                    'url' => $path,
+                    'alt' => $restaurante->nombre,
+                    'principal' => !$tienePrincipal && $orden == ($maxOrden + 1), // Primera nueva imagen es principal si no há ninguna
+                    'orden' => $orden++
+                ]);
+                
+                $tienePrincipal = true; // Marcar que ya hay principal
+            }
+        }
+
+        $restaurante->loadMissing('usuario');
+        // Solo los administradores pueden enviar estos correos de notificación
+        $recipientEmail = $restaurante->usuario?->email;
+        if ($recipientEmail) {
+            Mail::to($recipientEmail)->send(new Restaurante_Modificado_o_eliminado($restaurante));
+        } else {
+            Log::warning('No se pudo enviar email: usuario o email no disponible.', [
                 'restaurante_id' => $restaurante->id,
-                'url' => 'img/restaurantes/' . $nombreArchivo,
-                'alt' => $restaurante->nombre,
-                'principal' => true,
-                'orden' => 0
+                'user_id' => $restaurante->user_id,
             ]);
         }
 
@@ -266,7 +377,6 @@ class AdminController extends Controller
                 'restaurante' => $restaurante->load(['categoria', 'ubicacion', 'imagenes', 'tiposComida'])
             ]);
         }
-
         return Redirect::route('admin.index')->with('success', 'Restaurante actualizado exitosamente');
     }
 
@@ -300,20 +410,39 @@ class AdminController extends Controller
                 'activo' => true,
             ]);
             
-            // Migrar imágenes
+            // Si el usuario no es gerente, cambiar su rol a gerente
+            $usuario = \App\Models\User::find($pendiente->user_id);
+            if ($usuario && $usuario->rol !== 'gerente') {
+                $usuario->update(['rol' => 'gerente']);
+            }
+            
+            // Migrar imágenes: trasladar de img/restaurantes/pendiente/ a img/restaurantes/
             $imagenesPendientes = ImagenRestaurantePendiente::where('restaurante_pendiente_id', $id)->get();
             foreach ($imagenesPendientes as $imagenPendiente) {
-                // Copiar la imagen de restaurantes_pendientes a restaurantes
                 $oldPath = $imagenPendiente->url;
-                $newPath = str_replace('restaurantes_pendientes', 'restaurantes', $oldPath);
                 
-                if (Storage::disk('public')->exists($oldPath)) {
-                    Storage::disk('public')->copy($oldPath, $newPath);
+                // Cambiar ruta de: img/restaurantes/pendiente/archivo.jpg a img/restaurantes/archivo.jpg
+                $newPath = str_replace('img/restaurantes/pendiente/', 'img/restaurantes/', $oldPath);
+                
+                // Obtener rutas completas usando public_path()
+                $oldFullPath = public_path($oldPath);
+                $newFullPath = public_path($newPath);
+                
+                // Mover archivo del sistema de archivos
+                if (File::exists($oldFullPath)) {
+                    // Asegurar que la carpeta destino existe
+                    $destDir = dirname($newFullPath);
+                    if (!File::isDirectory($destDir)) {
+                        File::makeDirectory($destDir, 0755, true);
+                    }
+                    // Mover el archivo
+                    File::move($oldFullPath, $newFullPath);
                 }
                 
+                // Crear registro de imagen en tabla restaurantes con la nueva ruta
                 ImagenRestaurante::create([
                     'restaurante_id' => $restaurante->id,
-                    'url' => $newPath,
+                    'url' => $newPath,  // Ruta actualizada en la BD
                     'alt' => $imagenPendiente->alt,
                     'principal' => $imagenPendiente->principal,
                     'orden' => $imagenPendiente->orden,
@@ -326,13 +455,6 @@ class AdminController extends Controller
                 ->pluck('tipo_comida_id');
             
             $restaurante->tiposComida()->attach($tiposComida);
-            
-            // Eliminar imágenes pendientes del storage
-            foreach ($imagenesPendientes as $imagenPendiente) {
-                if (Storage::disk('public')->exists($imagenPendiente->url)) {
-                    Storage::disk('public')->delete($imagenPendiente->url);
-                }
-            }
             
             // Eliminar de tablas pendientes
             DB::table('tipo_comida_restaurante_pendiente')
@@ -390,7 +512,31 @@ class AdminController extends Controller
     public function destroy(Request $request, Restaurante $restaurante)
     {
         $this->checkAdmin();
+        
+        $restaurante->loadMissing('usuario');
+        $recipientEmail = $restaurante->usuario?->email;
+        $nombreRestaurante = $restaurante->nombre;
+        $restauranteId = $restaurante->id;
+        $userId = $restaurante->user_id;  // Guardar antes de eliminar
+        
         $restaurante->delete();
+
+        // Enviar email de eliminación solo a administradores
+        if ($recipientEmail) {
+            try {
+                Mail::to($recipientEmail)->send(new Restaurante_Eliminado($nombreRestaurante, $restauranteId));
+            } catch (\Exception $e) {
+                Log::error('Error al enviar email de eliminación: ' . $e->getMessage(), [
+                    'restaurante_id' => $restauranteId,
+                    'user_id' => $userId,
+                ]);
+            }
+        } else {
+            Log::warning('No se pudo enviar email de eliminación: usuario o email no disponible.', [
+                'restaurante_id' => $restauranteId,
+                'user_id' => $userId,
+            ]);
+        }
 
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
@@ -398,7 +544,22 @@ class AdminController extends Controller
                 'message' => 'Restaurante eliminado exitosamente'
             ]);
         }
-
         return Redirect::route('admin.index')->with('success', 'Restaurante eliminado exitosamente');
+    }
+
+    public function emailPreviewModificado(Restaurante $restaurante)
+    {
+        $this->checkAdmin();
+        $restaurante->loadMissing('usuario');
+        return view('emails.restaurante_modificado_o_eliminado', ['restaurante' => $restaurante]);
+    }
+
+    public function emailPreviewEliminado(Restaurante $restaurante)
+    {
+        $this->checkAdmin();
+        return view('emails.restaurante_eliminado', [
+            'nombre' => $restaurante->nombre,
+            'restaurante_id' => $restaurante->id
+        ]);
     }
 }

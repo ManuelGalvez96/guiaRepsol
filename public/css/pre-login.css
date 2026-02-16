@@ -453,3 +453,155 @@ body {
     display: block;
     margin-top: 4px;
 }
+
+/* ======================================
+   RESPONSIVE DESIGN - Media Queries
+   ====================================== */
+
+/* Tablets */
+@media (max-width: 768px) {
+    .login-header {
+        padding: 15px 20px;
+    }
+
+    .logo {
+        width: 120px;
+        margin-left: 0;
+    }
+
+    .btn-close-header {
+        margin-right: 0;
+    }
+
+    .login-container {
+        padding: 20px 15px;
+    }
+
+    .login-box {
+        padding: 30px 25px;
+        margin-top: 20px;
+    }
+
+    .login-title {
+        font-size: 28px;
+    }
+
+    .login-description {
+        font-size: 14px;
+    }
+
+    .servicios-iconos img {
+        max-width: 100%;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .login-header {
+        padding: 12px 15px;
+    }
+
+    .logo {
+        width: 100px;
+    }
+
+    .btn-close-header {
+        font-size: 16px;
+    }
+
+    .login-container {
+        padding: 15px 10px;
+    }
+
+    .login-box {
+        padding: 25px 20px;
+        margin-top: 15px;
+        border-radius: 6px;
+    }
+
+    .login-title {
+        font-size: 24px;
+        margin-bottom: 12px;
+    }
+
+    .login-description {
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+
+    .servicios-iconos {
+        margin: 15px 0 20px;
+    }
+
+    .servicios-iconos img {
+        max-width: 100%;
+    }
+
+    .btn-login-apprepsol,
+    .btn-register,
+    .btn-login {
+        padding: 12px;
+        font-size: 15px;
+    }
+
+    .divider {
+        margin: 8px 0;
+    }
+
+    .divider:before,
+    .divider:after {
+        width: 42%;
+    }
+
+    .modal-dialog {
+        margin: 10px;
+    }
+
+    .modal-body {
+        padding: 15px;
+    }
+
+    .modal-body p {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .modal-body ul {
+        font-size: 13px;
+    }
+}
+
+/* Extra small mobile */
+@media (max-width: 360px) {
+    .login-header {
+        padding: 10px 12px;
+    }
+
+    .logo {
+        width: 90px;
+    }
+
+    .login-box {
+        padding: 20px 15px;
+    }
+
+    .login-title {
+        font-size: 22px;
+    }
+
+    .login-description {
+        font-size: 12px;
+    }
+
+    .btn-login-apprepsol,
+    .btn-register,
+    .btn-login {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .divider span {
+        padding: 0 10px;
+        font-size: 13px;
+    }
+}

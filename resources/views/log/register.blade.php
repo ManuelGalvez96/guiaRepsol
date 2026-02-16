@@ -53,7 +53,8 @@
                 <div class="form-group">
                     <label for="name">Nombre</label>
                     <input type="text" id="name" name="name"
-                        class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}">
+                        class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" >
+                    <span id="error-nombre" class="text-danger" style="font-size: 12px;"></span>
                     @error('name')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
                     @enderror
@@ -62,7 +63,8 @@
                 <div class="form-group">
                     <label for="apellidos">Apellidos</label>
                     <input type="text" id="apellidos" name="apellidos"
-                        class="form-control @error('apellidos') is-invalid @enderror" value="{{ old('apellidos') }}">
+                        class="form-control @error('apellidos') is-invalid @enderror" value="{{ old('apellidos') }}" >
+                    <span id="error-apellidos" class="text-danger" style="font-size: 12px;"></span>
                     @error('apellidos')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
                     @enderror
@@ -71,7 +73,8 @@
                 <div class="form-group">
                     <label for="email">Correo electrónico</label>
                     <input type="email" id="email" name="email"
-                        class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}">
+                        class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" >
+                    <span id="error-email" class="text-danger" style="font-size: 12px;"></span>
                     @error('email')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
                     @enderror
@@ -81,8 +84,9 @@
                     <label for="password">Contraseña</label>
                     <div class="password-input">
                         <input type="password" id="password" name="password"
-                            class="form-control @error('password') is-invalid @enderror">
+                            class="form-control @error('password') is-invalid @enderror" >
                     </div>
+                    <span id="error-password" class="text-danger" style="font-size: 12px;"></span>
                     @error('password')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
                     @enderror
@@ -92,14 +96,15 @@
                     <label for="password_confirmation">Confirmar Contraseña</label>
                     <div class="password-input">
                         <input type="password" id="password_confirmation" name="password_confirmation"
-                            class="form-control @error('password_confirmation') is-invalid @enderror">
+                            class="form-control @error('password_confirmation') is-invalid @enderror" >
                     </div>
+                    <span id="error-password-confirmation" class="text-danger" style="font-size: 12px;"></span>
                     @error('password_confirmation')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
                     @enderror
                 </div>
 
-                <button type="submit" class="btn-login">Registrarse</button>
+                <button type="submit" id="boton_enviar" disabled class="btn-login">Registrarse</button>
 
             </form>
             <hr>
@@ -136,6 +141,7 @@
             </div>
         </div>
     </div>
+    <script src="{{ asset('js/register/register.js') }}"></script>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 

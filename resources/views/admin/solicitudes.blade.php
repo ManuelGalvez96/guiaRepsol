@@ -185,10 +185,10 @@
         window.solicitudesData = {
             @foreach($solicitudes as $solicitud)
             {{ $solicitud->id }}: {
-                imagen: "{{ $solicitud->imagenes->first() ? asset('storage/' . $solicitud->imagenes->first()->url) : asset('images/placeholder.jpg') }}",
+                imagen: "{{ $solicitud->imagenes->first() ? asset($solicitud->imagenes->first()->url) : asset('images/placeholder.jpg') }}",
                 imagenes_adicionales: [
                     @foreach($solicitud->imagenes->skip(1) as $imagen)
-                        "{{ asset('storage/' . $imagen->url) }}"{{ !$loop->last ? ',' : '' }}
+                        "{{ asset($imagen->url) }}"{{ !$loop->last ? ',' : '' }}
                     @endforeach
                 ],
                 nombre: "{{ $solicitud->nombre }}",

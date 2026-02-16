@@ -13,6 +13,7 @@
             @endif
         @endif
     </p>
+    <br>
 </div>
 
 <div class="table-container">
@@ -63,7 +64,7 @@
                 <td colspan="8" class="text-center p-40">
                     @if(request('buscar'))
                         No se encontraron restaurantes que coincidan con "{{ request('buscar') }}"
-                        <br><small style="color: #666; margin-top: 10px; display: block;">Intenta con otros términos de búsqueda</small>
+                        <br><small class="search-hint">Intenta con otros términos de búsqueda</small>
                     @else
                         No hay restaurantes disponibles
                     @endif

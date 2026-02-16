@@ -9,7 +9,10 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
+<body
+    data-csrf="{{ csrf_token() }}"
+    data-route-index="{{ route('admin.index') }}"
+>
     <div class="header">
         <div class="logo">guia repsol</div>
     </div>
@@ -161,14 +164,17 @@
             </div>
 
             <div class="form-group">
-                <label for="imagen">Imagen del Restaurante</label>
-                <input type="file" id="imagen" name="imagen" accept="image/*" onchange="previewImage(event)">
-                @error('imagen')
+                <label for="imagenes">Imágenes del Restaurante</label>
+                <div class="images-container" id="imagesPreview">
+                    <p id="noImagesMessage">Selecciona imágenes para añadir.</p>
+                </div>
+                <div class="add-images-section">
+                    <label for="imagenes" class="add-images-label">➕ Seleccionar imágenes:</label>
+                    <input type="file" id="imagenes" name="imagenes[]" accept="image/*" multiple onchange="previewImages(event)" class="add-images-input">
+                </div>
+                @error('imagenes')
                     <div class="error">{{ $message }}</div>
                 @enderror
-                <div class="image-preview" id="imagePreview">
-                    <img id="preview" src="" alt="Vista previa">
-                </div>
             </div>
 
             <div class="button-group">

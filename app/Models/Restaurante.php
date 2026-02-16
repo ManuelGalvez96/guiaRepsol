@@ -72,6 +72,11 @@ class Restaurante extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     /**
      * Usuarios que dieron like al restaurante.
      */

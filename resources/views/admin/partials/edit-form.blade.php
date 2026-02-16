@@ -1,4 +1,5 @@
-<form id="editRestauranteForm" action="{{ route('admin.update', $restaurante) }}" method="POST" enctype="multipart/form-data">
+<form id="editRestauranteForm" action="{{ route('admin.update', $restaurante) }}" method="POST"
+    enctype="multipart/form-data">
     @csrf
     @method('PUT')
 
@@ -22,8 +23,9 @@
         <label for="categoria_id">Categoría *</label>
         <select id="categoria_id" name="categoria_id">
             <option value="">Seleccione una categoría</option>
-            @foreach($categorias as $categoria)
-                <option value="{{ $categoria->id }}" {{ old('categoria_id', $restaurante->categoria_id) == $categoria->id ? 'selected' : '' }}>
+            @foreach ($categorias as $categoria)
+                <option value="{{ $categoria->id }}"
+                    {{ old('categoria_id', $restaurante->categoria_id) == $categoria->id ? 'selected' : '' }}>
                     {{ $categoria->nombre }}
                 </option>
             @endforeach
@@ -37,8 +39,9 @@
         <label for="ubicacion_id">Ubicación *</label>
         <select id="ubicacion_id" name="ubicacion_id">
             <option value="">Seleccione una ubicación</option>
-            @foreach($ubicaciones as $ubicacion)
-                <option value="{{ $ubicacion->id }}" {{ old('ubicacion_id', $restaurante->ubicacion_id) == $ubicacion->id ? 'selected' : '' }}>
+            @foreach ($ubicaciones as $ubicacion)
+                <option value="{{ $ubicacion->id }}"
+                    {{ old('ubicacion_id', $restaurante->ubicacion_id) == $ubicacion->id ? 'selected' : '' }}>
                     {{ $ubicacion->ciudad }} - {{ $ubicacion->provincia }} ({{ $ubicacion->comunidad_autonoma }})
                 </option>
             @endforeach
@@ -52,8 +55,9 @@
         <label for="user_id">Gerente del Restaurante *</label>
         <select id="user_id" name="user_id" class="form-select">
             <option value="">Seleccione un gerente</option>
-            @foreach($gerentes as $gerente)
-                <option value="{{ $gerente->id }}" {{ old('user_id', $restaurante->user_id) == $gerente->id ? 'selected' : '' }}>
+            @foreach ($gerentes as $gerente)
+                <option value="{{ $gerente->id }}"
+                    {{ old('user_id', $restaurante->user_id) == $gerente->id ? 'selected' : '' }}>
                     {{ $gerente->name }} ({{ $gerente->email }})
                 </option>
             @endforeach
@@ -65,7 +69,8 @@
 
     <div class="form-group">
         <label for="direccion">Dirección *</label>
-        <input type="text" id="direccion" name="direccion" value="{{ old('direccion', $restaurante->direccion) }}">
+        <input type="text" id="direccion" name="direccion" value="{{ old('direccion', $restaurante->direccion) }}"
+            required>
         @error('direccion')
             <div class="error">{{ $message }}</div>
         @enderror
@@ -74,16 +79,14 @@
     <div class="form-group">
         <label>Tipos de Comida</label>
         <div class="tipos-comida-grid">
-            @foreach($tiposComida as $tipo)
+            @foreach ($tiposComida as $tipo)
                 <label class="tipos-comida-label">
-                    <input 
-                        type="checkbox" 
-                        name="tipos_comida[]" 
-                        value="{{ $tipo->id }}"
-                        {{ (is_array(old('tipos_comida')) && in_array($tipo->id, old('tipos_comida'))) || 
-                           (!old('tipos_comida') && $restaurante->tiposComida->contains($tipo->id)) ? 'checked' : '' }}
-                        class="tipos-comida-checkbox"
-                    >
+                    <input type="checkbox" name="tipos_comida[]" value="{{ $tipo->id }}"
+                        {{ (is_array(old('tipos_comida')) && in_array($tipo->id, old('tipos_comida'))) ||
+                        (!old('tipos_comida') && $restaurante->tiposComida->contains($tipo->id))
+                            ? 'checked'
+                            : '' }}
+                        class="tipos-comida-checkbox">
                     <span class="tipos-comida-text">{{ $tipo->nombre }}</span>
                 </label>
             @endforeach
@@ -119,7 +122,8 @@
 
     <div class="form-group">
         <label for="precio">Precio Promedio (€) *</label>
-        <input type="number" id="precio" name="precio" value="{{ old('precio', $restaurante->precio) }}" step="0.01">
+        <input type="number" id="precio" name="precio" value="{{ old('precio', $restaurante->precio) }}"
+            step="0.01" required>
         @error('precio')
             <div class="error">{{ $message }}</div>
         @enderror
@@ -127,7 +131,8 @@
 
     <div class="form-group">
         <label for="soles">Soles Repsol (0-3)</label>
-        <input type="number" id="soles" name="soles" value="{{ old('soles', $restaurante->soles) }}" min="0" max="3">
+        <input type="number" id="soles" name="soles" value="{{ old('soles', $restaurante->soles) }}"
+            min="0" max="3">
         @error('soles')
             <div class="error">{{ $message }}</div>
         @enderror
@@ -135,27 +140,48 @@
 
     <div class="form-group">
         <label for="valoracion_promedio">Valoración (0-5)</label>
-        <input type="number" id="valoracion_promedio" name="valoracion_promedio" value="{{ old('valoracion_promedio', $restaurante->valoracion_promedio) }}" step="0.1" min="0" max="5">
+        <input type="number" id="valoracion_promedio" name="valoracion_promedio"
+            value="{{ old('valoracion_promedio', $restaurante->valoracion_promedio) }}" step="0.1" min="0"
+            max="5">
         @error('valoracion_promedio')
             <div class="error">{{ $message }}</div>
         @enderror
     </div>
 
     <div class="form-group">
-        <label for="imagen">Imagen del Restaurante</label>
-        @if($restaurante->imagenes->first())
-            <div class="current-image">
-                <p class="current-image-text">Imagen actual:</p>
-                <img src="{{ asset($restaurante->imagenes->first()->url) }}" alt="{{ $restaurante->imagenes->first()->alt }}" class="current-image-preview">
-            </div>
-        @endif
-        <input type="file" id="imagen" name="imagen" accept="image/*" onchange="previewImage(event)" class="mt-10">
-        @error('imagen')
+        <label for="imagenes">Imágenes del Restaurante</label>
+        <div class="images-container" id="allImagesContainer"
+            style="display: flex; flex-wrap: wrap; gap: 15px; margin: 10px 0; padding: 15px; background: #f8f9fa; border-radius: 6px; min-height: 140px;">
+            @if ($restaurante->imagenes->count() > 0)
+                @foreach ($restaurante->imagenes as $imagen)
+                    <div class="current-image-item" data-imagen-id="{{ $imagen->id }}"
+                        style="position: relative; text-align: center; border: 2px solid #ddd; border-radius: 8px; padding: 5px; background: white; max-width: 170px;">
+                        <button type="button" class="btn-eliminar-imagen-existente"
+                            data-imagen-id="{{ $imagen->id }}"
+                            data-action="delete"
+                            style="position: absolute; top: 3px; right: 3px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 1000; box-shadow: 0 2px 6px rgba(0,0,0,0.3); transition: all 0.2s ease;"
+                            title="Eliminar imagen">×</button>
+                        <img src="{{ asset($imagen->url) }}" alt="{{ $restaurante->nombre }}"
+                            style="width: 150px; height: 100px; object-fit: cover; border-radius: 5px; display: block;">
+                        <small
+                            style="display: block; margin-top: 5px; color: #666; font-size: 11px;">{{ $imagen->principal ? 'Principal' : 'Adicional' }}</small>
+                    </div>
+                @endforeach
+            @else
+                <p id="noImagesMessage" style="width: 100%; text-align: center; color: #999; margin: 20px 0;">No hay
+                    imágenes. Selecciona algunas para añadir.</p>
+            @endif
+        </div>
+        <input type="hidden" name="imagenes_eliminar" id="imagenes_eliminar" value="">
+        <div style="margin-top: 15px;">
+            <label for="imagenes" style="display: block; margin-bottom: 8px; font-weight: 500; color: #495057;">➕
+                Seleccionar nuevas imágenes:</label>
+            <input type="file" id="imagenes" name="imagenes[]" accept="image/*" multiple
+                onchange="previewImages(event)" style="margin-top: 5px;">
+        </div>
+        @error('imagenes')
             <div class="error">{{ $message }}</div>
         @enderror
-        <div class="image-preview" id="imagePreview">
-            <img id="preview" src="" alt="Vista previa">
-        </div>
     </div>
 
     <div class="button-group">
@@ -163,4 +189,3 @@
         <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
     </div>
 </form>
-
