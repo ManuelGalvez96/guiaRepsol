@@ -4,13 +4,13 @@
 let csrfToken;
 
 // Al cargar la pagina
-document.addEventListener('DOMContentLoaded', function () {
+window.onload = function () {
     console.log('Iniciando formulario de editar...');
     // Pequeño delay para asegurar que el DOM esté listo
-    setTimeout(() => {
+    setTimeout(function() {
         initializeEditForm();
     }, 100);
-});
+};
 
 // Configurar formulario de edicion
 function initializeEditForm() {
@@ -47,7 +47,7 @@ function setupEditFormHandler() {
     if (!form) return;
 
     // Cuando se envie el formulario
-    form.addEventListener('submit', function (e) {
+    form.onsubmit = function (e) {
         e.preventDefault();
         console.log('Actualizando restaurante...');
 
@@ -143,7 +143,7 @@ function setupEditFormHandler() {
                 }
                 form.classList.remove('loading');
             });
-    });
+    };
 }
 
 // Preview de imagen nueva
@@ -362,6 +362,4 @@ function validateImageFile(file) {
 // TODO: mejorar la deteccion de cambios en checkboxes
 
 // Guardar valores al cargar
-document.addEventListener('DOMContentLoaded', function () {
-    setTimeout(saveOriginalValues, 100); // delay pequeño para que carguen los valores
-});
+// Nota: Esta función se llama desde initializeEditForm() que ya está en window.onload

@@ -1,29 +1,64 @@
 // Validación del formulario
-document.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
+    // Menú hamburguesa para móvil
+    const btnMenu = document.querySelector('.btn-menu-detalle');
+    const tabsNav = document.querySelector('.tabs-nav');
+    
+    if (btnMenu && tabsNav) {
+        btnMenu.onclick = function() {
+            tabsNav.classList.toggle('show');
+            btnMenu.classList.toggle('active');
+        };
+        
+        // Cerrar el menú al hacer clic en un enlace
+        const navLinks = tabsNav.querySelectorAll('.nav-link');
+        navLinks.forEach(function(link) {
+            link.onclick = function() {
+                if (window.innerWidth <= 768) {
+                    tabsNav.classList.remove('show');
+                    btnMenu.classList.remove('active');
+                }
+            };
+        });
+        
+        // Cerrar el menú al hacer clic fuera de él
+        document.onclick = function(event) {
+            if (window.innerWidth <= 768) {
+                const isClickInsideMenu = tabsNav.contains(event.target);
+                const isClickOnButton = btnMenu.contains(event.target);
+                
+                if (!isClickInsideMenu && !isClickOnButton && tabsNav.classList.contains('show')) {
+                    tabsNav.classList.remove('show');
+                    btnMenu.classList.remove('active');
+                }
+            }
+        };
+    }
+
     const form = document.querySelector('form');
     const descripcion = document.querySelector('textarea[name="descripcion"]');
     const fotoPrincipal = document.getElementById('foto_principal');
     const fotosAdicionales = document.getElementById('fotos_adicionales');
     
     // Actualizar texto de archivo seleccionado
-    fotoPrincipal.addEventListener('change', function() {
+    fotoPrincipal.onchange = function() {
         if (this.files.length > 0) {
             const container = this.closest('.file-upload');
             const textDiv = container.querySelector('.file-upload-text strong');
             textDiv.textContent = '✓ ' + this.files[0].name;
         }
-    });
+    };
     
-    fotosAdicionales.addEventListener('change', function() {
+    fotosAdicionales.onchange = function() {
         if (this.files.length > 0) {
             const container = this.closest('.file-upload');
             const textDiv = container.querySelector('.file-upload-text strong');
             textDiv.textContent = '✓ ' + this.files.length + ' archivo(s) seleccionado(s)';
         }
-    });
+    };
     
     // Validación al enviar
-    form.addEventListener('submit', function(e) {
+    form.onsubmit = function(e) {
         let errores = [];
         
         // Validar nombre
@@ -172,10 +207,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 primerError.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
-    });
+    };
     
     // Contador de caracteres para la descripción
-    descripcion.addEventListener('input', function() {
+    descripcion.oninput = function() {
         const small = this.nextElementSibling;
         const length = this.value.trim().length;
         if (length < 100) {
@@ -185,5 +220,5 @@ document.addEventListener('DOMContentLoaded', function() {
             small.textContent = length + ' caracteres';
             small.style.color = '#27ae60';
         }
-    });
-});
+    };
+};

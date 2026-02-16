@@ -4,10 +4,10 @@
 let csrfToken;
 
 // Al cargar la página
-document.addEventListener('DOMContentLoaded', function () {
+window.onload = function () {
     console.log('Inicializando formulario de crear...');
     initializeCreateForm();
-});
+};
 
 // Configurar el formulario
 function initializeCreateForm() {
@@ -43,7 +43,7 @@ function setupCreateFormHandler() {
     if (!form) return;
 
     // Cuando se envíe el form
-    form.addEventListener('submit', function (e) {
+    form.onsubmit = function (e) {
         e.preventDefault();
         console.log('Enviando formulario...');
 
@@ -148,7 +148,7 @@ function setupCreateFormHandler() {
                 }
                 form.classList.remove('loading');
             });
-    });
+    };
 }
 
 // Preview de la imagen antes de subir

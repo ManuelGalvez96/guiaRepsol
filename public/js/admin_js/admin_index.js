@@ -7,10 +7,10 @@ let currentFilters = {};
 let searchTimeout = null;
 
 // Cuando cargue la página, inicializar todo
-document.addEventListener('DOMContentLoaded', function () {
+window.onload = function () {
     console.log('Iniciando panel admin...');
     initializeAdmin();
-});
+};
 
 // Inicializar configuración
 function initializeAdmin() {
@@ -55,29 +55,29 @@ function setupEventListeners() {
     const resetFiltersBtn = document.getElementById('resetFilters');
 
     if (filterBuscar && !filterBuscar.hasListener) {
-        filterBuscar.addEventListener('input', handleSearchInput);
+        filterBuscar.oninput = handleSearchInput;
         filterBuscar.hasListener = true;
     }
     if (filterTipoComida && !filterTipoComida.hasListener) {
-        filterTipoComida.addEventListener('change', handleFilterChange);
+        filterTipoComida.onchange = handleFilterChange;
         filterTipoComida.hasListener = true;
     }
     if (filterValoracion && !filterValoracion.hasListener) {
-        filterValoracion.addEventListener('change', handleFilterChange);
+        filterValoracion.onchange = handleFilterChange;
         filterValoracion.hasListener = true;
     }
     if (filterPrecio && !filterPrecio.hasListener) {
-        filterPrecio.addEventListener('change', handleFilterChange);
+        filterPrecio.onchange = handleFilterChange;
         filterPrecio.hasListener = true;
     }
     if (resetFiltersBtn && !resetFiltersBtn.hasListener) {
-        resetFiltersBtn.addEventListener('click', resetFilters);
+        resetFiltersBtn.onclick = resetFilters;
         resetFiltersBtn.hasListener = true;
     }
 
     // Paginación - usar delegación de eventos para que funcione con AJAX
     if (!document.hasPaginationListener) {
-        document.addEventListener('click', function (e) {
+        document.onclick = function (e) {
             if (e.target.matches('.page-link') && !e.target.classList.contains('active') && !e.target.classList.contains('page-disabled')) {
                 e.preventDefault();
                 const href = e.target.getAttribute('href');
@@ -87,7 +87,7 @@ function setupEventListeners() {
                     loadRestaurantesPage(page);
                 }
             }
-        });
+        };
         document.hasPaginationListener = true;
     }
 }
@@ -466,11 +466,11 @@ function setupCreateFormHandler() {
     const form = document.getElementById('createRestauranteForm');
     if (!form) return;
 
-    form.addEventListener('submit', function (e) {
+    form.onsubmit = function (e) {
         e.preventDefault();
         console.log('Enviando formulario de crear...');
         submitFormAjax(form, 'Creando...', 'Crear Restaurante');
-    });
+    };
 }
 
 // Configurar submit del form de editar
@@ -478,11 +478,11 @@ function setupEditFormHandler() {
     const form = document.getElementById('editRestauranteForm');
     if (!form) return;
 
-    form.addEventListener('submit', function (e) {
+    form.onsubmit = function (e) {
         e.preventDefault();
         console.log('Enviando formulario de editar...');
         submitFormAjax(form, 'Actualizando...', 'Actualizar Restaurante');
-    });
+    };
 }
 
 // Enviar formulario con AJAX (funciona para crear y editar)

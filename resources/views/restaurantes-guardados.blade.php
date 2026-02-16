@@ -47,7 +47,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <button class="btn-menu">
+                    <button class="btn-menu-detalle">
                         <i class="bi bi-list"></i>
                     </button>
                 </div>
@@ -201,6 +201,7 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="{{ asset('js/restaurantes-guardados.js') }}"></script>
 </body>
 
 </html>
