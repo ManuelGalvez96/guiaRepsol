@@ -1,9 +1,9 @@
 // Función para el horario desplegable
-document.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
     // Horario desplegable
     const horarioToggle = document.querySelector('.horario-toggle');
     if (horarioToggle) {
-        horarioToggle.addEventListener('click', function() {
+        horarioToggle.onclick = function() {
             const detalle = document.getElementById('horarioDetalle');
             const icon = document.querySelector('.horario-icon');
             
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 icon.classList.remove('bi-chevron-up');
                 icon.classList.add('bi-chevron-down');
             }
-        });
+        };
     }
 
     // Sistema de calificación con estrellas
@@ -38,29 +38,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
         stars.forEach(star => {
             // Efecto hover
-            star.addEventListener('mouseenter', function() {
+            star.onmouseenter = function() {
                 const value = parseInt(this.getAttribute('data-value'));
                 highlightStars(stars, value);
-            });
+            };
 
             // Al hacer clic
-            star.addEventListener('click', function() {
+            star.onclick = function() {
                 selectedRating = parseInt(this.getAttribute('data-value'));
                 if (puntuacionInput) {
                     puntuacionInput.value = selectedRating;
                 }
                 highlightStars(stars, selectedRating);
-            });
+            };
         });
 
         // Restaurar selección al salir del hover
-        container.addEventListener('mouseleave', function() {
+        container.onmouseleave = function() {
             if (selectedRating > 0) {
                 highlightStars(stars, selectedRating);
             } else {
                 clearStars(stars);
             }
-        });
+        };
     });
 
     function highlightStars(stars, count) {
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Manejar botones de guardar valoración
     const botonesGuardar = document.querySelectorAll('.btn-guardar-valoracion');
     botonesGuardar.forEach(boton => {
-        boton.addEventListener('click', function() {
+        boton.onclick = function() {
             const valoracionId = this.getAttribute('data-valoracion-id');
             const restauranteId = this.getAttribute('data-restaurante-id');
             const form = document.getElementById(`form-editar-valoracion-${valoracionId}`);
@@ -152,13 +152,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     confirmButtonColor: '#00a3e0'
                 });
             });
-        });
+        };
     });
 
     // Manejar botones de eliminar valoración
     const botonesEliminar = document.querySelectorAll('.btn-eliminar-valoracion');
     botonesEliminar.forEach(boton => {
-        boton.addEventListener('click', function() {
+        boton.onclick = function() {
             const valoracionId = this.getAttribute('data-valoracion-id');
             
             Swal.fire({
@@ -215,13 +215,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 }
             });
-        });
+        };
     });
 
     // Manejar botón de favorito (like)
     const btnFavorito = document.getElementById('btn-favorito');
     if (btnFavorito) {
-        btnFavorito.addEventListener('click', function() {
+        btnFavorito.onclick = function() {
             const restauranteId = this.getAttribute('data-restaurante-id');
             
             fetch(`/restaurante/${restauranteId}/like`, {
@@ -262,13 +262,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     confirmButtonColor: '#00a3e0'
                 });
             });
-        });
+        };
     }
 
     // Manejar botón de guardar
     const btnGuardar = document.getElementById('btn-guardar');
     if (btnGuardar) {
-        btnGuardar.addEventListener('click', function() {
+        btnGuardar.onclick = function() {
             const restauranteId = this.getAttribute('data-restaurante-id');
             
             fetch(`/restaurante/${restauranteId}/guardar`, {
@@ -320,7 +320,225 @@ document.addEventListener('DOMContentLoaded', function() {
                     confirmButtonColor: '#00a3e0'
                 });
             });
-        });
+        };
     }
-});
+
+    // Slider de miniaturas
+    const thumbnailsWrapper = document.getElementById('thumbnailsWrapper');
+    const thumbnailPrev = document.getElementById('thumbnailPrev');
+    const thumbnailNext = document.getElementById('thumbnailNext');
+    const imagenPrincipalDisplay = document.getElementById('imagenPrincipalDisplay');
+
+    if (thumbnailsWrapper && thumbnailPrev && thumbnailNext) {
+        let currentIndex = 0;
+        const thumbnails = thumbnailsWrapper.querySelectorAll('.thumbnail-item');
+        const itemsPerView = 4;
+        const totalItems = thumbnails.length;
+        const maxIndex = Math.max(0, totalItems - itemsPerView);
+
+        // Función para actualizar el slider
+        function updateSlider() {
+            const offset = -(currentIndex * (100 / itemsPerView));
+            thumbnailsWrapper.style.transform = `translateX(${offset}%)`;
+            
+            // Actualizar estado de botones
+            thumbnailPrev.disabled = currentIndex === 0;
+            thumbnailNext.disabled = currentIndex >= maxIndex;
+        }
+
+        // Botón anterior
+        thumbnailPrev.onclick = function() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSlider();
+            }
+        };
+
+        // Botón siguiente
+        thumbnailNext.onclick = function() {
+            if (currentIndex < maxIndex) {
+                currentIndex++;
+                updateSlider();
+            }
+        };
+
+        // Click en miniatura
+        thumbnails.forEach(thumbnail => {
+            thumbnail.onclick = function() {
+                // Remover clase active de todas las miniaturas
+                thumbnails.forEach(t => t.classList.remove('active'));
+                
+                // Agregar clase active a la miniatura clickeada
+                this.classList.add('active');
+                
+                // Cambiar imagen principal
+                const imageUrl = this.getAttribute('data-image');
+                if (imagenPrincipalDisplay) {
+                    imagenPrincipalDisplay.src = imageUrl;
+                }
+            };
+        });
+
+        // Inicializar
+        updateSlider();
+    }
+
+    // Manejar botón de editar restaurante (para gerentes)
+    const btnEditarRestaurante = document.getElementById('btn-editar-restaurante');
+    if (btnEditarRestaurante) {
+        btnEditarRestaurante.onclick = function() {
+            const modal = new bootstrap.Modal(document.getElementById('modalEditarRestaurante'));
+            modal.show();
+        };
+    }
+
+    // Manejar guardar edición de restaurante
+    const btnGuardarEdicion = document.getElementById('btnGuardarEdicion');
+    if (btnGuardarEdicion) {
+        btnGuardarEdicion.onclick = function() {
+            const restauranteId = document.getElementById('btn-editar-restaurante').getAttribute('data-restaurante-id');
+            const form = document.getElementById('formEditarRestaurante');
+            const formData = new FormData(form);
+            
+            // Validaciones básicas
+            const nombre = document.getElementById('edit_nombre').value.trim();
+            const email = document.getElementById('edit_email').value.trim();
+            const direccion = document.getElementById('edit_direccion').value.trim();
+            const precio = document.getElementById('edit_precio').value;
+            
+            if (!nombre || !email || !direccion || !precio) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campos requeridos',
+                    text: 'Por favor completa todos los campos obligatorios',
+                    confirmButtonColor: '#00a3e0'
+                });
+                return;
+            }
+
+            // Cerrar modal
+            const modalElement = document.getElementById('modalEditarRestaurante');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            if (modal) modal.hide();
+
+            // Mostrar loading
+            Swal.fire({
+                title: 'Actualizando...',
+                text: 'Por favor espera',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            // Enviar con fetch
+            fetch(`/restaurante/${restauranteId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': window.csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => Promise.reject(err));
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Actualizado!',
+                        text: data.message || 'Restaurante actualizado exitosamente',
+                        confirmButtonColor: '#00a3e0'
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                } else {
+                    throw new Error(data.message || 'Error al actualizar');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message || 'No se pudo actualizar el restaurante',
+                    confirmButtonColor: '#00a3e0'
+                });
+            });
+        };
+    }
+
+    // Manejar eliminación de imágenes del slider
+    const botonesEliminarImagenSlider = document.querySelectorAll('.btn-eliminar-imagen-slider');
+    botonesEliminarImagenSlider.forEach(boton => {
+        boton.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const imagenId = this.getAttribute('data-imagen-id');
+            
+            Swal.fire({
+                title: '¿Eliminar imagen?',
+                text: 'Esta acción no se puede deshacer',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Eliminando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    fetch(`/imagen-slider/${imagenId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': window.csrfToken,
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Eliminar visualmente el elemento
+                            const imagenItem = document.querySelector(`.imagen-actual-item[data-imagen-id="${imagenId}"]`);
+                            if (imagenItem) {
+                                imagenItem.remove();
+                            }
+                            
+                            Swal.fire({
+                                icon: 'success',
+                                title: '¡Eliminada!',
+                                text: data.message,
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        } else {
+                            throw new Error(data.message || 'Error al eliminar');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: error.message || 'No se pudo eliminar la imagen',
+                            confirmButtonColor: '#00a3e0'
+                        });
+                    });
+                }
+            });
+        };
+    });
+};
 

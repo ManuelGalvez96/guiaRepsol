@@ -83,18 +83,22 @@ class AdminController extends Controller
         }
 
         // Para peticiones normales, devolver la vista completa
+        $perPage = $request->input('per_page', 10);
+        $restaurantes = $query->paginate($perPage)->appends($request->except('page'));
         $categorias = Categoria::all();
         $tiposComida = TipoComida::all();
 
         return view('admin.index', compact('restaurantes', 'categorias', 'tiposComida'));
     }
 
-    public function solicitudes()
+    public function solicitudes(Request $request)
     {
+        $perPage = $request->input('per_page', 10);
+        
         // Obtener restaurantes pendientes de aprobación de la tabla restaurante_pendiente
         $solicitudes = RestaurantePendiente::with(['categoria', 'ubicacionPendiente', 'usuario'])
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate($perPage)->appends($request->except('page'));
 
         // Cargar imágenes manualmente para cada solicitud
         foreach ($solicitudes as $solicitud) {
@@ -209,7 +213,6 @@ class AdminController extends Controller
     public function update(Request $request, Restaurante $restaurante)
     {
         $this->checkAdmin();
-
         // Si solo se está actualizando el estado activo (aprobar solicitud)
         if ($request->has('activo') && count($request->all()) == 1) {
             $restaurante->update(['activo' => $request->activo]);

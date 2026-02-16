@@ -142,5 +142,170 @@ class ImagenRestauranteSeeder extends Seeder
             'principal' => true,
             'orden' => 1,
         ]);
+
+        // Imágenes adicionales para el slider de Akelarre
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[4], // Akelarre
+            'url' => 'img/restaurantes/Akelarre_1.jpg',
+            'alt' => 'Interior restaurante Akelarre',
+            'principal' => false,
+            'orden' => 1,
+        ]);
+
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[4], // Akelarre
+            'url' => 'img/restaurantes/Akelarre_2.jpg',
+            'alt' => 'Plato estrella Akelarre',
+            'principal' => false,
+            'orden' => 2,
+        ]);
+
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[4], // Akelarre
+            'url' => 'img/restaurantes/Akelarre_3.jpg',
+            'alt' => 'Vistas desde Akelarre',
+            'principal' => false,
+            'orden' => 3,
+        ]);
+
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[4], // Akelarre
+            'url' => 'img/restaurantes/Akelarre_4.jpg',
+            'alt' => 'Terraza Akelarre',
+            'principal' => false,
+            'orden' => 4,
+        ]);
+
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[4], // Akelarre
+            'url' => 'img/restaurantes/Akelarre_5.jpg',
+            'alt' => 'Plato gourmet Akelarre',
+            'principal' => false,
+            'orden' => 5,
+        ]);
+
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[4], // Akelarre
+            'url' => 'img/restaurantes/Akelarre_6.jpg',
+            'alt' => 'Cocina Akelarre',
+            'principal' => false,
+            'orden' => 6,
+        ]);
+
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[4], // Akelarre
+            'url' => 'img/restaurantes/Akelarre_7.jpg',
+            'alt' => 'Detalle decoración Akelarre',
+            'principal' => false,
+            'orden' => 7,
+        ]);
+
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[4], // Akelarre
+            'url' => 'img/restaurantes/Akelarre_8.jpg',
+            'alt' => 'Ambiente nocturno Akelarre',
+            'principal' => false,
+            'orden' => 8,
+        ]);
+
+        // Imágenes adicionales para el slider de Disfrutar
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[5], // Disfrutar
+            'url' => 'img/restaurantes/Disfrutar_1.jpg',
+            'alt' => 'Sala principal Disfrutar',
+            'principal' => false,
+            'orden' => 1,
+        ]);
+
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[5], // Disfrutar
+            'url' => 'img/restaurantes/Disfrutar_2.jpg',
+            'alt' => 'Creación culinaria Disfrutar',
+            'principal' => false,
+            'orden' => 2,
+        ]);
+
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[5], // Disfrutar
+            'url' => 'img/restaurantes/Disfrutar_3.jpg',
+            'alt' => 'Cocina abierta Disfrutar',
+            'principal' => false,
+            'orden' => 3,
+        ]);
+
+        // Imágenes adicionales para el slider de Martín Berasategui
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[3], // Martín Berasategui
+            'url' => 'img/restaurantes/Martin_Berasategui_1.jpg',
+            'alt' => 'Comedor elegante Martín Berasategui',
+            'principal' => false,
+            'orden' => 1,
+        ]);
+
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[3], // Martín Berasategui
+            'url' => 'img/restaurantes/Martin_Berasategui_2.jpg',
+            'alt' => 'Plato gourmet Martín Berasategui',
+            'principal' => false,
+            'orden' => 2,
+        ]);
+
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[3], // Martín Berasategui
+            'url' => 'img/restaurantes/Martin_Berasategui_3.jpg',
+            'alt' => 'Bodega Martín Berasategui',
+            'principal' => false,
+            'orden' => 3,
+        ]);
+
+        // Imágenes adicionales para el slider de Abantal
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[12], // Abantal
+            'url' => 'img/restaurantes/Abantal_1.jpg',
+            'alt' => 'Interior moderno Abantal',
+            'principal' => false,
+            'orden' => 1,
+        ]);
+
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[12], // Abantal
+            'url' => 'img/restaurantes/Abantal_2.jpg',
+            'alt' => 'Tapa innovadora Abantal',
+            'principal' => false,
+            'orden' => 2,
+        ]);
+
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[12], // Abantal
+            'url' => 'img/restaurantes/Abantal_3.jpg',
+            'alt' => 'Menú degustación Abantal',
+            'principal' => false,
+            'orden' => 3,
+        ]);
+
+        // Imágenes adicionales para el slider de DiverXO
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[14], // DiverXO
+            'url' => 'img/restaurantes/DiverXO_1.jpg',
+            'alt' => 'Ambiente único DiverXO',
+            'principal' => false,
+            'orden' => 1,
+        ]);
+
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[14], // DiverXO
+            'url' => 'img/restaurantes/DiverXO_2.jpg',
+            'alt' => 'Plato innovador DiverXO',
+            'principal' => false,
+            'orden' => 2,
+        ]);
+
+        ImagenRestaurante::create([
+            'restaurante_id' => $restauranteIds[14], // DiverXO
+            'url' => 'img/restaurantes/DiverXO_3.jpg',
+            'alt' => 'Cocina fusión DiverXO',
+            'principal' => false,
+            'orden' => 3,
+        ]);
     }
 }

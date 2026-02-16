@@ -49,6 +49,7 @@ body{
 
 .burger{
   font-size:22px;
+  cursor:pointer;
 }
 
 .logo{
@@ -60,6 +61,7 @@ body{
   display:flex;
   align-items:center;
   gap:20px;
+  cursor:pointer;
 }
 
 /* ===== BLUE SEPARATOR ===== */
@@ -1190,5 +1192,341 @@ body{
 
   .footer-cols{
     grid-template-columns:1fr;
+  }
+}
+
+/* ===== RESPONSIVE GENERAL ===== */
+@media(max-width:992px){
+  .topbar-inner{
+    padding:0 20px;
+  }
+
+  .nav{
+    display:none;
+  }
+
+  .hero{
+    grid-template-columns:1fr;
+    padding:40px 20px;
+    gap:40px;
+  }
+
+  .hero h1{
+    font-size:32px;
+  }
+
+  .subnav-inner{
+    padding:12px 20px;
+    gap:16px;
+    overflow-x:auto;
+    white-space:nowrap;
+  }
+
+  .categorias{
+    grid-template-columns:repeat(6, 1fr);
+    gap:48px 24px;
+  }
+
+  .categoria:nth-child(1),
+  .categoria:nth-child(2),
+  .categoria:nth-child(3),
+  .categoria:nth-child(4),
+  .categoria:nth-child(5),
+  .categoria:nth-child(6),
+  .categoria:nth-child(7){
+    grid-column:span 2;
+  }
+
+  .app-box{
+    padding:56px 40px;
+  }
+
+  .newsletter-form{
+    flex-direction:column;
+    min-width:100%;
+  }
+
+  .newsletter-form button{
+    padding:16px;
+    width:100%;
+  }
+}
+
+@media(max-width:768px){
+  .topbar-inner{
+    padding:0 16px;
+    height:48px;
+  }
+
+  .logo{
+    font-size:18px;
+  }
+
+  .burger{
+    font-size:20px;
+  }
+
+  .top-right{
+    font-size:14px;
+  }
+
+  .hero{
+    padding:32px 16px;
+    gap:32px;
+  }
+
+  .hero h1{
+    font-size:28px;
+  }
+
+  .hero p{
+    font-size:15px;
+  }
+
+  .momentos{
+    padding:64px 0 80px;
+  }
+
+  .momentos-inner,
+  .que-son-inner,
+  .ultimo-inner,
+  .destacado-inner,
+  .frio-inner,
+  .comunidades-inner{
+    padding:0 16px;
+  }
+
+  .momentos-title,
+  .que-son-title,
+  .ultimo-title,
+  .destacado-title,
+  .frio-title,
+  .comunidades-title{
+    font-size:28px;
+    margin-bottom:48px;
+  }
+
+  .que-son,
+  .ultimo,
+  .destacado,
+  .frio,
+  .comunidades{
+    padding:80px 0;
+  }
+
+  .categorias{
+    grid-template-columns:repeat(2, 1fr);
+    gap:40px 20px;
+  }
+
+  .categoria:nth-child(1),
+  .categoria:nth-child(2),
+  .categoria:nth-child(3),
+  .categoria:nth-child(4),
+  .categoria:nth-child(5),
+  .categoria:nth-child(6),
+  .categoria:nth-child(7){
+    grid-column:span 1;
+  }
+
+  .icono{
+    font-size:56px;
+  }
+
+  .cercanos-box{
+    padding:32px 24px;
+  }
+
+  .cercanos-header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:12px;
+  }
+
+  .ultimo-featured{
+    margin-bottom:48px;
+  }
+
+  .featured-content{
+    padding:32px;
+  }
+
+  .app-box{
+    padding:40px 24px;
+  }
+
+  .footer-newsletter{
+    padding:48px 0;
+  }
+
+  .footer-newsletter-inner{
+    padding:0 16px;
+  }
+
+  .footer-main{
+    padding:56px 0;
+  }
+
+  .footer-main-inner{
+    padding:0 16px;
+    grid-template-columns:1fr;
+    gap:48px;
+  }
+
+  .footer-bottom-inner{
+    padding:0 16px;
+  }
+}
+
+@media(max-width:600px){
+  .subnav-inner{
+    padding:12px 16px;
+    font-size:14px;
+  }
+
+  .hero h1{
+    font-size:24px;
+  }
+
+  .hero p{
+    font-size:14px;
+  }
+
+  .hero-btn{
+    padding:10px 18px;
+    font-size:14px;
+  }
+
+  .momentos-title,
+  .que-son-title,
+  .ultimo-title,
+  .destacado-title,
+  .frio-title,
+  .comunidades-title{
+    font-size:24px;
+  }
+
+  .momento-overlay h3,
+  .frio-overlay h3{
+    font-size:18px;
+  }
+
+  .que-son-text{
+    font-size:15px;
+  }
+
+  .categorias{
+    gap:32px 16px;
+  }
+
+  .cercanos-filters{
+    gap:8px;
+  }
+
+  .filter-pill{
+    padding:8px 14px;
+    font-size:14px;
+  }
+
+  .ultimo-grid{
+    margin-bottom:48px;
+  }
+
+  .app-box{
+    padding:32px 20px;
+  }
+
+  .phone{
+    width:240px;
+  }
+
+  .footer-newsletter-inner{
+    gap:24px;
+  }
+
+  .newsletter-text h3{
+    font-size:22px;
+  }
+
+  .footer-bottom-inner{
+    flex-direction:column;
+    gap:16px;
+  }
+
+  .footer-legal{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .footer-legal span{
+    display:none;
+  }
+}
+
+@media(max-width:480px){
+  .topbar-inner{
+    padding:0 12px;
+  }
+
+  .top-left{
+    gap:12px;
+  }
+
+  .logo{
+    font-size:16px;
+  }
+
+  .hero{
+    padding:24px 12px;
+  }
+
+  .hero h1{
+    font-size:22px;
+  }
+
+  .momentos,
+  .que-son,
+  .ultimo,
+  .destacado,
+  .frio,
+  .comunidades{
+    padding:56px 0;
+  }
+
+  .momentos-inner,
+  .que-son-inner,
+  .ultimo-inner,
+  .destacado-inner,
+  .frio-inner,
+  .comunidades-inner{
+    padding:0 12px;
+  }
+
+  .momentos-title,
+  .que-son-title,
+  .ultimo-title,
+  .destacado-title,
+  .frio-title,
+  .comunidades-title{
+    font-size:20px;
+    margin-bottom:32px;
+  }
+
+  .cercanos-box{
+    padding:24px 16px;
+  }
+
+  .local-info h3{
+    font-size:16px;
+  }
+
+  .featured-content{
+    padding:24px;
+  }
+
+  .footer-newsletter,
+  .footer-main{
+    padding:40px 0;
   }
 }

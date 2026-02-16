@@ -39,7 +39,7 @@
 
             <div class="form-group">
                 <label for="categoria_id">Categoría *</label>
-                <select id="categoria_id" name="categoria_id" required>
+                <select id="categoria_id" name="categoria_id">
                     <option value="">Seleccione una categoría</option>
                     @foreach ($categorias as $categoria)
                         <option value="{{ $categoria->id }}"
@@ -55,7 +55,7 @@
 
             <div class="form-group">
                 <label for="ubicacion_id">Ubicación *</label>
-                <select id="ubicacion_id" name="ubicacion_id" required>
+                <select id="ubicacion_id" name="ubicacion_id">
                     <option value="">Seleccione una ubicación</option>
                     @foreach ($ubicaciones as $ubicacion)
                         <option value="{{ $ubicacion->id }}"
@@ -72,7 +72,7 @@
 
             <div class="form-group">
                 <label for="user_id">Gerente del Restaurante *</label>
-                <select id="user_id" name="user_id" required class="form-select">
+                <select id="user_id" name="user_id" class="form-select">
                     <option value="">Seleccione un gerente</option>
                     @foreach ($gerentes as $gerente)
                         <option value="{{ $gerente->id }}"

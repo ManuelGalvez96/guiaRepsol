@@ -119,10 +119,10 @@
     <div class="main-detalle">
         <div class="container">
             <div class="row">
-                <!-- Columna Izquierda - Información del Restaurante -->
-                <div class="col-lg-5">
-                    <!-- Info Principal -->
-                    <div class="restaurant-info-box">
+                <!-- Columna Izquierda - Información del Restaurante (desktop) -->
+                <div class="col-lg-5 order-4 order-lg-1">
+                    <!-- Info Principal (solo desktop) -->
+                    <div class="restaurant-info-box d-none d-lg-block">
                         @if($restaurante->soles > 0)
                         <div class="mb-3">
                             @for($i = 0; $i < $restaurante->soles; $i++)
@@ -159,6 +159,15 @@
                                 <i class="bi bi-heart{{ $userHasLiked ? '-fill' : '' }}"></i>
                                 <span id="like-count">{{ $totalLikes }}</span>
                             </button>
+                            @auth
+                                @if(Auth::id() === $restaurante->user_id)
+                                    <button class="btn-editar-gerente" 
+                                            id="btn-editar-restaurante" 
+                                            data-restaurante-id="{{ $restaurante->id }}">
+                                        <i class="bi bi-pencil-square"></i> Editar
+                                    </button>
+                                @endif
+                            @endauth
                         </div>
                     </div>
 
@@ -318,40 +327,110 @@
                 </div>
 
                 <!-- Columna Derecha - Imágenes y Reservas -->
-                <div class="col-lg-7">
-                    <!-- Carousel de Imágenes -->
-                    <div id="carouselRestaurante" class="carousel slide mb-4" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            @if($restaurante->imagenes->isNotEmpty())
-                                @foreach($restaurante->imagenes as $index => $imagen)
-                                <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                    <img src="{{ asset($imagen->url) }}" class="d-block w-100" alt="{{ $imagen->alt ?? $restaurante->nombre }}" style="height: 400px; object-fit: cover; border-radius: 8px;">
-                                </div>
-                                @endforeach
-                            @else
-                                <div class="carousel-item active">
-                                    <img src="{{ asset($resolveRestauranteImage($restaurante->nombre)) }}" class="d-block w-100" alt="{{ $restaurante->nombre }}" style="height: 400px; object-fit: cover; border-radius: 8px;">
-                                </div>
-                            @endif
-                        </div>
-                        @if($restaurante->imagenes->count() > 1)
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselRestaurante" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Anterior</span>
+                <div class="col-12 col-lg-7 order-1 order-lg-2">
+                    <!-- Imagen Principal -->
+                    <div class="image-container">
+                        @if($imagenPrincipal)
+                            @php
+                                // Si la URL empieza con 'img/', es una ruta pública directa
+                                // Si no, está en storage/app/public/
+                                $imagenUrl = str_starts_with($imagenPrincipal->url, 'img/') 
+                                    ? asset($imagenPrincipal->url) 
+                                    : asset('storage/' . $imagenPrincipal->url);
+                            @endphp
+                            <img src="{{ $imagenUrl }}" 
+                                 id="imagenPrincipalDisplay"
+                                 alt="{{ $restaurante->nombre }}" 
+                                 class="restaurant-image-main">
+                        @else
+                            <img src="{{ $resolveRestauranteImage($restaurante->nombre) }}" 
+                                 id="imagenPrincipalDisplay"
+                                 alt="{{ $restaurante->nombre }}" 
+                                 class="restaurant-image-main">
+                        @endif
+                        @if($imagenesAdicionales->count() > 0)
+                        <button class="btn-ver-fotos" data-bs-toggle="modal" data-bs-target="#modalGaleria">
+                            <i class="bi bi-images"></i> Mostrar todas las fotos ({{ $imagenesAdicionales->count() + 1 }})
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselRestaurante" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Siguiente</span>
-                        </button>
-                        <div class="carousel-indicators">
-                            @foreach($restaurante->imagenes as $index => $imagen)
-                            <button type="button" data-bs-target="#carouselRestaurante" data-bs-slide-to="{{ $index }}" class="{{ $index == 0 ? 'active' : '' }}" aria-current="{{ $index == 0 ? 'true' : 'false' }}" aria-label="Slide {{ $index + 1 }}"></button>
-                            @endforeach
-                        </div>
                         @endif
                     </div>
 
-                    <!-- Reportajes Relacionados -->
+                    <!-- Slider de Miniaturas -->
+                    @if($imagenPrincipal || $imagenesAdicionales->count() > 0)
+                    <div class="thumbnails-slider-container">
+                        <button class="thumbnail-nav-btn thumbnail-prev" id="thumbnailPrev">
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                        <div class="thumbnails-slider">
+                            <div class="thumbnails-wrapper" id="thumbnailsWrapper">
+                                @if($imagenPrincipal)
+                                    @php
+                                        $imgPrincipalUrl = str_starts_with($imagenPrincipal->url, 'img/') 
+                                            ? asset($imagenPrincipal->url) 
+                                            : asset('storage/' . $imagenPrincipal->url);
+                                    @endphp
+                                    <div class="thumbnail-item active" data-image="{{ $imgPrincipalUrl }}">
+                                        <img src="{{ $imgPrincipalUrl }}" alt="Principal">
+                                    </div>
+                                @endif
+                                @foreach($imagenesAdicionales as $imagen)
+                                    @php
+                                        $imgUrl = str_starts_with($imagen->url, 'img/') 
+                                            ? asset($imagen->url) 
+                                            : asset('storage/' . $imagen->url);
+                                    @endphp
+                                    <div class="thumbnail-item" data-image="{{ $imgUrl }}">
+                                        <img src="{{ $imgUrl }}" alt="Foto {{ $loop->iteration }}">
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        <button class="thumbnail-nav-btn thumbnail-next" id="thumbnailNext">
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+                    @endif
+
+                    <!-- Info Principal para Mobile (justo después de la imagen) - solo visible en móvil -->
+                    <div class="restaurant-info-box d-lg-none">
+                        @if($restaurante->soles > 0)
+                        <div class="mb-3">
+                            @for($i = 0; $i < $restaurante->soles; $i++)
+                                <i class="bi bi-sun-fill" style="color: #f7931e; font-size: 28px;"></i>
+                            @endfor
+                        </div>
+                        @endif
+
+                        <p class="fecha-publicacion">Sábado de Verano 2021</p>
+                        <h1 class="restaurant-name-title">{{ $restaurante->nombre }}</h1>
+                        
+                        <p class="restaurant-ubicacion">
+                            <i class="bi bi-geo-alt"></i> {{ $restaurante->direccion }}, {{ $restaurante->ubicacion->codigo_postal }} {{ $restaurante->ubicacion->ciudad }}
+                        </p>
+
+                        <div class="restaurant-tipo">
+                            <span class="tipo-badge">{{ $restaurante->ubicacion->ciudad }}</span>
+                            <span class="tipo-badge">{{ $restaurante->ubicacion->provincia }}</span>
+                            <span class="tipo-badge">{{ $restaurante->categoria->nombre }}</span>
+                            @foreach($restaurante->tiposComida as $tipo)
+                                <span class="tipo-badge">{{ $tipo->nombre }}</span>
+                            @endforeach
+                        </div>
+
+                        <div class="mt-3">
+                            <button class="btn-guardar">
+                                <i class="bi bi-bookmark"></i> Guardar
+                            </button>
+                            <button class="btn-compartir">
+                                <i class="bi bi-share"></i>
+                            </button>
+                            <button class="btn-favorito">
+                                <i class="bi bi-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Valoraciones de usuarios -->
                     <div class="section-box">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h3 class="section-title mb-0">Valoraciones de usuarios</h3>
@@ -443,7 +522,7 @@
                                         <div class="modal-body">
                                             <div class="mb-3">
                                                 <label class="form-label">¿Cómo valoras tu experiencia?</label>
-                                                <input type="hidden" name="puntuacion" id="puntuacion-edit-{{ $valoracion->id }}" value="{{ $valoracion->puntuacion }}" required>
+                                                <input type="hidden" name="puntuacion" id="puntuacion-edit-{{ $valoracion->id }}" value="{{ $valoracion->puntuacion }}">
                                                 <div class="rating-stars" data-modal-id="{{ $valoracion->id }}" data-current-rating="{{ $valoracion->puntuacion }}">
                                                     @for($i = 1; $i <= 5; $i++)
                                                     <div class="star {{ $i <= $valoracion->puntuacion ? 'active' : '' }}" data-value="{{ $i }}">
@@ -454,7 +533,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Comentario</label>
-                                                <textarea name="comentario" class="form-control" rows="4" required>{{ $valoracion->comentario }}</textarea>
+                                                <textarea name="comentario" class="form-control" rows="4">{{ $valoracion->comentario }}</textarea>
                                             </div>
                                         </div>
                                         <div class="modal-footer d-flex justify-content-between">
@@ -488,7 +567,7 @@
                                         <div class="modal-body">
                                             <div class="mb-3">
                                                 <label class="form-label">Tu respuesta</label>
-                                                <textarea name="respuesta_gerente" class="form-control" rows="4" required placeholder="Escribe tu respuesta...">{{ $valoracion->respuesta_gerente }}</textarea>
+                                                <textarea name="respuesta_gerente" class="form-control" rows="4" placeholder="Escribe tu respuesta...">{{ $valoracion->respuesta_gerente }}</textarea>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -513,7 +592,7 @@
                                         <div class="modal-body">
                                             <div class="mb-3">
                                                 <label class="form-label">Tu respuesta</label>
-                                                <textarea name="respuesta_gerente" class="form-control" rows="4" required>{{ $valoracion->respuesta_gerente }}</textarea>
+                                                <textarea name="respuesta_gerente" class="form-control" rows="4">{{ $valoracion->respuesta_gerente }}</textarea>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -576,7 +655,7 @@
                                     <div class="modal-body">
                                         <div class="mb-3">
                                             <label class="form-label">¿Cómo valoras tu experiencia?</label>
-                                            <input type="hidden" name="puntuacion" id="puntuacion" required>
+                                            <input type="hidden" name="puntuacion" id="puntuacion">
                                             <div class="rating-stars">
                                                 <div class="star" data-value="1">
                                                     <i class="bi bi-star-fill"></i>
@@ -597,7 +676,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Comentario</label>
-                                            <textarea name="comentario" class="form-control" rows="4" required placeholder="Comparte tu experiencia..."></textarea>
+                                            <textarea name="comentario" class="form-control" rows="4" placeholder="Comparte tu experiencia..."></textarea>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -615,45 +694,208 @@
         </div>
     </div>
 
-    <!-- Modal Galería de Imágenes -->
-    <div class="modal fade" id="modalGaleria" tabindex="-1">
-        <div class="modal-dialog modal-lg">
+    <!-- Modal Galería de Fotos -->
+    <div class="modal fade" id="modalGaleria" tabindex="-1" aria-labelledby="modalGaleriaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Galería de {{ $restaurante->nombre }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title" id="modalGaleriaLabel">Galería de fotos - {{ $restaurante->nombre }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-0">
-                    <div id="carouselGaleria" class="carousel slide" data-bs-ride="false">
-                        <div class="carousel-inner">
-                            @foreach($restaurante->imagenes as $index => $imagen)
-                                <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                    <img src="{{ asset($imagen->url) }}" 
-                                         class="d-block w-100" 
-                                         alt="{{ $restaurante->nombre }} - Imagen {{ $index + 1 }}"
-                                         style="height: 400px; object-fit: cover;">
-                                </div>
-                            @endforeach
-                        </div>
-                        @if($restaurante->imagenes->count() > 1)
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselGaleria" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselGaleria" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        @endif
+                    <div id="carouselGaleria" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-indicators">
-                            @foreach($restaurante->imagenes as $index => $imagen)
-                                <button type="button" data-bs-target="#carouselGaleria" data-bs-slide-to="{{ $index }}" 
-                                        class="{{ $index === 0 ? 'active' : '' }}"></button>
+                            @if($imagenPrincipal)
+                            <button type="button" data-bs-target="#carouselGaleria" data-bs-slide-to="0" class="active"></button>
+                            @endif
+                            @foreach($imagenesAdicionales as $index => $imagen)
+                                <button type="button" data-bs-target="#carouselGaleria" data-bs-slide-to="{{ $imagenPrincipal ? $index + 1 : $index }}"></button>
                             @endforeach
                         </div>
+                        <div class="carousel-inner">
+                            @if($imagenPrincipal)
+                            @php
+                                $imagenPrincipalUrl = str_starts_with($imagenPrincipal->url, 'img/') 
+                                    ? asset($imagenPrincipal->url) 
+                                    : asset('storage/' . $imagenPrincipal->url);
+                            @endphp
+                            <div class="carousel-item active">
+                                <img src="{{ $imagenPrincipalUrl }}" class="d-block w-100" alt="Foto principal">
+                            </div>
+                            @endif
+                            @foreach($imagenesAdicionales as $imagen)
+                            @php
+                                $imagenUrl = str_starts_with($imagen->url, 'img/') 
+                                    ? asset($imagen->url) 
+                                    : asset('storage/' . $imagen->url);
+                            @endphp
+                            <div class="carousel-item {{ !$imagenPrincipal && $loop->first ? 'active' : '' }}">
+                                <img src="{{ $imagenUrl }}" class="d-block w-100" alt="Foto del restaurante">
+                            </div>
+                            @endforeach
+                        </div>
+                        @if($imagenPrincipal || $imagenesAdicionales->count() > 0)
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselGaleria" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselGaleria" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Siguiente</span>
+                        </button>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal Editar Restaurante (Solo para Gerentes) -->
+    @auth
+    @if(Auth::id() === $restaurante->user_id)
+    <div class="modal fade" id="modalEditarRestaurante" tabindex="-1" aria-labelledby="modalEditarRestauranteLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarRestauranteLabel">Editar Restaurante</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarRestaurante">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="edit_nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="edit_nombre" name="nombre" value="{{ $restaurante->nombre }}">
+                                    <span id="error-edit-nombre" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="edit_categoria_id" class="form-label">Categoría <span class="text-danger">*</span></label>
+                                    <select class="form-control" id="edit_categoria_id" name="categoria_id">
+                                        @foreach(\App\Models\Categoria::all() as $categoria)
+                                            <option value="{{ $categoria->id }}" {{ $restaurante->categoria_id == $categoria->id ? 'selected' : '' }}>
+                                                {{ $categoria->nombre }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="edit_descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="edit_descripcion" name="descripcion" rows="3">{{ $restaurante->descripcion }}</textarea>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="edit_direccion" class="form-label">Dirección <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="edit_direccion" name="direccion" value="{{ $restaurante->direccion }}">
+                            <span id="error-edit-direccion" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="edit_telefono" class="form-label">Teléfono</label>
+                                    <input type="text" class="form-control" id="edit_telefono" name="telefono" value="{{ $restaurante->telefono }}">
+                                    <span id="error-edit-telefono" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="edit_email" class="form-label">Email <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" id="edit_email" name="email" value="{{ $restaurante->email }}">
+                                    <span id="error-edit-email" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="edit_web" class="form-label">Sitio Web</label>
+                                    <input type="url" class="form-control" id="edit_web" name="web" value="{{ $restaurante->web }}">
+                                    <span id="error-edit-web" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="edit_precio" class="form-label">Precio Promedio (€) <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="edit_precio" name="precio" step="0.01" value="{{ $restaurante->precio }}">
+                                    <span id="error-edit-precio" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">Tipos de Comida</label>
+                            <div class="tipos-comida-grid">
+                                @foreach(\App\Models\TipoComida::all() as $tipo)
+                                    <label class="tipos-comida-label">
+                                        <input type="checkbox" 
+                                               class="tipos-comida-checkbox" 
+                                               name="tipos_comida[]" 
+                                               value="{{ $tipo->id }}"
+                                               {{ $restaurante->tiposComida->contains($tipo->id) ? 'checked' : '' }}>
+                                        <span class="tipos-comida-text">{{ $tipo->nombre }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="edit_imagen" class="form-label">Cambiar Imagen Principal</label>
+                            <input type="file" class="form-control" id="edit_imagen" name="imagen" accept="image/*">
+                            <small class="form-text text-muted">Dejar vacío si no desea cambiar la imagen</small>
+                            @if($imagenPrincipal)
+                                <div class="mt-2">
+                                    <img src="{{ str_starts_with($imagenPrincipal->url, 'img/') ? asset($imagenPrincipal->url) : asset('storage/' . $imagenPrincipal->url) }}" 
+                                         class="img-thumbnail" 
+                                         style="max-width: 200px;">
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="edit_fotos_adicionales" class="form-label">Agregar Fotos Adicionales</label>
+                            <input type="file" class="form-control" id="edit_fotos_adicionales" name="fotos_adicionales[]" accept="image/*" multiple>
+                            <small class="form-text text-muted">Puede seleccionar hasta 8 imágenes adicionales (máx 5MB cada una)</small>
+                            
+                            @if($imagenesAdicionales->count() > 0)
+                                <div class="mt-3">
+                                    <label class="form-label">Imágenes actuales del slider:</label>
+                                    <div class="d-flex gap-2 flex-wrap" id="imagenesActualesContainer">
+                                        @foreach($imagenesAdicionales as $imagen)
+                                            <div class="position-relative imagen-actual-item" data-imagen-id="{{ $imagen->id }}">
+                                                <img src="{{ str_starts_with($imagen->url, 'img/') ? asset($imagen->url) : asset('storage/' . $imagen->url) }}" 
+                                                     class="img-thumbnail" 
+                                                     style="width: 100px; height: 100px; object-fit: cover;">
+                                                <button type="button" 
+                                                        class="btn btn-danger btn-sm position-absolute top-0 end-0 btn-eliminar-imagen-slider" 
+                                                        data-imagen-id="{{ $imagen->id }}"
+                                                        style="padding: 2px 6px; font-size: 11px;">
+                                                    <i class="bi bi-x"></i>
+                                                </button>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnGuardarEdicion">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+    @endauth
 
     <!-- Scripts de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
@@ -662,7 +904,8 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <!-- Script personalizado -->
+    <!-- Scripts personalizados -->
+    <script src="{{ asset('js/validacion-editar-restaurante.js') }}"></script>
     <script src="{{ asset('js/restaurante-detalle.js') }}"></script>
 </body>
 </html>

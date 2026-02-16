@@ -49,6 +49,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/restaurante/{id}/like', [RestauranteController::class, 'toggleLike'])->name('restaurante.like');
     Route::post('/restaurante/{id}/guardar', [RestauranteController::class, 'toggleGuardar'])->name('restaurante.guardar');
     Route::get('/restaurantes-guardados', [RestauranteController::class, 'guardados'])->name('restaurantes.guardados');
+    
+    // Ruta para actualizar restaurante (solo gerentes)
+    Route::post('/restaurante/{id}', [RestauranteController::class, 'update'])->name('restaurante.update');
+    Route::delete('/imagen-slider/{id}', [RestauranteController::class, 'eliminarImagenSlider'])->name('imagen.slider.delete');
 });
 
 // Rutas para formulario de registro de restaurantes

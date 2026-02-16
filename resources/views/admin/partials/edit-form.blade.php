@@ -5,7 +5,7 @@
 
     <div class="form-group">
         <label for="nombre">Nombre del Restaurante *</label>
-        <input type="text" id="nombre" name="nombre" value="{{ old('nombre', $restaurante->nombre) }}" required>
+        <input type="text" id="nombre" name="nombre" value="{{ old('nombre', $restaurante->nombre) }}">
         @error('nombre')
             <div class="error">{{ $message }}</div>
         @enderror
@@ -21,7 +21,7 @@
 
     <div class="form-group">
         <label for="categoria_id">Categoría *</label>
-        <select id="categoria_id" name="categoria_id" required>
+        <select id="categoria_id" name="categoria_id">
             <option value="">Seleccione una categoría</option>
             @foreach ($categorias as $categoria)
                 <option value="{{ $categoria->id }}"
@@ -37,7 +37,7 @@
 
     <div class="form-group">
         <label for="ubicacion_id">Ubicación *</label>
-        <select id="ubicacion_id" name="ubicacion_id" required>
+        <select id="ubicacion_id" name="ubicacion_id">
             <option value="">Seleccione una ubicación</option>
             @foreach ($ubicaciones as $ubicacion)
                 <option value="{{ $ubicacion->id }}"
@@ -53,7 +53,7 @@
 
     <div class="form-group">
         <label for="user_id">Gerente del Restaurante *</label>
-        <select id="user_id" name="user_id" required class="form-select">
+        <select id="user_id" name="user_id" class="form-select">
             <option value="">Seleccione un gerente</option>
             @foreach ($gerentes as $gerente)
                 <option value="{{ $gerente->id }}"
@@ -106,7 +106,7 @@
 
     <div class="form-group">
         <label for="email">Email *</label>
-        <input type="email" id="email" name="email" value="{{ old('email', $restaurante->email) }}" required>
+        <input type="email" id="email" name="email" value="{{ old('email', $restaurante->email) }}">
         @error('email')
             <div class="error">{{ $message }}</div>
         @enderror

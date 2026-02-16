@@ -86,7 +86,7 @@
     </div>
 
     <!-- Modales -->
-    <div id="modalOverlay" class="modal-overlay modal-hidden">
+    <div id="modalOverlay" class="modal-overlay modal-hidden"> 
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">Modal</h2>
