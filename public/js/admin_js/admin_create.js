@@ -71,7 +71,7 @@ function manejarCrear() {
     if (ajaxObj.readyState == READY_STATE_COMPLETE) {
         const submitBtn = document.getElementById('submitBtn');
 
-        if (ajaxObj.status == 200) {
+        if (ajaxObj.status == 200 || ajaxObj.status == 201) {
             const data = JSON.parse(ajaxObj.responseText);
             if (data.success) {
                 Swal.fire({

@@ -185,13 +185,6 @@
     </div>
 
     <!-- JavaScript separado para mejor mantenimiento -->
-    <script>
-        // Pasar configuración de PHP a JavaScript
-        window.createConfig = {
-            csrfToken: '{{ csrf_token() }}',
-            adminIndexRoute: '{{ route("admin.index") }}'
-        };
-    </script>
     <script src="{{ asset('js/admin_js/admin_create.js') }}"></script>
 </body>
 </html>
