@@ -1,4 +1,6 @@
-/* Reset y Variables */
+/* =============================================
+   RESET Y VARIABLES GLOBALES
+   ============================================= */
 :root {
     --color-primary: #1e3a5f;
     --color-secondary: #00a3e0;
@@ -19,11 +21,17 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--color-background);
     color: var(--color-text);
     line-height: 1.6;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Header Principal */
@@ -698,14 +706,10 @@ body {
     }
 }
 
-/* Garantizar que las columnas lg se muestren lado a lado en desktop */
-@media (min-width: 992px) {
-    .main-content .col-lg-4,
-    .main-content .col-lg-8 {
-        display: flex;
-        flex-direction: column;
-    }
-}
+
+/* =============================================
+   MEDIA QUERIES MOBILE
+   ============================================= */
 
 @media (max-width: 767px) {
     .header-main {
@@ -940,7 +944,10 @@ body {
     }
 }
 
-/* Mejoras adicionales para el menú hamburguesa */
+/* =============================================
+   MEJORAS ADICIONALES Y EFECTOS HOVER
+   ============================================= */
+
 .btn-menu-detalle:hover,
 .btn-menu-detalle.active {
     color: var(--color-secondary);
