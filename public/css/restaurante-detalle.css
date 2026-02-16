@@ -726,10 +726,6 @@ body {
         font-size: 12px;
     }
 
-    .btn-acceso-detalle span {
-        display: none;
-    }
-
     .banner-gala-detalle {
         font-size: 11px;
         padding: 8px 0;
@@ -2241,6 +2237,19 @@ body {
     background-color: #e6c000;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive para botón editar gerente */
+@media (max-width: 768px) {
+    .btn-editar-gerente {
+        padding: 8px 16px;
+        font-size: 12px;
+        margin-left: 5px;
+    }
+
+    .btn-editar-gerente i {
+        font-size: 14px;
+    }
 }
 
 /* Estilos para el Modal de Edición - Usando estilos de admin */

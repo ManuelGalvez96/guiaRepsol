@@ -33,6 +33,17 @@ window.onload = function() {
             }
         };
     }
+
+    // Acordeón del sidebar de contenido relacionado en responsive
+    const btnToggleSidebar = document.getElementById('btnToggleSidebar');
+    const sidebarContent = document.getElementById('sidebarContent');
+    
+    if (btnToggleSidebar && sidebarContent) {
+        btnToggleSidebar.onclick = function() {
+            sidebarContent.classList.toggle('show');
+            btnToggleSidebar.classList.toggle('active');
+        };
+    }
 };
 
 // Funcionalidad para la página de restaurantes
