@@ -21,7 +21,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <button class="btn-menu">
+                    <button class="btn-menu-detalle">
                         <i class="bi bi-list"></i>
                     </button>
                 </div>
@@ -29,17 +29,6 @@
                     <img src="{{ asset('img/Guia_Repsol.png') }}" alt="Guía Repsol" class="logo-img">
                 </div>
                 <div class="col">
-                    <!--
-                    <div class="search-bar">
-                        <button class="btn-close-search" id="restaurant-search-clear">
-                            <i class="bi bi-x-lg"></i>
-                        </button>
-                        <input type="text" class="search-input" id="restaurant-search-input" placeholder="Buscar">
-                        <button class="btn-search-submit" id="restaurant-search-button">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                    -->
                 </div>
                 <div class="col-auto">
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
