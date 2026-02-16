@@ -110,7 +110,7 @@
                         <div class="section-header">
                             <div>
                                 <h2>Contenido relacionado
-                                    <button class="btn-toggle-sidebar" id="btnToggleSidebar">
+                                    <button class="btn-toggle-sidebar active" id="btnToggleSidebar">
                                         <i class="bi bi-chevron-down"></i>
                                     </button>
                                 </h2>
@@ -129,7 +129,7 @@
                         </div>
 
                         <!-- Lista de Restaurantes Patrocinados -->
-                        <div class="articles-list sidebar-content" id="sidebarContent">
+                        <div class="articles-list sidebar-content show" id="sidebarContent">
                             @forelse($restaurantesPatrocinados as $patrocinado)
                             <a href="{{ route('restaurante.detalle', $patrocinado->id) }}" style="text-decoration: none; color: inherit;">
                             <article class="article-item">
@@ -156,11 +156,10 @@
                             @empty
                             <p class="text-muted">No hay restaurantes patrocinados en este momento.</p>
                             @endforelse
-                        </div>
 
-                        <!-- Paginación Patrocinados -->
-                        @if($restaurantesPatrocinados->hasPages())
-                        <div class="pagination-section mt-4">
+                            <!-- Paginación Patrocinados -->
+                            @if($restaurantesPatrocinados->hasPages())
+                            <div class="pagination-section mt-4">
                             <div class="d-flex justify-content-center align-items-center gap-2">
                                 <!-- Flecha Anterior -->
                                 @if($restaurantesPatrocinados->onFirstPage())
