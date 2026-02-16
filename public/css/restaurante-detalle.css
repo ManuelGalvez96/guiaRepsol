@@ -2308,3 +2308,23 @@ body {
 #modalEditarRestaurante .imagen-actual-item:hover .img-thumbnail {
     opacity: 0.8;
 }
+
+/* Estilos para validación del formulario */
+#modalEditarRestaurante .text-danger {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    min-height: 1.2rem;
+}
+
+#modalEditarRestaurante .btn-deshabilitado {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+}
+
+#modalEditarRestaurante .btn-deshabilitado:hover {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+}

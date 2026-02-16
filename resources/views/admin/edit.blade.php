@@ -25,7 +25,7 @@
 
             <div class="form-group">
                 <label for="nombre">Nombre del Restaurante *</label>
-                <input type="text" id="nombre" name="nombre" value="{{ old('nombre', $restaurante->nombre) }}" required>
+                <input type="text" id="nombre" name="nombre" value="{{ old('nombre', $restaurante->nombre) }}">
                 @error('nombre')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -41,7 +41,7 @@
 
             <div class="form-group">
                 <label for="categoria_id">Categoría *</label>
-                <select id="categoria_id" name="categoria_id" required>
+                <select id="categoria_id" name="categoria_id">
                     <option value="">Seleccione una categoría</option>
                     @foreach($categorias as $categoria)
                         <option value="{{ $categoria->id }}" {{ old('categoria_id', $restaurante->categoria_id) == $categoria->id ? 'selected' : '' }}>
@@ -56,7 +56,7 @@
 
             <div class="form-group">
                 <label for="ubicacion_id">Ubicación *</label>
-                <select id="ubicacion_id" name="ubicacion_id" required>
+                <select id="ubicacion_id" name="ubicacion_id">
                     <option value="">Seleccione una ubicación</option>
                     @foreach($ubicaciones as $ubicacion)
                         <option value="{{ $ubicacion->id }}" {{ old('ubicacion_id', $restaurante->ubicacion_id) == $ubicacion->id ? 'selected' : '' }}>
@@ -71,7 +71,7 @@
 
             <div class="form-group">
                 <label for="user_id">Gerente del Restaurante *</label>
-                <select id="user_id" name="user_id" required class="form-select">
+                <select id="user_id" name="user_id" class="form-select">
                     <option value="">Seleccione un gerente</option>
                     @foreach($gerentes as $gerente)
                         <option value="{{ $gerente->id }}" {{ old('user_id', $restaurante->user_id) == $gerente->id ? 'selected' : '' }}>
@@ -86,7 +86,7 @@
 
             <div class="form-group">
                 <label for="direccion">Dirección *</label>
-                <input type="text" id="direccion" name="direccion" value="{{ old('direccion', $restaurante->direccion) }}" required>
+                <input type="text" id="direccion" name="direccion" value="{{ old('direccion', $restaurante->direccion) }}">
                 @error('direccion')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -124,7 +124,7 @@
 
             <div class="form-group">
                 <label for="email">Email *</label>
-                <input type="email" id="email" name="email" value="{{ old('email', $restaurante->email) }}" required>
+                <input type="email" id="email" name="email" value="{{ old('email', $restaurante->email) }}">
                 @error('email')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -140,7 +140,7 @@
 
             <div class="form-group">
                 <label for="precio">Precio Promedio (€) *</label>
-                <input type="number" id="precio" name="precio" value="{{ old('precio', $restaurante->precio) }}" step="0.01" required>
+                <input type="number" id="precio" name="precio" value="{{ old('precio', $restaurante->precio) }}" step="0.01">
                 @error('precio')
                     <div class="error">{{ $message }}</div>
                 @enderror

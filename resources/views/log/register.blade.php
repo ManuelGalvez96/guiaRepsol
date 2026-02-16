@@ -53,7 +53,7 @@
                 <div class="form-group">
                     <label for="name">Nombre</label>
                     <input type="text" id="name" name="name"
-                        class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
+                        class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}">
                     @error('name')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
                     @enderror
@@ -62,7 +62,7 @@
                 <div class="form-group">
                     <label for="apellidos">Apellidos</label>
                     <input type="text" id="apellidos" name="apellidos"
-                        class="form-control @error('apellidos') is-invalid @enderror" value="{{ old('apellidos') }}" required>
+                        class="form-control @error('apellidos') is-invalid @enderror" value="{{ old('apellidos') }}">
                     @error('apellidos')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
                     @enderror
@@ -71,7 +71,7 @@
                 <div class="form-group">
                     <label for="email">Correo electrónico</label>
                     <input type="email" id="email" name="email"
-                        class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
+                        class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}">
                     @error('email')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
                     @enderror
@@ -81,7 +81,7 @@
                     <label for="password">Contraseña</label>
                     <div class="password-input">
                         <input type="password" id="password" name="password"
-                            class="form-control @error('password') is-invalid @enderror" required>
+                            class="form-control @error('password') is-invalid @enderror">
                     </div>
                     @error('password')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
@@ -92,7 +92,7 @@
                     <label for="password_confirmation">Confirmar Contraseña</label>
                     <div class="password-input">
                         <input type="password" id="password_confirmation" name="password_confirmation"
-                            class="form-control @error('password_confirmation') is-invalid @enderror" required>
+                            class="form-control @error('password_confirmation') is-invalid @enderror">
                     </div>
                     @error('password_confirmation')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>

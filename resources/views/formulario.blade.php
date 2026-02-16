@@ -92,7 +92,7 @@
 
             <div class="form-group">
                 <label>Nombre del negocio <span class="required">*</span></label>
-                <input type="text" name="nombre" required placeholder="Ej: Mesón El Rincón" value="{{ old('nombre') }}"
+                <input type="text" name="nombre" placeholder="Ej: Mesón El Rincón" value="{{ old('nombre') }}"
                     class="@error('nombre') error @enderror">
                 @error('nombre')
                     <small style="color: #e74c3c;">{{ $message }}</small>
@@ -102,7 +102,7 @@
             <div class="form-row">
                 <div class="form-group">
                     <label>Categoría <span class="required">*</span></label>
-                    <select name="categoria_id" required>
+                    <select name="categoria_id">
                         <option value="">Selecciona una categoría</option>
                         @foreach($categorias ?? [] as $categoria)
                             <option value="{{ $categoria->id }}" {{ old('categoria_id') == $categoria->id ? 'selected' : '' }}>
@@ -114,14 +114,14 @@
 
                 <div class="form-group">
                     <label>Precio promedio <span class="required">*</span></label>
-                    <input type="number" name="precio" required placeholder="Ej: 25.00" step="0.01" min="0.01" max="9999.99" value="{{ old('precio') }}">
+                    <input type="number" name="precio" placeholder="Ej: 25.00" step="0.01" min="0.01" max="9999.99" value="{{ old('precio') }}">
                     <small>Precio promedio por persona en euros (máximo 9999.99€)</small>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Descripción del negocio <span class="required">*</span></label>
-                <textarea name="descripcion" required placeholder="Describe tu negocio, su ambiente, especialidades, historia..." class="@error('descripcion') error @enderror">{{ old('descripcion') }}</textarea>
+                <textarea name="descripcion" placeholder="Describe tu negocio, su ambiente, especialidades, historia..." class="@error('descripcion') error @enderror">{{ old('descripcion') }}</textarea>
                 <small>Mínimo 100 caracteres</small>
                 @error('descripcion')
                     <small style="color: #e74c3c; display: block;">{{ $message }}</small>
@@ -135,30 +135,30 @@
 
             <div class="form-group">
                 <label>Dirección completa <span class="required">*</span></label>
-                <input type="text" name="direccion" required placeholder="Calle, número, piso" value="{{ old('direccion') }}">
+                <input type="text" name="direccion" placeholder="Calle, número, piso" value="{{ old('direccion') }}">
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label>Ciudad <span class="required">*</span></label>
-                    <input type="text" name="ciudad" required placeholder="Ej: Madrid" value="{{ old('ciudad') }}">
+                    <input type="text" name="ciudad" placeholder="Ej: Madrid" value="{{ old('ciudad') }}">
                 </div>
 
                 <div class="form-group">
                     <label>Provincia <span class="required">*</span></label>
-                    <input type="text" name="provincia" required placeholder="Ej: Madrid" value="{{ old('provincia') }}">
+                    <input type="text" name="provincia" placeholder="Ej: Madrid" value="{{ old('provincia') }}">
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label>Código postal <span class="required">*</span></label>
-                    <input type="text" name="codigo_postal" required placeholder="Ej: 28001" value="{{ old('codigo_postal') }}">
+                    <input type="text" name="codigo_postal" placeholder="Ej: 28001" value="{{ old('codigo_postal') }}">
                 </div>
 
                 <div class="form-group">
                     <label>Comunidad Autónoma <span class="required">*</span></label>
-                    <input type="text" name="comunidad_autonoma" required placeholder="Ej: Comunidad de Madrid" value="{{ old('comunidad_autonoma') }}">
+                    <input type="text" name="comunidad_autonoma" placeholder="Ej: Comunidad de Madrid" value="{{ old('comunidad_autonoma') }}">
                 </div>
             </div>
         </div>
@@ -175,7 +175,7 @@
 
                 <div class="form-group">
                     <label>Email <span class="required">*</span></label>
-                    <input type="email" name="email" required placeholder="contacto@tunegocio.com" value="{{ old('email') }}" class="@error('email') error @enderror">
+                    <input type="email" name="email" placeholder="contacto@tunegocio.com" value="{{ old('email') }}" class="@error('email') error @enderror">
                     @error('email')
                         <small style="color: #e74c3c;">{{ $message }}</small>
                     @enderror
@@ -218,7 +218,7 @@
                         <strong>Haz clic para subir</strong> o arrastra la imagen aquí
                         <br><small>Formatos JPG, PNG. Máximo 5MB</small>
                     </div>
-                    <input type="file" id="foto_principal" name="foto_principal" accept="image/*" required>
+                    <input type="file" id="foto_principal" name="foto_principal" accept="image/*">
                 </div>
                 @error('foto_principal')
                     <small style="color: #e74c3c;">{{ $message }}</small>

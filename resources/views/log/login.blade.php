@@ -49,7 +49,7 @@
                 <div class="form-group">
                     <label for="email">Correo electrónico</label>
                     <input type="email" id="email" name="email"
-                        class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
+                        class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}">
                     @error('email')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>
                     @enderror
@@ -59,7 +59,7 @@
                     <label for="password">Contraseña</label>
                     <div class="password-input">
                         <input type="password" id="password" name="password"
-                            class="form-control @error('password') is-invalid @enderror" required>
+                            class="form-control @error('password') is-invalid @enderror">
                     </div>
                     @error('password')
                         <span class="text-danger" style="font-size: 12px;">{{ $message }}</span>

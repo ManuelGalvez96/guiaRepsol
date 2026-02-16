@@ -522,7 +522,7 @@
                                         <div class="modal-body">
                                             <div class="mb-3">
                                                 <label class="form-label">¿Cómo valoras tu experiencia?</label>
-                                                <input type="hidden" name="puntuacion" id="puntuacion-edit-{{ $valoracion->id }}" value="{{ $valoracion->puntuacion }}" required>
+                                                <input type="hidden" name="puntuacion" id="puntuacion-edit-{{ $valoracion->id }}" value="{{ $valoracion->puntuacion }}">
                                                 <div class="rating-stars" data-modal-id="{{ $valoracion->id }}" data-current-rating="{{ $valoracion->puntuacion }}">
                                                     @for($i = 1; $i <= 5; $i++)
                                                     <div class="star {{ $i <= $valoracion->puntuacion ? 'active' : '' }}" data-value="{{ $i }}">
@@ -533,7 +533,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Comentario</label>
-                                                <textarea name="comentario" class="form-control" rows="4" required>{{ $valoracion->comentario }}</textarea>
+                                                <textarea name="comentario" class="form-control" rows="4">{{ $valoracion->comentario }}</textarea>
                                             </div>
                                         </div>
                                         <div class="modal-footer d-flex justify-content-between">
@@ -567,7 +567,7 @@
                                         <div class="modal-body">
                                             <div class="mb-3">
                                                 <label class="form-label">Tu respuesta</label>
-                                                <textarea name="respuesta_gerente" class="form-control" rows="4" required placeholder="Escribe tu respuesta...">{{ $valoracion->respuesta_gerente }}</textarea>
+                                                <textarea name="respuesta_gerente" class="form-control" rows="4" placeholder="Escribe tu respuesta...">{{ $valoracion->respuesta_gerente }}</textarea>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -592,7 +592,7 @@
                                         <div class="modal-body">
                                             <div class="mb-3">
                                                 <label class="form-label">Tu respuesta</label>
-                                                <textarea name="respuesta_gerente" class="form-control" rows="4" required>{{ $valoracion->respuesta_gerente }}</textarea>
+                                                <textarea name="respuesta_gerente" class="form-control" rows="4">{{ $valoracion->respuesta_gerente }}</textarea>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -655,7 +655,7 @@
                                     <div class="modal-body">
                                         <div class="mb-3">
                                             <label class="form-label">¿Cómo valoras tu experiencia?</label>
-                                            <input type="hidden" name="puntuacion" id="puntuacion" required>
+                                            <input type="hidden" name="puntuacion" id="puntuacion">
                                             <div class="rating-stars">
                                                 <div class="star" data-value="1">
                                                     <i class="bi bi-star-fill"></i>
@@ -676,7 +676,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Comentario</label>
-                                            <textarea name="comentario" class="form-control" rows="4" required placeholder="Comparte tu experiencia..."></textarea>
+                                            <textarea name="comentario" class="form-control" rows="4" placeholder="Comparte tu experiencia..."></textarea>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -767,13 +767,14 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="edit_nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="edit_nombre" name="nombre" value="{{ $restaurante->nombre }}" required>
+                                    <input type="text" class="form-control" id="edit_nombre" name="nombre" value="{{ $restaurante->nombre }}">
+                                    <span id="error-edit-nombre" class="text-danger small"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="edit_categoria_id" class="form-label">Categoría <span class="text-danger">*</span></label>
-                                    <select class="form-control" id="edit_categoria_id" name="categoria_id" required>
+                                    <select class="form-control" id="edit_categoria_id" name="categoria_id">
                                         @foreach(\App\Models\Categoria::all() as $categoria)
                                             <option value="{{ $categoria->id }}" {{ $restaurante->categoria_id == $categoria->id ? 'selected' : '' }}>
                                                 {{ $categoria->nombre }}
@@ -791,7 +792,8 @@
 
                         <div class="form-group mb-3">
                             <label for="edit_direccion" class="form-label">Dirección <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="edit_direccion" name="direccion" value="{{ $restaurante->direccion }}" required>
+                            <input type="text" class="form-control" id="edit_direccion" name="direccion" value="{{ $restaurante->direccion }}">
+                            <span id="error-edit-direccion" class="text-danger small"></span>
                         </div>
 
                         <div class="row">
@@ -799,12 +801,14 @@
                                 <div class="form-group mb-3">
                                     <label for="edit_telefono" class="form-label">Teléfono</label>
                                     <input type="text" class="form-control" id="edit_telefono" name="telefono" value="{{ $restaurante->telefono }}">
+                                    <span id="error-edit-telefono" class="text-danger small"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="edit_email" class="form-label">Email <span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control" id="edit_email" name="email" value="{{ $restaurante->email }}" required>
+                                    <input type="email" class="form-control" id="edit_email" name="email" value="{{ $restaurante->email }}">
+                                    <span id="error-edit-email" class="text-danger small"></span>
                                 </div>
                             </div>
                         </div>
@@ -814,12 +818,14 @@
                                 <div class="form-group mb-3">
                                     <label for="edit_web" class="form-label">Sitio Web</label>
                                     <input type="url" class="form-control" id="edit_web" name="web" value="{{ $restaurante->web }}">
+                                    <span id="error-edit-web" class="text-danger small"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="edit_precio" class="form-label">Precio Promedio (€) <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" id="edit_precio" name="precio" step="0.01" value="{{ $restaurante->precio }}" required>
+                                    <input type="number" class="form-control" id="edit_precio" name="precio" step="0.01" value="{{ $restaurante->precio }}">
+                                    <span id="error-edit-precio" class="text-danger small"></span>
                                 </div>
                             </div>
                         </div>
@@ -898,7 +904,8 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <!-- Script personalizado -->
+    <!-- Scripts personalizados -->
+    <script src="{{ asset('js/validacion-editar-restaurante.js') }}"></script>
     <script src="{{ asset('js/restaurante-detalle.js') }}"></script>
 </body>
 </html>
