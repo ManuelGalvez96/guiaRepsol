@@ -272,7 +272,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 20px;
-  margin-top: 24px;
+  margin-bottom: 2px;
   padding: 6px 4px;
   text-decoration: none;
 }
@@ -1342,7 +1342,7 @@ body {
   }
 
   .categorias {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, calc(50% - 10px));
     gap: 40px 20px;
     justify-content: center;
   }
@@ -1358,7 +1358,7 @@ body {
   }
 
   .icono {
-    font-size: 48px;
+    font-size: 56px;
   }
 
   .cercanos-box {
