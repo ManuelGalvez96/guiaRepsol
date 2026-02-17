@@ -15,8 +15,8 @@
 <div class="topbar">
   <div class="topbar-inner">
     <div class="top-left">
-      <div class="burger" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">☰</div>
-      <div class="logo" onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">guía repsol</div>
+      <div class="burger" onclick="window.location.href='{{ route('pre-login') }}'" style="cursor: pointer;">☰</div>
+      <div class="logo" onclick="window.location.href='{{ route('pre-login') }}'" style="cursor: pointer;">guía repsol</div>
       <nav class="nav">
         <a href="{{ route('pre-login') }}">Comer</a>
         <a href="{{ route('pre-login') }}">Viajar</a>
@@ -34,12 +34,12 @@
 <!-- SUBNAV -->
 <section class="subnav">
   <div class="subnav-inner">
-    <div onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">Soletes</div>
-    <div onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">Todos los Soletes</div>
-    <div onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">Pet friendly</div>
-    <div onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">Con solera</div>
-    <div onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">De carretera</div>
-    <div onclick="window.location.href='{{ route('login') }}'" style="cursor: pointer;">Donde comen los cocineros</div>
+    <div onclick="window.location.href='{{ route('pre-login') }}'" style="cursor: pointer;">Soletes</div>
+    <div onclick="window.location.href='{{ route('pre-login') }}'" style="cursor: pointer;">Todos los Soletes</div>
+    <div onclick="window.location.href='{{ route('pre-login') }}'" style="cursor: pointer;">Pet friendly</div>
+    <div onclick="window.location.href='{{ route('pre-login') }}'" style="cursor: pointer;">Con solera</div>
+    <div onclick="window.location.href='{{ route('pre-login') }}'" style="cursor: pointer;">De carretera</div>
+    <div onclick="window.location.href='{{ route('pre-login') }}'" style="cursor: pointer;">Donde comen los cocineros</div>
   </div>
 </section>
 

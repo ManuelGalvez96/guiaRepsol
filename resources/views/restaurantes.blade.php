@@ -7,7 +7,31 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="{{ asset('css/restaurantes.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/restaurantes.css') }}?v={{ time() }}">
+    <style>
+        /* Forzar layout horizontal en pantallas grandes */
+        @media (min-width: 992px) {
+            .main-content .row {
+                display: flex !important;
+                flex-wrap: wrap !important;
+            }
+            .main-content .col-lg-4 {
+                flex: 0 0 33.33333333% !important;
+                max-width: 33.33333333% !important;
+            }
+            .main-content .col-lg-8 {
+                flex: 0 0 66.66666667% !important;
+                max-width: 66.66666667% !important;
+            }
+        }
+        @media (max-width: 991px) {
+            .main-content .col-lg-4,
+            .main-content .col-lg-8 {
+                flex: 0 0 100% !important;
+                max-width: 100% !important;
+            }
+        }
+    </style>
     <title>Guía Repsol - Restaurantes</title>
 </head>
 
@@ -103,9 +127,9 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="container">
-            <div class="row">
+            <div class="row" style="display: flex; flex-wrap: wrap;">
                 <!-- Columna Izquierda - Contenido Relacionado -->
-                <div class="col-lg-4">
+                <div class="col-lg-4" style="flex: 0 0 33.33333333%; max-width: 33.33333333%;">
                     <div class="content-section">
                         <div class="section-header">
                             <div>
@@ -200,7 +224,7 @@
                 </div>
 
                 <!-- Columna Derecha - Establecimientos -->
-                <div class="col-lg-8">
+                <div class="col-lg-8" style="flex: 0 0 66.66666667%; max-width: 66.66666667%;">
                     <!-- Establecimientos Gastronómicos -->
                     <div class="content-section">
                         <div class="section-header">
