@@ -1,4 +1,146 @@
+// Estado global para sincronización
+let restaurantState = {
+    liked: null,
+    saved: null,
+    totalLikes: null
+};
+
+// Función para sincronizar todos los botones
+function syncAllButtons() {
+    syncLikeButtons();
+    syncSaveButtons();
+}
+
+// Sincronizar botones de Like
+function syncLikeButtons() {
+    const btnFavoritoDesktop = document.getElementById('btn-favorito');
+    const btnFavoritoMobile = document.getElementById('btn-favorito-mobile');
+    const likeCountDesktop = document.getElementById('like-count');
+    const likeCountMobile = document.getElementById('like-count-mobile');
+
+    const updateButton = (btn, likeCount) => {
+        if (!btn) return;
+        const icon = btn.querySelector('i');
+
+        if (restaurantState.liked) {
+            btn.classList.add('active');
+            icon.classList.remove('bi-heart');
+            icon.classList.add('bi-heart-fill');
+        } else {
+            btn.classList.remove('active');
+            icon.classList.remove('bi-heart-fill');
+            icon.classList.add('bi-heart');
+        }
+
+        if (likeCount && restaurantState.totalLikes !== null) {
+            likeCount.textContent = restaurantState.totalLikes;
+        }
+    };
+
+    updateButton(btnFavoritoDesktop, likeCountDesktop);
+    updateButton(btnFavoritoMobile, likeCountMobile);
+}
+
+// Sincronizar botones de Save
+function syncSaveButtons() {
+    const btnGuardarDesktop = document.getElementById('btn-guardar');
+    const btnGuardarMobile = document.getElementById('btn-guardar-mobile');
+
+    const updateButton = (btn) => {
+        if (!btn) return;
+        const icon = btn.querySelector('i');
+
+        if (restaurantState.saved) {
+            btn.classList.add('active');
+            icon.classList.remove('bi-bookmark');
+            icon.classList.add('bi-bookmark-fill');
+        } else {
+            btn.classList.remove('active');
+            icon.classList.remove('bi-bookmark-fill');
+            icon.classList.add('bi-bookmark');
+        }
+    };
+
+    updateButton(btnGuardarDesktop);
+    updateButton(btnGuardarMobile);
+}
+
+// Función para dar like/unlike
+function likeRestaurant(restauranteId, origin) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    fetch(`/restaurante/${restauranteId}/like`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            restaurantState.liked = data.liked;
+            restaurantState.totalLikes = data.totalLikes;
+            syncAllButtons();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+// Función para guardar/quitar de guardados
+function saveRestaurant(restauranteId, origin) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    fetch(`/restaurante/${restauranteId}/guardar`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            restaurantState.saved = data.saved;
+            syncAllButtons();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+// Función para editar restaurante
+function editRestaurant(restauranteId) {
+    const modal = new bootstrap.Modal(document.getElementById('modalEditarRestaurante'));
+    modal.show();
+}
+
+// Inicializar estado global basado en valores del servidor
+function initializeRestaurantState() {
+    // Los datos se pasan desde el blade en variables globales
+    // Usa los atributos data de los botones si los tienes disponibles
+    const btnFavorito = document.getElementById('btn-favorito');
+    if (btnFavorito && !restaurantState.liked) {
+        restaurantState.liked = btnFavorito.classList.contains('active');
+        const likeCount = document.getElementById('like-count');
+        if (likeCount) {
+            restaurantState.totalLikes = parseInt(likeCount.textContent);
+        }
+    }
+    
+    const btnGuardar = document.getElementById('btn-guardar');
+    if (btnGuardar && restaurantState.saved === null) {
+        restaurantState.saved = btnGuardar.classList.contains('active');
+    }
+}
+
 // Función para el horario desplegable
+
 window.onload = function() {
     // Menú hamburguesa para móvil
     const btnMenu = document.querySelector('.btn-menu-detalle');
@@ -256,106 +398,13 @@ window.onload = function() {
     // Manejar botón de favorito (like)
     const btnFavorito = document.getElementById('btn-favorito');
     if (btnFavorito) {
-        btnFavorito.onclick = function() {
-            const restauranteId = this.getAttribute('data-restaurante-id');
-            
-            fetch(`/restaurante/${restauranteId}/like`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': window.csrfToken,
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const icon = this.querySelector('i');
-                    const likeCount = document.getElementById('like-count');
-                    
-                    if (data.liked) {
-                        this.classList.add('active');
-                        icon.classList.remove('bi-heart');
-                        icon.classList.add('bi-heart-fill');
-                    } else {
-                        this.classList.remove('active');
-                        icon.classList.remove('bi-heart-fill');
-                        icon.classList.add('bi-heart');
-                    }
-                    
-                    if (likeCount) {
-                        likeCount.textContent = data.totalLikes;
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No se pudo actualizar el like',
-                    confirmButtonColor: '#00a3e0'
-                });
-            });
-        };
+        // El onclick ya está definido en el HTML, no necesita modificación aquí
     }
 
     // Manejar botón de guardar
     const btnGuardar = document.getElementById('btn-guardar');
     if (btnGuardar) {
-        btnGuardar.onclick = function() {
-            const restauranteId = this.getAttribute('data-restaurante-id');
-            
-            fetch(`/restaurante/${restauranteId}/guardar`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': window.csrfToken,
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const icon = this.querySelector('i');
-                    
-                    if (data.saved) {
-                        this.classList.add('active');
-                        icon.classList.remove('bi-bookmark');
-                        icon.classList.add('bi-bookmark-fill');
-                        
-                        Swal.fire({
-                            icon: 'success',
-                            title: '¡Guardado!',
-                            text: data.message,
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
-                    } else {
-                        this.classList.remove('active');
-                        icon.classList.remove('bi-bookmark-fill');
-                        icon.classList.add('bi-bookmark');
-                        
-                        Swal.fire({
-                            icon: 'info',
-                            title: 'Eliminado',
-                            text: data.message,
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No se pudo guardar el restaurante',
-                    confirmButtonColor: '#00a3e0'
-                });
-            });
-        };
+        // El onclick ya está definido en el HTML, no necesita modificación aquí
     }
 
     // Slider de miniaturas
@@ -421,10 +470,7 @@ window.onload = function() {
     // Manejar botón de editar restaurante (para gerentes)
     const btnEditarRestaurante = document.getElementById('btn-editar-restaurante');
     if (btnEditarRestaurante) {
-        btnEditarRestaurante.onclick = function() {
-            const modal = new bootstrap.Modal(document.getElementById('modalEditarRestaurante'));
-            modal.show();
-        };
+        // El onclick ya está definido en el HTML, no necesita modificación aquí
     }
 
     // Manejar guardar edición de restaurante
@@ -575,5 +621,8 @@ window.onload = function() {
             });
         };
     });
+
+    // Inicializar estado global al cargar la página
+    initializeRestaurantState();
 };
 

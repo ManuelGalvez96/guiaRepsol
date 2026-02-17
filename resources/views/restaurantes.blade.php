@@ -51,7 +51,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <button class="btn-menu-detalle">
+                    <button class="btn-menu-detalle" id="btnToggleMenu" onclick="toggleMobileMenu()">
                         <i class="bi bi-list"></i>
                     </button>
                 </div>
@@ -80,6 +80,16 @@
             </div>
         </div>
     </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-nav">
+            <li><a href="{{ route('home') }}"><i class="bi bi-house"></i> Inicio</a></li>
+            <li><a href="{{ route('restaurantes') }}" class="active"><i class="bi bi-list-ul"></i> Listado</a></li>
+            <li><a href="{{ route('formulario') }}"><i class="bi bi-shop"></i> Date a Conocer</a></li>
+            <li><a href="{{ route('restaurantes.guardados') }}"><i class="bi bi-bookmark-fill"></i> Guardados</a></li>
+        </ul>
+    </div>
 
     <!-- Tabs Navigation -->
     <div class="tabs-nav">
@@ -454,7 +464,10 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/mobile-menu.js') }}"></script>
     <script src="{{ asset('js/restaurantes.js') }}"></script>
+
+
 </body>
 
 </html>

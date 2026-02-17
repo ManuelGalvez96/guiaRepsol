@@ -264,3 +264,6 @@ if (clearButton) {
 		fetchResults('');
 	};
 }
+
+// Inicializar menú móvil
+initializeMobileMenu();

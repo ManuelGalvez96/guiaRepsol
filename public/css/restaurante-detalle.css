@@ -1795,6 +1795,26 @@ body {
     .restaurant-image-main {
         height: 250px;
     }
+
+    /* Estilos para botones en mobile */
+    .restaurant-info-box.d-lg-none .btn-guardar,
+    .restaurant-info-box.d-lg-none .btn-favorito,
+    .restaurant-info-box.d-lg-none .btn-editar-gerente {
+        padding: 8px 12px;
+        font-size: 12px;
+        flex: 1;
+        min-width: auto;
+    }
+
+    .restaurant-info-box.d-lg-none .btn-guardar i,
+    .restaurant-info-box.d-lg-none .btn-favorito i,
+    .restaurant-info-box.d-lg-none .btn-editar-gerente i {
+        font-size: 14px;
+    }
+
+    .restaurant-info-box.d-lg-none .btn-favorito span {
+        font-size: 12px;
+    }
 }
 
 /* Estilos para modales y botones de valoración */
@@ -2200,24 +2220,55 @@ body {
 
 /* Responsive para miniaturas */
 @media (max-width: 768px) {
+    /* Ocultar botones de navegación del slider en responsive */
+    .thumbnail-nav-btn {
+        display: none;
+    }
+    
+    /* Convertir slider a scroll vertical */
+    .thumbnails-slider-container {
+        position: relative;
+        margin-top: 20px;
+        padding: 0;
+    }
+    
+    .thumbnails-slider {
+        overflow-x: auto;
+        overflow-y: hidden;
+        max-width: 100%;
+        padding: 0;
+        -ms-overflow-style: auto;
+        scrollbar-width: thin;
+    }
+    
+    .thumbnails-slider::-webkit-scrollbar {
+        display: block;
+        height: 6px;
+    }
+    
+    .thumbnails-slider::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 163, 224, 0.6);
+        border-radius: 3px;
+    }
+    
+    .thumbnails-wrapper {
+        flex-direction: row;
+        gap: 10px;
+    }
+    
     .thumbnail-item {
-        min-width: calc(33.333% - 6.67px);
+        min-width: calc(25% - 7.5px);
+        flex: 0 0 calc(25% - 7.5px);
+    }
+    
+    .thumbnail-item img {
+        height: 80px;
     }
 }
 
 @media (max-width: 480px) {
-    .thumbnail-item {
-        min-width: calc(50% - 5px);
-    }
-    
     .thumbnails-slider {
-        padding: 0 40px;
-    }
-    
-    .thumbnail-nav-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 16px;
+        padding: 0;
     }
 }
 
