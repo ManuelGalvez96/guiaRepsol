@@ -42,7 +42,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Miga Cana',
-            'descripcion' => 'Bar de cocina tradicional española con toques modernos. Famoso por sus arroces y carnes a la brasa.',
+            'descripcion' => 'Bar de cocina tradicional española con toques modernos y ambiente acogedor. Famoso por sus arroces melosos y carnes a la brasa de calidad.',
             'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 2,
             'ubicacion_id' => 1,
@@ -59,7 +59,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Kitchen 154',
-            'descripcion' => 'Restaurante de alta cocina con propuestas innovadoras. Menú degustación con productos locales.',
+            'descripcion' => 'Restaurante de alta cocina con propuestas innovadoras y creativas. Menú degustación con productos locales de temporada y técnicas vanguardistas.',
             'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 1,
@@ -76,7 +76,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Martín Berasategui',
-            'descripcion' => 'Tres soles Repsol. Templo de la alta gastronomía vasca con creaciones del maestro Martín Berasategui.',
+            'descripcion' => 'Tres soles Repsol. Templo de la alta gastronomía vasca con creaciones excepcionales del maestro Martín Berasategui. Experiencia culinaria inolvidable.',
             'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 2,
@@ -93,7 +93,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Akelarre',
-            'descripcion' => 'Tres soles Repsol. Cocina vasca de vanguardia con vistas espectaculares al Cantábrico.',
+            'descripcion' => 'Tres soles Repsol. Cocina vasca de vanguardia del chef Pedro Subijana con vistas espectaculares al mar Cantábrico desde su terraza panorámica.',
             'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 2,
@@ -109,7 +109,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Disfrutar',
-            'descripcion' => 'Dos soles Repsol. Propuesta gastronómica innovadora de Oriol Castro, Eduard Xatruch y Mateu Casañas.',
+            'descripcion' => 'Dos soles Repsol. Propuesta gastronómica innovadora y sorprendente de Oriol Castro, Eduard Xatruch y Mateu Casañas. Creatividad en cada plato.',
             'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 3,
@@ -126,7 +126,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Ricard Camarena',
-            'descripcion' => 'Dos soles Repsol. Cocina mediterránea contemporánea con producto valenciano de máxima calidad.',
+            'descripcion' => 'Dos soles Repsol. Cocina mediterránea contemporánea del chef Ricard Camarena con producto valenciano de máxima calidad y técnicas innovadoras.',
             'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 4,
@@ -142,7 +142,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Skina',
-            'descripcion' => 'Dos soles Repsol. Alta cocina en pleno centro de Marbella con propuestas creativas.',
+            'descripcion' => 'Dos soles Repsol. Alta cocina en pleno centro de Marbella con propuestas creativas del chef Marcos Granda. Un espacio íntimo y elegante.',
             'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 5,
@@ -158,7 +158,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Casa Marcelo',
-            'descripcion' => 'Un sol Repsol. Cocina gallega de fusión con influencias asiáticas en el corazón de Santiago.',
+            'descripcion' => 'Un sol Repsol. Cocina gallega de fusión con influencias asiáticas en el corazón de Santiago. Propuestas creativas del chef Marcelo Tejedor.',
             'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 6,
@@ -175,7 +175,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Casa Gerardo',
-            'descripcion' => 'Un sol Repsol. Cocina asturiana tradicional reinventada con productos de proximidad.',
+            'descripcion' => 'Un sol Repsol. Cocina asturiana tradicional reinventada con productos de proximidad y temporada. Tradición familiar desde muchas generaciones.',
             'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 7,
@@ -191,7 +191,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Nerua',
-            'descripcion' => 'Un sol Repsol. Restaurante del Guggenheim Bilbao con cocina vasca contemporánea.',
+            'descripcion' => 'Un sol Repsol. Restaurante del Museo Guggenheim Bilbao con cocina vasca contemporánea del chef Josean Alija. Una experiencia gastronómica única.',
             'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 8,
@@ -208,7 +208,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'La Botica',
-            'descripcion' => 'Un sol Repsol. Propuesta gastronómica creativa en Matapozuelos con productos castellanos.',
+            'descripcion' => 'Un sol Repsol. Propuesta gastronómica creativa en Matapozuelos con productos castellanos de temporada y raíces tradicionales muy marcadas.',
             'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 9,
@@ -224,7 +224,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Abantal',
-            'descripcion' => 'Un sol Repsol. Cocina andaluza de autor con toques modernos en Sevilla.',
+            'descripcion' => 'Un sol Repsol. Cocina andaluza de autor con toques modernos en Sevilla. El chef Julio Fernández crea platos únicos con productos locales.',
             'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 10,
@@ -241,7 +241,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'El Club Allard',
-            'descripcion' => 'Dos soles Repsol. Alta cocina de vanguardia en un palacete modernista madrileño.',
+            'descripcion' => 'Dos soles Repsol. Alta cocina de vanguardia en un precioso palacete modernista madrileño. Experiencia gastronómica exclusiva y sofisticada.',
             'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 1,
@@ -258,7 +258,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'DiverXO',
-            'descripcion' => 'Tres soles Repsol. El primer y único tres soles de Madrid. Cocina fusión de Dabiz Muñoz.',
+            'descripcion' => 'Tres soles Repsol. El primer y único tres soles de Madrid. Cocina fusión innovadora del chef Dabiz Muñoz que rompe con todos los esquemas establecidos.',
             'user_id' => $gerenteIds[$index++] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 1,
@@ -276,7 +276,7 @@ class RestauranteSeeder extends Seeder
         // Additional 35 restaurants
         Restaurante::create([
             'nombre' => 'La Terraza del Casino',
-            'descripcion' => 'Dos soles Repsol. Elegante restaurante de Paco Roncero con vistas privilegiadas de Madrid.',
+            'descripcion' => 'Dos soles Repsol. Elegante restaurante del chef Paco Roncero con vistas privilegiadas de Madrid. Alta cocina española en ambiente exclusivo.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 1,
@@ -292,7 +292,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Coque',
-            'descripcion' => 'Dos soles Repsol. Los hermanos Sandoval ofrecen una experiencia gastronómica completa.',
+            'descripcion' => 'Dos soles Repsol. Los hermanos Sandoval ofrecen una experiencia gastronómica completa con espacios diferenciados y un viaje sensorial único por la cocina española.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 1,
@@ -308,7 +308,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Santceloni',
-            'descripcion' => 'Dos soles Repsol. Cocina española contemporánea con servicio impecable.',
+            'descripcion' => 'Dos soles Repsol. Cocina española contemporánea con un servicio impecable y productos de temporada de máxima calidad. Ambiente elegante y sofisticado.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 1,
@@ -324,7 +324,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Lasarte',
-            'descripcion' => 'Tres soles Repsol. El restaurante de Martín Berasategui en Barcelona.',
+            'descripcion' => 'Tres soles Repsol. El restaurante de Martín Berasategui en Barcelona ubicado en el Monument Hotel. Cocina vasca de alta gastronomía con sello propio.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 3,
@@ -340,7 +340,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Moments',
-            'descripcion' => 'Dos soles Repsol. Carme Ruscalleda y Raül Balam fusionan tradición e innovación.',
+            'descripcion' => 'Dos soles Repsol. Carme Ruscalleda y Raül Balam fusionan tradición catalana e innovación mundial en el Mandarin Oriental. Cocina sofisticada y creativa.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 3,
@@ -356,7 +356,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Azurmendi',
-            'descripcion' => 'Tres soles Repsol. Eneko Atxa combina sostenibilidad y alta cocina vasca.',
+            'descripcion' => 'Tres soles Repsol. Eneko Atxa combina sostenibilidad y alta cocina vasca en un edificio bioclimático. Una experiencia gastronómica responsable y excepcional.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 8,
@@ -372,7 +372,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Mugaritz',
-            'descripcion' => 'Dos soles Repsol. Andoni Luis Aduriz propone experiencias gastronómicas únicas.',
+            'descripcion' => 'Dos soles Repsol. Andoni Luis Aduriz propone experiencias gastronómicas únicas que desafían los sentidos. Cocina experimental y de vanguardia absoluta.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 2,
@@ -388,7 +388,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Arzak',
-            'descripcion' => 'Tres soles Repsol. Icono de la nueva cocina vasca con tradición familiar.',
+            'descripcion' => 'Tres soles Repsol. Icono de la nueva cocina vasca con tradición familiar desde 1897. Juan Mari Arzak y su hija Elena lideran la innovación culinaria.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 2,
@@ -404,7 +404,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Etxebarri',
-            'descripcion' => 'Un sol Repsol. Victor Arguinzoniz es el maestro de la parrilla.',
+            'descripcion' => 'Un sol Repsol. Victor Arguinzoniz es el maestro indiscutible de la parrilla. Cada ingrediente se cocina con fuego de diferentes maderas para lograr sabores únicos.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 8,
@@ -420,7 +420,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Quique Dacosta',
-            'descripcion' => 'Tres soles Repsol. Vanguardia gastronómica con raíces mediterráneas.',
+            'descripcion' => 'Tres soles Repsol. Vanguardia gastronómica con raíces mediterráneas en Dénia. Creatividad e innovación absoluta en cada creación del chef.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 4,
@@ -436,7 +436,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'El Celler de Can Roca',
-            'descripcion' => 'Tres soles Repsol. Los hermanos Roca han creado uno de los mejores restaurantes del mundo.',
+            'descripcion' => 'Tres soles Repsol. Los hermanos Roca han creado uno de los mejores restaurantes del mundo con cocina catalana vanguardista. Excelencia gastronómica absoluta.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 3,
@@ -452,7 +452,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Tickets Bar',
-            'descripcion' => 'Tapas de alta cocina por el equipo de Adrià en ambiente desenfadado.',
+            'descripcion' => 'Tapas de alta cocina por el equipo de Albert y Ferran Adrià en un ambiente desenfadado y divertido. Creatividad y sabor en cada bocado.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 2,
             'ubicacion_id' => 3,
@@ -468,7 +468,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Casa Mono',
-            'descripcion' => 'Cocina tradicional española con toques modernos en un ambiente acogedor.',
+            'descripcion' => 'Cocina tradicional española con toques modernos en un ambiente acogedor y familiar. Platos caseros elaborados con productos de primera calidad.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 2,
             'ubicacion_id' => 1,
@@ -484,7 +484,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'La Tasquita de Enfrente',
-            'descripcion' => 'Un sol Repsol. Cocina de mercado con toque personal de Juanjo López.',
+            'descripcion' => 'Un sol Repsol. Cocina de mercado con el toque personal del chef Juanjo López. Productos frescos y de temporada en un espacio cálido e íntimo.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 2,
             'ubicacion_id' => 1,
@@ -500,7 +500,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Taberna del Alabardero',
-            'descripcion' => 'Cocina andaluza refinada en un palacio del siglo XIX.',
+            'descripcion' => 'Cocina andaluza refinada en un precioso palacio del siglo XIX. Ambiente señorial con platos tradicionales elaborados con técnicas modernas.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 2,
             'ubicacion_id' => 10,
@@ -516,7 +516,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'El Poblet',
-            'descripcion' => 'Un sol Repsol. Cocina valenciana moderna por Quique Dacosta.',
+            'descripcion' => 'Un sol Repsol. Cocina valenciana moderna dirigida por Luis Valls del grupo Quique Dacosta. Productos locales con técnicas innovadoras.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 4,
@@ -532,7 +532,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'La Salita',
-            'descripcion' => 'Un sol Repsol. Cocina mediterránea de autor con producto de temporada.',
+            'descripcion' => 'Un sol Repsol. Cocina mediterránea de autor con producto de temporada fresco. El chef Beñat Gómez ofrece propuestas creativas y equilibradas.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 4,
@@ -548,7 +548,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Bardal',
-            'descripcion' => 'Dos soles Repsol. Cocina creativa en Ronda con vistas espectaculares.',
+            'descripcion' => 'Dos soles Repsol. Cocina creativa del chef Benito Gómez en Ronda con vistas espectaculares al Tajo. Producto local y técnicas vanguardistas.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 5,
@@ -564,7 +564,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Sollo',
-            'descripcion' => 'Un sol Repsol. Diego Gallegos, maestro del caviar y pescado de estero.',
+            'descripcion' => 'Un sol Repsol. Diego Gallegos es el maestro del caviar y pescado de estero. Innovación, sostenibilidad y sabor en cada plato marino.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 5,
@@ -580,7 +580,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Aponiente',
-            'descripcion' => 'Tres soles Repsol. Ángel León, el Chef del Mar, revoluciona la cocina marina.',
+            'descripcion' => 'Tres soles Repsol. Ángel León, el Chef del Mar, revoluciona la cocina marina con productos innovadores como el pláncton. Sostenibilidad y creatividad extrema.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 10,
@@ -596,7 +596,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Atrio',
-            'descripcion' => 'Tres soles Repsol. Toño Pérez y su bodega legendaria en Cáceres.',
+            'descripcion' => 'Tres soles Repsol. El chef Toño Pérez y su bodega legendaria en Cáceres ofrecen una experiencia gastronómica inolvidable. Cocina de autor extrema.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 1,
@@ -612,7 +612,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Cenador de Amós',
-            'descripcion' => 'Dos soles Repsol. Jesús Sánchez combina tradición cántabra e innovación.',
+            'descripcion' => 'Dos soles Repsol. Jesús Sánchez combina tradición cántabra e innovación culinaria. Producto local de máxima calidad en un entorno espectacular.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 7,
@@ -628,7 +628,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Kabuki',
-            'descripcion' => 'Un sol Repsol. Fusión nikkei con toques mediterráneos.',
+            'descripcion' => 'Un sol Repsol. Fusión nikkei con toques mediterráneos del chef Ricardo Sanz. La unión perfecta entre Japón y España en cada plato.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 3,
             'ubicacion_id' => 1,
@@ -644,7 +644,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Cañadío',
-            'descripcion' => 'Un sol Repsol. Coctelería y gastronomía de alto nivel.',
+            'descripcion' => 'Un sol Repsol. Cocina creativa y cóctel de alto nivel en Madrid. Propuestas gastronómicas innovadoras en un ambiente moderno y sofisticado.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 2,
             'ubicacion_id' => 1,
@@ -660,7 +660,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'La Maruca',
-            'descripcion' => 'Especialidad en pescados y mariscos de la costa cantábrica.',
+            'descripcion' => 'Especialidad en pescados y mariscos frescos de la costa cantábrica. Producto de máxima calidad tratado con respeto y tradición marinera.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 2,
             'ubicacion_id' => 1,
@@ -676,7 +676,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Casa Lucio',
-            'descripcion' => 'Emblemático restaurante madrileño famoso por sus huevos estrellados.',
+            'descripcion' => 'Emblemático restaurante madrileño famoso por sus huevos estrellados con jamón ibérico. Cocina tradicional castellana con sabor auténtico.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 2,
             'ubicacion_id' => 1,
@@ -692,7 +692,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Botín',
-            'descripcion' => 'El restaurante más antiguo del mundo según Guinness Records. Cocina castellana tradicional.',
+            'descripcion' => 'El restaurante más antiguo del mundo según Guinness World Records desde 1725. Cocina castellana tradicional con el famoso cochinillo asado en horno de leña.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 2,
             'ubicacion_id' => 1,
@@ -708,7 +708,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'El Molino de Enmedio',
-            'descripcion' => 'Un sol Repsol. Cocina tradicional manchega renovada.',
+            'descripcion' => 'Un sol Repsol. Cocina tradicional manchega renovada con productos locales de temporada. El chef Miguel Ángel Cabañero honra las recetas ancestrales.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 2,
             'ubicacion_id' => 9,
@@ -724,7 +724,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Ramón Freixa Madrid',
-            'descripcion' => 'Dos soles Repsol. Alta cocina catalana en el corazón de Madrid.',
+            'descripcion' => 'Dos soles Repsol. Alta cocina catalana del chef Ramón Freixa en el corazón de Madrid. Creatividad, técnica y productos de máxima calidad.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 1,
@@ -740,7 +740,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Maralba',
-            'descripcion' => 'Un sol Repsol. Cocina de arraigo con productos de Almansa.',
+            'descripcion' => 'Un sol Repsol. Cocina de arraigo con productos de Almansa y alrededores. El chef Fran Martínez ofrece platos con identidad manchega contemporánea.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 4,
@@ -756,7 +756,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'El Refectorio',
-            'descripcion' => 'Cocina tradicional leonesa en un convento del siglo XVIII.',
+            'descripcion' => 'Cocina tradicional leonesa con sabor auténtico en un hermoso convento del siglo XVIII. Ambiente histórico con propuestas gastronómicas de calidad.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 2,
             'ubicacion_id' => 9,
@@ -772,7 +772,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Zalacaín',
-            'descripcion' => 'Leyenda de la gastronomía madrileña, pionero de la alta cocina.',
+            'descripcion' => 'Leyenda de la gastronomía madrileña y pionero de la alta cocina española. Tradición, elegancia y servicio impecable en cada detalle.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 1,
@@ -788,7 +788,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Topa Sukaldería',
-            'descripcion' => 'Un sol Repsol. Cocina vasca moderna en pleno San Sebastián.',
+            'descripcion' => 'Un sol Repsol. Cocina vasca moderna con productos de temporada en pleno San Sebastián. Sabor auténtico con técnicas innovadoras del chef.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 2,
@@ -804,7 +804,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Cinc Sentits',
-            'descripcion' => 'Un sol Repsol. Restaurante íntimo con cocina catalana contemporánea.',
+            'descripcion' => 'Un sol Repsol. Restaurante íntimo con cocina catalana contemporánea del chef Jordi Artal. Productos de temporada trabajados con pasión y precisión.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 3,
@@ -820,7 +820,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'Villena',
-            'descripcion' => 'Un sol Repsol. Cocina de mercado en Segovia con raíces castellanas.',
+            'descripcion' => 'Un sol Repsol. Cocina de mercado en Segovia con profundas raíces castellanas. El chef Alberto López elabora platos con producto local de temporada.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 2,
             'ubicacion_id' => 9,
@@ -836,7 +836,7 @@ class RestauranteSeeder extends Seeder
 
         Restaurante::create([
             'nombre' => 'L\'Escaleta',
-            'descripcion' => 'Un sol Repsol. Cocina mediterránea creativa en Cocentaina.',
+            'descripcion' => 'Un sol Repsol. Cocina mediterránea creativa en Cocentaina del chef Kiko Moya. Productos valencianos de temporada con presentaciones vanguardistas.',
             'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
             'categoria_id' => 1,
             'ubicacion_id' => 4,

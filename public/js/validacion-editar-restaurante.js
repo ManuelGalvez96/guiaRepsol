@@ -1,7 +1,21 @@
 // Validación del formulario de editar restaurante (Gerentes)
-document.addEventListener('DOMContentLoaded', function () {
+// Ejecutar cuando el DOM esté listo
+(function() {
+    // Esperar a que el DOM esté completamente cargado
+    if (document.readyState === 'loading') {
+        document.onreadystatechange = function() {
+            if (document.readyState === 'complete') {
+                initValidacionEditarRestaurante();
+            }
+        };
+    } else {
+        initValidacionEditarRestaurante();
+    }
+})();
+
+function initValidacionEditarRestaurante() {
     const form = document.getElementById('formEditarRestaurante');
-    
+
     // Solo ejecutar si el formulario existe (es decir, si es gerente)
     if (!form) {
         return;
@@ -31,22 +45,22 @@ document.addEventListener('DOMContentLoaded', function () {
     webInput.onblur = comprobarWeb;
     precioInput.onblur = comprobarPrecio;
 
-    nombreInput.oninput = function() {
+    nombreInput.oninput = function () {
         comprobarNombre();
     };
-    direccionInput.oninput = function() {
+    direccionInput.oninput = function () {
         comprobarDireccion();
     };
-    emailInput.oninput = function() {
+    emailInput.oninput = function () {
         comprobarEmail();
     };
-    telefonoInput.oninput = function() {
+    telefonoInput.oninput = function () {
         comprobarTelefono();
     };
-    webInput.oninput = function() {
+    webInput.oninput = function () {
         comprobarWeb();
     };
-    precioInput.oninput = function() {
+    precioInput.oninput = function () {
         comprobarPrecio();
     };
 
@@ -57,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const telefono = telefonoInput.value.trim();
         const web = webInput.value.trim();
         const precio = precioInput.value.trim();
-        
+
         const emailFormato = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const urlFormato = /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
         const telefonoFormato = /^[0-9+\-\s()]{9,}$/;
@@ -65,13 +79,13 @@ document.addEventListener('DOMContentLoaded', function () {
         let nombreValido = nombre !== '' && nombre.length >= 3;
         let direccionValida = direccion !== '' && direccion.length >= 5;
         let emailValido = email !== '' && emailFormato.test(email);
-        
+
         // Teléfono es opcional, pero si tiene contenido debe ser válido
         let telefonoValido = telefono === '' || telefonoFormato.test(telefono);
-        
+
         // Web es opcional, pero si tiene contenido debe ser válida
         let webValida = web === '' || urlFormato.test(web);
-        
+
         let precioValido = precio !== '' && !isNaN(precio) && parseFloat(precio) > 0;
 
         if (nombreValido && direccionValida && emailValido && telefonoValido && webValida && precioValido) {
@@ -171,4 +185,4 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         comprobarBoton();
     }
-});
+};

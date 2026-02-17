@@ -1,4 +1,6 @@
-/* Reset y Variables */
+/* =============================================
+   RESET Y VARIABLES GLOBALES
+   ============================================= */
 :root {
     --color-primary: #1e3a5f;
     --color-secondary: #00a3e0;
@@ -19,11 +21,17 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--color-background);
     color: var(--color-text);
     line-height: 1.6;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Header Principal */
@@ -52,7 +60,7 @@ body {
     margin: 0;
 }
 
-.btn-menu,
+.btn-menu-detalle,
 .btn-search {
     background: none;
     border: none;
@@ -63,7 +71,7 @@ body {
     transition: color 0.3s ease;
 }
 
-.btn-menu:hover,
+.btn-menu-detalle:hover,
 .btn-search:hover {
     color: var(--color-primary);
 }
@@ -242,6 +250,7 @@ body {
     background-color: var(--color-white);
     border-bottom: 1px solid var(--color-border);
     padding: 0;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
 .tabs-nav .nav-tabs {
@@ -292,6 +301,23 @@ body {
     margin-bottom: 20px;
     flex-wrap: wrap;
     gap: 12px;
+}
+
+/* Botón toggle para sidebar responsive */
+.btn-toggle-sidebar {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--color-text);
+    cursor: pointer;
+    padding: 0;
+    margin-left: 8px;
+    display: none;
+    transition: transform 0.3s ease;
+}
+
+.btn-toggle-sidebar.active i {
+    transform: rotate(180deg);
 }
 
 .section-header h2 {
@@ -745,7 +771,7 @@ body {
 
 .form-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 480px 480px;
     gap: 20px;
 }
 
@@ -758,7 +784,7 @@ body {
 
 .checkbox-group {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
     gap: 12px;
     margin-top: 8px;
 }
@@ -867,7 +893,7 @@ body {
     }
 
     .form-row {
-        grid-template-columns: 1fr;
+        grid-template-columns: 100%;
     }
 
     .form-header h1 {
@@ -875,7 +901,7 @@ body {
     }
 
     .checkbox-group {
-        grid-template-columns: 1fr;
+        grid-template-columns: 100%;
     }
 }
 
@@ -929,7 +955,81 @@ body {
     }
 }
 
+
+/* =============================================
+   MEDIA QUERIES MOBILE
+   ============================================= */
+
+/* Mobile Menu - Hidden by default on desktop */
+.mobile-menu {
+    display: none;
+}
+
+.mobile-nav {
+    list-style: none;
+}
+
+.mobile-nav a {
+    text-decoration: none;
+    color: var(--color-text);
+}
+
 @media (max-width: 767px) {
+    /* Mobile Menu Styles */
+    .mobile-menu {
+        display: none;
+        background-color: var(--color-white);
+        border-bottom: 1px solid var(--color-border);
+        padding: 12px 0;
+    }
+
+    .mobile-menu.active {
+        display: block;
+    }
+
+    .mobile-nav {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 0 12px;
+    }
+
+    .mobile-nav li {
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .mobile-nav li:last-child {
+        border-bottom: none;
+    }
+
+    .mobile-nav a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 0;
+        font-size: 14px;
+        color: var(--color-text);
+        transition: color 0.3s ease;
+    }
+
+    .mobile-nav a:hover {
+        color: var(--color-secondary);
+    }
+
+    .mobile-nav a.active {
+        color: var(--color-secondary);
+        font-weight: 600;
+    }
+
+    .mobile-nav i {
+        font-size: 18px;
+    }
+
+    /* Hide tabs-nav on mobile */
+    .tabs-nav {
+        display: none;
+    }
+
     .header-main {
         padding: 8px 0;
     }
@@ -946,7 +1046,7 @@ body {
         height: 24px;
     }
 
-    .btn-menu,
+    .btn-menu-detalle,
     .btn-search {
         font-size: 20px;
         padding: 6px;
@@ -993,8 +1093,61 @@ body {
         font-size: 14px;
     }
 
+    /* Ocultar el menú por defecto en móvil */
+    .tabs-nav {
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        border-bottom: none;
+    }
+
+    /* Mostrar el menú cuando está activo */
+    .tabs-nav.show {
+        max-height: 500px;
+        opacity: 1;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .tabs-nav .nav-tabs {
+        flex-direction: column;
+    }
+
+    .tabs-nav .nav-link {
+        width: 100%;
+        text-align: left;
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .tabs-nav .nav-link.active {
+        border-bottom: 1px solid var(--color-border);
+        border-left: 3px solid var(--color-secondary);
+        background-color: rgba(0, 163, 224, 0.05);
+    }
+
     .main-content {
         padding: 16px 0;
+    }
+
+    /* Mostrar botón toggle en responsive */
+    .btn-toggle-sidebar {
+        display: inline-block;
+    }
+
+    /* Ocultar contenido del sidebar por defecto en responsive */
+    .sidebar-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+    }
+
+    .sidebar-content.show {
+        max-height: 5000px;
+    }
+
+    /* Ocultar select de ordenar en responsive */
+    .sidebar-ordenar {
+        display: none;
     }
     
     .content-section {
@@ -1107,4 +1260,13 @@ body {
         height: 28px;
         font-size: 12px;
     }
+}
+
+/* =============================================
+   MEJORAS ADICIONALES Y EFECTOS HOVER
+   ============================================= */
+
+.btn-menu-detalle:hover,
+.btn-menu-detalle.active {
+    color: var(--color-secondary);
 }

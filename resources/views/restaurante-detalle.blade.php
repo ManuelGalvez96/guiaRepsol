@@ -40,6 +40,11 @@
 
             return $restauranteImageMap[$key] ?? 'img/restaurantes/emigrante.webp';
         };
+
+        // La URL de la base de datos ya es correcta, solo aplicar asset()
+        $resolveImagenUrl = function (string $url): string {
+            return asset($url);
+        };
     @endphp
     <!-- Header -->
     <header class="header-detalle">
@@ -72,7 +77,15 @@
             </div>
         </div>
     </header>
-
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-nav">
+            <li><a href="{{ route('home') }}"><i class="bi bi-house"></i> Inicio</a></li>
+            <li><a href="{{ route('restaurantes') }}"><i class="bi bi-list-ul"></i> Listado</a></li>
+            <li><a href="{{ route('formulario') }}"><i class="bi bi-shop"></i> Date a Conocer</a></li>
+            <li><a href="{{ route('restaurantes.guardados') }}" class="active"><i class="bi bi-bookmark-fill"></i> Guardados</a></li>
+        </ul>
+    </div>
     <!-- Tabs Navigation -->
     <div class="tabs-nav">
         <div class="container">
@@ -163,6 +176,8 @@
                                 @if(Auth::id() === $restaurante->user_id)
                                     <button class="btn-editar-gerente" 
                                             id="btn-editar-restaurante" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#modalEditarRestaurante"
                                             data-restaurante-id="{{ $restaurante->id }}">
                                         <i class="bi bi-pencil-square"></i> Editar
                                     </button>
@@ -309,21 +324,6 @@
                         </div>
                     </div>
 
-                    <!-- Call to Action - Da a conocer tu negocio -->
-                    <div class="section-box cta-box">
-                        <div class="cta-content">
-                            <div class="cta-icon">
-                                <i class="bi bi-shop" style="font-size: 64px; color: #00a3e0;"></i>
-                            </div>
-                            <h3 class="cta-title">Da a conocer tu negocio</h3>
-                            <p class="cta-description">
-                                ¿Eres dueño de un restaurante? Regístralo en la Guía Repsol y llega a miles de clientes que buscan experiencias gastronómicas únicas.
-                            </p>
-                            <a href="{{ route('formulario') }}" class="btn-cta">
-                                Registrar mi restaurante
-                            </a>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Columna Derecha - Imágenes y Reservas -->
@@ -331,14 +331,7 @@
                     <!-- Imagen Principal -->
                     <div class="image-container">
                         @if($imagenPrincipal)
-                            @php
-                                // Si la URL empieza con 'img/', es una ruta pública directa
-                                // Si no, está en storage/app/public/
-                                $imagenUrl = str_starts_with($imagenPrincipal->url, 'img/') 
-                                    ? asset($imagenPrincipal->url) 
-                                    : asset('storage/' . $imagenPrincipal->url);
-                            @endphp
-                            <img src="{{ $imagenUrl }}" 
+                            <img src="{{ $resolveImagenUrl($imagenPrincipal->url) }}" 
                                  id="imagenPrincipalDisplay"
                                  alt="{{ $restaurante->nombre }}" 
                                  class="restaurant-image-main">
@@ -347,11 +340,6 @@
                                  id="imagenPrincipalDisplay"
                                  alt="{{ $restaurante->nombre }}" 
                                  class="restaurant-image-main">
-                        @endif
-                        @if($imagenesAdicionales->count() > 0)
-                        <button class="btn-ver-fotos" data-bs-toggle="modal" data-bs-target="#modalGaleria">
-                            <i class="bi bi-images"></i> Mostrar todas las fotos ({{ $imagenesAdicionales->count() + 1 }})
-                        </button>
                         @endif
                     </div>
 
@@ -364,23 +352,13 @@
                         <div class="thumbnails-slider">
                             <div class="thumbnails-wrapper" id="thumbnailsWrapper">
                                 @if($imagenPrincipal)
-                                    @php
-                                        $imgPrincipalUrl = str_starts_with($imagenPrincipal->url, 'img/') 
-                                            ? asset($imagenPrincipal->url) 
-                                            : asset('storage/' . $imagenPrincipal->url);
-                                    @endphp
-                                    <div class="thumbnail-item active" data-image="{{ $imgPrincipalUrl }}">
-                                        <img src="{{ $imgPrincipalUrl }}" alt="Principal">
+                                    <div class="thumbnail-item active" data-image="{{ $resolveImagenUrl($imagenPrincipal->url) }}">
+                                        <img src="{{ $resolveImagenUrl($imagenPrincipal->url) }}" alt="Principal">
                                     </div>
                                 @endif
                                 @foreach($imagenesAdicionales as $imagen)
-                                    @php
-                                        $imgUrl = str_starts_with($imagen->url, 'img/') 
-                                            ? asset($imagen->url) 
-                                            : asset('storage/' . $imagen->url);
-                                    @endphp
-                                    <div class="thumbnail-item" data-image="{{ $imgUrl }}">
-                                        <img src="{{ $imgUrl }}" alt="Foto {{ $loop->iteration }}">
+                                    <div class="thumbnail-item" data-image="{{ $resolveImagenUrl($imagen->url) }}">
+                                        <img src="{{ $resolveImagenUrl($imagen->url) }}" alt="Foto {{ $loop->iteration }}">
                                     </div>
                                 @endforeach
                             </div>
@@ -427,6 +405,16 @@
                             <button class="btn-favorito">
                                 <i class="bi bi-heart"></i>
                             </button>
+                            @auth
+                                @if(Auth::id() === $restaurante->user_id)
+                                    <button class="btn-editar-gerente" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#modalEditarRestaurante"
+                                            data-restaurante-id="{{ $restaurante->id }}">
+                                        <i class="bi bi-pencil-square"></i> Editar
+                                    </button>
+                                @endif
+                            @endauth
                         </div>
                     </div>
 
@@ -714,23 +702,13 @@
                         </div>
                         <div class="carousel-inner">
                             @if($imagenPrincipal)
-                            @php
-                                $imagenPrincipalUrl = str_starts_with($imagenPrincipal->url, 'img/') 
-                                    ? asset($imagenPrincipal->url) 
-                                    : asset('storage/' . $imagenPrincipal->url);
-                            @endphp
                             <div class="carousel-item active">
-                                <img src="{{ $imagenPrincipalUrl }}" class="d-block w-100" alt="Foto principal">
+                                <img src="{{ $resolveImagenUrl($imagenPrincipal->url) }}" class="d-block w-100" alt="Foto principal">
                             </div>
                             @endif
                             @foreach($imagenesAdicionales as $imagen)
-                            @php
-                                $imagenUrl = str_starts_with($imagen->url, 'img/') 
-                                    ? asset($imagen->url) 
-                                    : asset('storage/' . $imagen->url);
-                            @endphp
                             <div class="carousel-item {{ !$imagenPrincipal && $loop->first ? 'active' : '' }}">
-                                <img src="{{ $imagenUrl }}" class="d-block w-100" alt="Foto del restaurante">
+                                <img src="{{ $resolveImagenUrl($imagen->url) }}" class="d-block w-100" alt="Foto del restaurante">
                             </div>
                             @endforeach
                         </div>
@@ -852,7 +830,7 @@
                             <small class="form-text text-muted">Dejar vacío si no desea cambiar la imagen</small>
                             @if($imagenPrincipal)
                                 <div class="mt-2">
-                                    <img src="{{ str_starts_with($imagenPrincipal->url, 'img/') ? asset($imagenPrincipal->url) : asset('storage/' . $imagenPrincipal->url) }}" 
+                                    <img src="{{ $resolveImagenUrl($imagenPrincipal->url) }}" 
                                          class="img-thumbnail" 
                                          style="max-width: 200px;">
                                 </div>
@@ -870,7 +848,7 @@
                                     <div class="d-flex gap-2 flex-wrap" id="imagenesActualesContainer">
                                         @foreach($imagenesAdicionales as $imagen)
                                             <div class="position-relative imagen-actual-item" data-imagen-id="{{ $imagen->id }}">
-                                                <img src="{{ str_starts_with($imagen->url, 'img/') ? asset($imagen->url) : asset('storage/' . $imagen->url) }}" 
+                                                <img src="{{ $resolveImagenUrl($imagen->url) }}" 
                                                      class="img-thumbnail" 
                                                      style="width: 100px; height: 100px; object-fit: cover;">
                                                 <button type="button" 

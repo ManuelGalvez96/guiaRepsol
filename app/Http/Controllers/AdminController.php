@@ -35,13 +35,14 @@ class AdminController extends Controller
         $this->checkAdmin();
         $query = Restaurante::with(['categoria', 'ubicacion', 'imagenes', 'tiposComida']);
 
-        // Filtro de búsqueda por nombre
+        // Filtro de búsqueda por nombre del restaurante o gerente
         if ($request->filled('buscar')) {
             $buscar = $request->buscar;
             $query->where(function($q) use ($buscar) {
                 $q->where('nombre', 'LIKE', '%' . $buscar . '%')
-                  ->orWhere('descripcion', 'LIKE', '%' . $buscar . '%')
-                  ->orWhere('direccion', 'LIKE', '%' . $buscar . '%');
+                  ->orWhereHas('gerente', function($qGerente) use ($buscar) {
+                      $qGerente->where('name', 'LIKE', '%' . $buscar);
+                  });
             });
         }
 
@@ -136,7 +137,7 @@ class AdminController extends Controller
         $this->checkAdmin();
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
-            'descripcion' => 'nullable|string',
+            'descripcion' => 'nullable|min:100|string',
             'user_id' => 'required|exists:users,id',
             'categoria_id' => 'required|exists:categorias,id',
             'ubicacion_id' => 'required|exists:ubicaciones,id',
@@ -225,7 +226,7 @@ class AdminController extends Controller
 
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
-            'descripcion' => 'nullable|string',
+            'descripcion' => 'nullable|min:100|string',
             'user_id' => 'required|exists:users,id',
             'categoria_id' => 'required|exists:categorias,id',
             'ubicacion_id' => 'required|exists:ubicaciones,id',

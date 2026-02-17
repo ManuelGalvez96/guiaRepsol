@@ -47,7 +47,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <button class="btn-menu">
+                    <button class="btn-menu-detalle" id="btnToggleMenu" onclick="toggleMobileMenu()">
                         <i class="bi bi-list"></i>
                     </button>
                 </div>
@@ -55,17 +55,6 @@
                     <img src="{{ asset('img/Guia_Repsol.png') }}" alt="Guía Repsol" class="logo-img">
                 </div>
                 <div class="col">
-                    <!--
-                    <div class="search-bar">
-                        <button class="btn-close-search" id="restaurant-search-clear">
-                            <i class="bi bi-x-lg"></i>
-                        </button>
-                        <input type="text" class="search-input" id="restaurant-search-input" placeholder="Buscar">
-                        <button class="btn-search-submit" id="restaurant-search-button">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                    -->
                 </div>
                 <div class="col-auto">
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
@@ -78,6 +67,16 @@
             </div>
         </div>
     </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-nav">
+            <li><a href="{{ route('home') }}"><i class="bi bi-house"></i> Inicio</a></li>
+            <li><a href="{{ route('restaurantes') }}"><i class="bi bi-list-ul"></i> Listado</a></li>
+            <li><a href="{{ route('formulario') }}"><i class="bi bi-shop"></i> Date a Conocer</a></li>
+            <li><a href="{{ route('restaurantes.guardados') }}" class="active"><i class="bi bi-bookmark-fill"></i> Guardados</a></li>
+        </ul>
+    </div>
 
     <!-- Tabs Navigation -->
     <div class="tabs-nav">
@@ -214,6 +213,10 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="{{ asset('js/mobile-menu.js') }}"></script>
+    <script src="{{ asset('js/restaurantes-guardados.js') }}"></script>
+
+
 </body>
 
 </html>

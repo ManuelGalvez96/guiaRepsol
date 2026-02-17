@@ -21,7 +21,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <button class="btn-menu">
+                    <button class="btn-menu-detalle" id="btnToggleMenu" onclick="toggleMobileMenu()">
                         <i class="bi bi-list"></i>
                     </button>
                 </div>
@@ -29,17 +29,6 @@
                     <img src="{{ asset('img/Guia_Repsol.png') }}" alt="Guía Repsol" class="logo-img">
                 </div>
                 <div class="col">
-                    <!--
-                    <div class="search-bar">
-                        <button class="btn-close-search" id="restaurant-search-clear">
-                            <i class="bi bi-x-lg"></i>
-                        </button>
-                        <input type="text" class="search-input" id="restaurant-search-input" placeholder="Buscar">
-                        <button class="btn-search-submit" id="restaurant-search-button">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                    -->
                 </div>
                 <div class="col-auto">
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
@@ -53,6 +42,16 @@
         </div>
     </header>
 
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-nav">
+            <li><a href="{{ route('home') }}"><i class="bi bi-house"></i> Inicio</a></li>
+            <li><a href="{{ route('restaurantes') }}"><i class="bi bi-list-ul"></i> Listado</a></li>
+            <li><a href="{{ route('formulario') }}" class="active"><i class="bi bi-shop"></i> Date a Conocer</a></li>
+            <li><a href="{{ route('restaurantes.guardados') }}"><i class="bi bi-bookmark-fill"></i> Guardados</a></li>
+        </ul>
+    </div>
+
     <!-- Tabs Navigation -->
     <div class="tabs-nav">
         <div class="container">
@@ -64,7 +63,8 @@
                     <a class="nav-link" href="{{ route('restaurantes') }}"><i class="bi bi-list-ul"></i> Listado</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ route('formulario') }}"><i class="bi bi-shop"></i> Date a Conocer</a>
+                    <a class="nav-link active" href="{{ route('formulario') }}"><i class="bi bi-shop"></i> Date a
+                        Conocer</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('restaurantes.guardados') }}"><i class="bi bi-bookmark-fill"></i>
@@ -92,8 +92,10 @@
                 </ul>
             </div>
         @endif
+    </div>
 
-        <form action="{{ route('restaurantes.store') }}" method="POST" enctype="multipart/form-data">
+    <div class="form-container">
+        <form id="formCrearNegocio" action="{{ route('restaurantes.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <!-- INFORMACIÓN BÁSICA -->
@@ -102,18 +104,16 @@
 
                 <div class="form-group">
                     <label>Nombre del negocio <span class="required">*</span></label>
-                    <input type="text" name="nombre" required placeholder="Ej: Mesón El Rincón"
-                        value="{{ old('nombre') }}" class="@error('nombre') error @enderror">
-                    @error('nombre')
-                        <small style="color: #e74c3c;">{{ $message }}</small>
-                    @enderror
+                    <input type="text" name="nombre" placeholder="Ej: Mesón El Rincón" value="{{ old('nombre') }}"
+                        class="@error('nombre') error @enderror">
+                    <span id="error-nombre" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label>Categoría <span class="required">*</span></label>
-                        <select name="categoria_id" required>
-                            <option value="">Selecciona una categoría</option>
+                        <select name="categoria_id">
+                            <option value="" disabled selected>Selecciona una categoría</option>
                             @foreach ($categorias ?? [] as $categoria)
                                 <option value="{{ $categoria->id }}"
                                     {{ old('categoria_id') == $categoria->id ? 'selected' : '' }}>
@@ -121,24 +121,24 @@
                                 </option>
                             @endforeach
                         </select>
+                        <span id="error-categoria" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                     </div>
 
                     <div class="form-group">
                         <label>Precio promedio <span class="required">*</span></label>
-                        <input type="number" name="precio" required placeholder="Ej: 25.00" step="0.01"
-                            min="0.01" max="9999.99" value="{{ old('precio') }}">
+                        <input type="number" name="precio" placeholder="Ej: 25.00" step="0.01" min="0.01"
+                            max="9999.99" value="{{ old('precio') }}">
                         <small>Precio promedio por persona en euros (máximo 9999.99€)</small>
+                        <span id="error-precio" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>Descripción del negocio <span class="required">*</span></label>
-                    <textarea name="descripcion" required placeholder="Describe tu negocio, su ambiente, especialidades, historia..."
-                        class="@error('descripcion') error @enderror" maxlength="1000" id="descripcion">{{ old('descripcion') }}</textarea>
-                    <small>Mínimo 100 caracteres | Máximo 1000 caracteres | <span id="charCount">0</span>/1000</small>
-                    @error('descripcion')
-                        <small style="color: #e74c3c; display: block;">{{ $message }}</small>
-                    @enderror
+                    <textarea name="descripcion" placeholder="Describe tu negocio, su ambiente, especialidades, historia..."
+                        class="@error('descripcion') error @enderror">{{ old('descripcion') }}</textarea>
+                    <small>Mínimo 100 caracteres</small>
+                    <span id="error-descripcion" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 </div>
             </div>
 
@@ -148,35 +148,39 @@
 
                 <div class="form-group">
                     <label>Dirección completa <span class="required">*</span></label>
-                    <input type="text" name="direccion" required placeholder="Calle, número, piso"
+                    <input type="text" name="direccion" placeholder="Calle, número, piso"
                         value="{{ old('direccion') }}">
+                    <span id="error-direccion" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label>Ciudad <span class="required">*</span></label>
-                        <input type="text" name="ciudad" required placeholder="Ej: Madrid"
-                            value="{{ old('ciudad') }}">
+                        <input type="text" name="ciudad" placeholder="Ej: Madrid" value="{{ old('ciudad') }}">
+                        <span id="error-ciudad" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                     </div>
 
                     <div class="form-group">
                         <label>Provincia <span class="required">*</span></label>
-                        <input type="text" name="provincia" required placeholder="Ej: Madrid"
+                        <input type="text" name="provincia" placeholder="Ej: Madrid"
                             value="{{ old('provincia') }}">
+                        <span id="error-provincia" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label>Código postal <span class="required">*</span></label>
-                        <input type="text" name="codigo_postal" required placeholder="Ej: 28001"
+                        <input type="text" name="codigo_postal" placeholder="Ej: 28001"
                             value="{{ old('codigo_postal') }}">
+                        <span id="error-codigo-postal" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                     </div>
 
                     <div class="form-group">
                         <label>Comunidad Autónoma <span class="required">*</span></label>
-                        <input type="text" name="comunidad_autonoma" required
-                            placeholder="Ej: Comunidad de Madrid" value="{{ old('comunidad_autonoma') }}">
+                        <input type="text" name="comunidad_autonoma" placeholder="Ej: Comunidad de Madrid"
+                            value="{{ old('comunidad_autonoma') }}">
+                        <span id="error-comunidad" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                     </div>
                 </div>
             </div>
@@ -190,15 +194,14 @@
                         <label>Teléfono</label>
                         <input type="tel" name="telefono" placeholder="Ej: 912345678"
                             value="{{ old('telefono') }}">
+                        <span id="error-telefono" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                     </div>
 
                     <div class="form-group">
                         <label>Email <span class="required">*</span></label>
-                        <input type="email" name="email" required placeholder="contacto@tunegocio.com"
+                        <input type="email" name="email" placeholder="contacto@tunegocio.com"
                             value="{{ old('email') }}" class="@error('email') error @enderror">
-                        @error('email')
-                            <small style="color: #e74c3c;">{{ $message }}</small>
-                        @enderror
+                        <span id="error-email" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                     </div>
                 </div>
 
@@ -206,6 +209,7 @@
                     <label>Sitio web</label>
                     <input type="url" name="web" placeholder="https://www.tunegocio.com"
                         value="{{ old('web') }}">
+                    <span id="error-web" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 </div>
             </div>
 
@@ -241,15 +245,13 @@
                             <strong>Haz clic para subir</strong> o arrastra la imagen aquí
                             <br><small>Formatos JPG, PNG. Máximo 5MB</small>
                         </div>
-                        <input type="file" id="foto_principal" name="foto_principal" accept="image/*" required>
+                        <input type="file" id="foto_principal" name="foto_principal" accept="image/*">
                     </div>
-                    @error('foto_principal')
-                        <small style="color: #e74c3c;">{{ $message }}</small>
-                    @enderror
+                    <span id="error-foto-principal" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 </div>
 
                 <div class="form-group">
-                    <label>Imágenes adicionales (máximo 5)</label>
+                    <label>Imágenes adicionales (máximo 8)</label>
                     <div class="file-upload" onclick="document.getElementById('fotos_adicionales').click()">
                         <div class="file-upload-icon">🖼️</div>
                         <div class="file-upload-text">
@@ -264,9 +266,9 @@
 
             <!-- BOTONES -->
             <div class="form-actions">
-                <button type="button" class="btn-form btn-secondary"
+                <button type="button" class="btn btn-secondary"
                     onclick="window.location.href='{{ route('restaurantes') }}'">Cancelar</button>
-                <button type="submit" class="btn-form btn-primary">Enviar solicitud</button>
+                <button type="submit" class="btn btn-primary" id="btnEnviarFormulario" disabled>Enviar solicitud</button>
             </div>
         </form>
     </div>
@@ -276,24 +278,11 @@
     </footer>
 
     <!-- Scripts de Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="{{ asset('js/mobile-menu.js') }}"></script>
+    <script src="{{ asset('js/validacion-formulario.js') }}"></script>
 
-    <!-- Contador de caracteres para descripción -->
-    <script>
-        const descripcionField = document.getElementById('descripcion');
-        const charCountSpan = document.getElementById('charCount');
 
-        if (descripcionField && charCountSpan) {
-            // Actualizar contador al cargar la página (si hay valor previo)
-            charCountSpan.textContent = descripcionField.value.length;
-
-            // Actualizar contador en tiempo real
-            descripcionField.addEventListener('input', () => {
-                charCountSpan.textContent = descripcionField.value.length;
-            });
-        }
-    </script>
 
 </body>
 

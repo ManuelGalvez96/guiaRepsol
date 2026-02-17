@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,20 +10,17 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body
-    data-csrf="{{ csrf_token() }}"
-    data-buscar="{{ request('buscar', '') }}"
-    data-tipo-comida="{{ request('tipo_comida', '') }}"
-    data-valoracion="{{ request('valoracion', '') }}"
-    data-precio="{{ request('precio', '') }}"
-    data-page="{{ $restaurantes->currentPage() }}"
-    data-route-index="{{ route('admin.index') }}"
-    data-route-create="{{ route('admin.create') }}"
-    data-route-logout="{{ route('logout') }}"
->
+
+<body data-csrf="{{ csrf_token() }}" data-buscar="{{ request('buscar', '') }}"
+    data-tipo-comida="{{ request('tipo_comida', '') }}" data-valoracion="{{ request('valoracion', '') }}"
+    data-precio="{{ request('precio', '') }}" data-page="{{ $restaurantes->currentPage() }}"
+    data-route-index="{{ route('admin.index') }}" data-route-create="{{ route('admin.create') }}"
+    data-route-logout="{{ route('logout') }}">
     <!-- Header -->
     <div class="header">
-        <div class="logo">guia repsol</div>
+        <div class="servicios-iconos">
+            <img src="{{ asset('img/Guia_Repsol.png') }}" class="logo" alt="Guía Repsol">
+        </div>
         <button type="button" class="logout-btn" onclick="logoutUser()">Cerrar sesión</button>
     </div>
 
@@ -31,12 +29,13 @@
         <div class="top-section">
             <h1>Gestión de restaurantes</h1>
             <div style="display: flex; gap: 10px;">
-                <a href="{{ route('admin.solicitudes') }}" class="create-btn" style="background-color: #f39c12;">Solicitudes de negocio</a>
-                <a href="{{ route('admin.create') }}" class="create-btn">Crear Restaurante</a>
+                <a href="{{ route('admin.solicitudes') }}" class="create-btn"
+                    style="background-color: #f39c12;">Solicitudes de negocio</a>
+                <a href="#" onclick="openCreateModal(); return false;" class="create-btn">Crear Restaurante</a>
             </div>
         </div>
 
-        @if(session('success'))
+        @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
@@ -44,14 +43,12 @@
 
         <!-- Filtros -->
         <div class="filters">
-            <input type="text" name="buscar" class="filter-search" id="filterBuscar" 
-                   placeholder="🔍 Buscar restaurante..." 
-                   value="{{ request('buscar') }}"
-                   oninput="filtroConDelay()">
+            <input type="text" name="buscar" class="filter-search" id="filterBuscar"
+                placeholder="🔍 Buscar restaurante..." value="{{ request('buscar') }}" oninput="filtroConDelay()">
 
             <select name="tipo_comida" class="filter-select" id="filterTipoComida" onchange="aplicarFiltros()">
                 <option value="">Tipo de comida</option>
-                @foreach($tiposComida as $tipo)
+                @foreach ($tiposComida as $tipo)
                     <option value="{{ $tipo->id }}" {{ request('tipo_comida') == $tipo->id ? 'selected' : '' }}>
                         {{ $tipo->nombre }}
                     </option>
@@ -75,8 +72,9 @@
                 <option value="30-50" {{ request('precio') == '30-50' ? 'selected' : '' }}>30-50€</option>
                 <option value="50+" {{ request('precio') == '50+' ? 'selected' : '' }}>50€+</option>
             </select>
-            
-            <button type="button" class="btn btn-reset" id="resetFilters" onclick="resetearFiltros()">Limpiar Filtros</button>
+
+            <button type="button" class="btn btn-reset" id="resetFilters" onclick="resetearFiltros()">Limpiar
+                Filtros</button>
         </div>
 
         <!-- Table Container -->
@@ -86,7 +84,7 @@
     </div>
 
     <!-- Modales -->
-    <div id="modalOverlay" class="modal-overlay modal-hidden"> 
+    <div id="modalOverlay" class="modal-overlay modal-hidden">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">Modal</h2>
@@ -98,9 +96,21 @@
         </div>
     </div>
 
+    <!-- Configuración global para scripts -->
+    <script>
+        // Variables globales para edición
+        window.editConfig = {
+            csrfToken: '{{ csrf_token() }}',
+            adminIndexRoute: '{{ route('admin.index') }}'
+        };
+        window.imagenesAEliminar = [];
+    </script>
+
     <script src="{{ asset('js/admin_js/admin_index.js') }}"></script>
+    <script src="{{ asset('js/validacion_admin_js/editar.js') }}"></script>
     <script src="{{ asset('js/admin_js/admin_edit.js') }}"></script>
+    <script src="{{ asset('js/validacion_admin_js/crear.js') }}"></script>
     <script src="{{ asset('js/admin_js/admin_create.js') }}"></script>
 </body>
-</html>
 
+</html>

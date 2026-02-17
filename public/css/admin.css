@@ -391,6 +391,7 @@ textarea {
     background-color: rgba(0,0,0,0.5);
 }
 
+/* Modal Content */
 .modal-content {
     background-color: #fefefe;
     margin: 2% auto;
@@ -400,8 +401,9 @@ textarea {
     width: 90%;
     max-width: 800px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    max-height: 90vh;
+    max-height: none;
     overflow-y: auto;
+    max-height: 95vh;
 }
 
 /* Modal Overlay: contenedor principal del modal */
@@ -616,6 +618,12 @@ textarea {
     max-width: 170px;
 }
 
+.logo {
+   height: 32px;
+    width: auto;
+    margin: 0;
+}
+
 .image-preview-item img {
     width: 150px !important;
     height: 100px !important;
@@ -669,7 +677,7 @@ textarea {
     }
     
     .tipos-comida-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 100%;
     }
     
 /* ==================== MODAL ==================== */
@@ -939,7 +947,7 @@ textarea:focus {
 
 /* ==================== CONTENEDOR DE IMÁGENES ==================== */
 .images-container {
-    display: flex;
+    display: flex !important;
     flex-wrap: wrap;
     gap: 15px;
     margin: 10px 0;
@@ -947,6 +955,10 @@ textarea:focus {
     background: #f8f9fa;
     border-radius: 6px;
     min-height: 140px;
+    width: 100%;
+    box-sizing: border-box;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 /* Imagen existente */
@@ -1043,6 +1055,11 @@ textarea:focus {
     background: #fffbf0;
     max-width: 170px;
     box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 .new-image-item img {
@@ -1087,6 +1104,20 @@ textarea:focus {
 .btn-eliminar-imagen-nueva:hover {
     background: #c0392b;
     transform: scale(1.15);
+}
+
+/* Badge para imagen nueva */
+.new-image-badge {
+    display: inline-block;
+    background: #ffc107;
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .swal2-toast .swal2-title {

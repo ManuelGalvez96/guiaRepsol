@@ -20,7 +20,9 @@ body {
     color: var(--color-text);
     line-height: 1.6;
 }
-
+.mobile-menu {
+    display: none;
+}
 /* Header */
 .header-detalle {
     background-color: var(--color-white);
@@ -344,7 +346,7 @@ body {
 /* Sitios de interés */
 .sitios-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 300px);
     gap: 15px;
 }
 
@@ -483,7 +485,7 @@ body {
 /* Responsive */
 @media (max-width: 991px) {
     .sitios-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 100%;
     }
 
     .main-detalle .container {
@@ -517,6 +519,43 @@ body {
     .btn-acceso-detalle {
         padding: 6px 12px;
         font-size: 13px;
+    }
+
+    /* Ocultar el menú por defecto en móvil */
+    .tabs-nav {
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        border-bottom: none;
+    }
+
+    /* Mostrar el menú cuando está activo */
+    .tabs-nav.show {
+        max-height: 500px;
+        opacity: 1;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .tabs-nav .nav-tabs {
+        flex-direction: column;
+    }
+
+    .tabs-nav .nav-link {
+        width: 100%;
+        text-align: left;
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .tabs-nav .nav-link.active {
+        border-bottom: 1px solid var(--color-border);
+        border-left: 3px solid var(--color-secondary);
+        background-color: rgba(0, 163, 224, 0.05);
+    }
+
+    /* Ocultar botones del slider en responsive */
+    .thumbnail-nav-btn {
+        display: none;
     }
 
     .banner-gala-detalle {
@@ -692,10 +731,6 @@ body {
     .btn-acceso-detalle {
         padding: 5px 10px;
         font-size: 12px;
-    }
-
-    .btn-acceso-detalle span {
-        display: none;
     }
 
     .banner-gala-detalle {
@@ -1165,6 +1200,7 @@ body {
     background-color: var(--color-white);
     border-bottom: 1px solid var(--color-border);
     padding: 0;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
 .tabs-nav .nav-tabs {
@@ -1605,7 +1641,7 @@ body {
 /* Sitios de interés */
 .sitios-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 300px);
     gap: 15px;
 }
 
@@ -1744,11 +1780,60 @@ body {
 /* Responsive */
 @media (max-width: 991px) {
     .sitios-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 100%;
     }
 }
 
 @media (max-width: 767px) {
+   .mobile-menu {
+        display: none;
+        background-color: var(--color-white);
+        border-bottom: 1px solid var(--color-border);
+        padding: 12px 0;
+    }
+
+    .mobile-menu.active {
+        display: block;
+    }
+
+    .mobile-nav {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 0 12px;
+    }
+
+    .mobile-nav li {
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .mobile-nav li:last-child {
+        border-bottom: none;
+    }
+
+    .mobile-nav a {
+        display: flex;
+        text-decoration: none;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 0;
+        font-size: 14px;
+        color: var(--color-text);
+        transition: color 0.3s ease;
+    }
+
+    .mobile-nav a:hover {
+        color: var(--color-secondary);
+    }
+
+    .mobile-nav a.active {
+        color: var(--color-secondary);
+        font-weight: 600;
+    }
+
+    .mobile-nav i {
+        font-size: 18px;
+    }
     .restaurant-name-title {
         font-size: 24px;
     }
@@ -1760,6 +1845,26 @@ body {
 
     .restaurant-image-main {
         height: 250px;
+    }
+
+    /* Estilos para botones en mobile */
+    .restaurant-info-box.d-lg-none .btn-guardar,
+    .restaurant-info-box.d-lg-none .btn-favorito,
+    .restaurant-info-box.d-lg-none .btn-editar-gerente {
+        padding: 8px 12px;
+        font-size: 12px;
+        flex: 1;
+        min-width: auto;
+    }
+
+    .restaurant-info-box.d-lg-none .btn-guardar i,
+    .restaurant-info-box.d-lg-none .btn-favorito i,
+    .restaurant-info-box.d-lg-none .btn-editar-gerente i {
+        font-size: 14px;
+    }
+
+    .restaurant-info-box.d-lg-none .btn-favorito span {
+        font-size: 12px;
     }
 }
 
@@ -2166,24 +2271,55 @@ body {
 
 /* Responsive para miniaturas */
 @media (max-width: 768px) {
+    /* Ocultar botones de navegación del slider en responsive */
+    .thumbnail-nav-btn {
+        display: none;
+    }
+    
+    /* Convertir slider a scroll vertical */
+    .thumbnails-slider-container {
+        position: relative;
+        margin-top: 20px;
+        padding: 0;
+    }
+    
+    .thumbnails-slider {
+        overflow-x: auto;
+        overflow-y: hidden;
+        max-width: 100%;
+        padding: 0;
+        -ms-overflow-style: auto;
+        scrollbar-width: thin;
+    }
+    
+    .thumbnails-slider::-webkit-scrollbar {
+        display: block;
+        height: 6px;
+    }
+    
+    .thumbnails-slider::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 163, 224, 0.6);
+        border-radius: 3px;
+    }
+    
+    .thumbnails-wrapper {
+        flex-direction: row;
+        gap: 10px;
+    }
+    
     .thumbnail-item {
-        min-width: calc(33.333% - 6.67px);
+        min-width: calc(25% - 7.5px);
+        flex: 0 0 calc(25% - 7.5px);
+    }
+    
+    .thumbnail-item img {
+        height: 80px;
     }
 }
 
 @media (max-width: 480px) {
-    .thumbnail-item {
-        min-width: calc(50% - 5px);
-    }
-    
     .thumbnails-slider {
-        padding: 0 40px;
-    }
-    
-    .thumbnail-nav-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 16px;
+        padding: 0;
     }
 }
 
@@ -2208,6 +2344,19 @@ body {
     background-color: #e6c000;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive para botón editar gerente */
+@media (max-width: 768px) {
+    .btn-editar-gerente {
+        padding: 8px 16px;
+        font-size: 12px;
+        margin-left: 5px;
+    }
+
+    .btn-editar-gerente i {
+        font-size: 14px;
+    }
 }
 
 /* Estilos para el Modal de Edición - Usando estilos de admin */
@@ -2251,7 +2400,7 @@ body {
 
 #modalEditarRestaurante .tipos-comida-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 200px));
     gap: 10px;
     margin-top: 10px;
 }
@@ -2327,4 +2476,39 @@ body {
 #modalEditarRestaurante .btn-deshabilitado:hover {
     background-color: #6c757d !important;
     border-color: #6c757d !important;
+}
+
+/* Mejoras adicionales para el menú hamburguesa */
+.btn-menu-detalle:hover,
+.btn-menu-detalle.active {
+    color: var(--color-secondary);
+}
+
+/* Mejoras generales responsive */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .row {
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+    
+    .col, .col-auto, [class*="col-"] {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .restaurant-image-main {
+        border-radius: 0;
+    }
+    
+    .section-box,
+    .restaurant-info-box {
+        border-radius: 4px;
+    }
 }

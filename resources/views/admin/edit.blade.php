@@ -24,6 +24,7 @@
                 <label for="nombre">Nombre del Restaurante *</label>
                 <input type="text" id="nombre" name="nombre" value="{{ old('nombre', $restaurante->nombre) }}"
                     required>
+                <span id="error-nombre" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('nombre')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -32,6 +33,7 @@
             <div class="form-group">
                 <label for="descripcion">Descripción</label>
                 <textarea id="descripcion" name="descripcion">{{ old('descripcion', $restaurante->descripcion) }}</textarea>
+                <span id="error-descripcion" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('descripcion')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -48,6 +50,7 @@
                         </option>
                     @endforeach
                 </select>
+                <span id="error-categoria" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('categoria_id')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -65,6 +68,7 @@
                         </option>
                     @endforeach
                 </select>
+                <span id="error-ubicacion" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('ubicacion_id')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -81,6 +85,7 @@
                         </option>
                     @endforeach
                 </select>
+                <span id="error-gerente" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('user_id')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -90,6 +95,7 @@
                 <label for="direccion">Dirección *</label>
                 <input type="text" id="direccion" name="direccion"
                     value="{{ old('direccion', $restaurante->direccion) }}" required>
+                <span id="error-direccion" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('direccion')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -119,6 +125,7 @@
                 <label for="telefono">Teléfono</label>
                 <input type="text" id="telefono" name="telefono"
                     value="{{ old('telefono', $restaurante->telefono) }}">
+                <span id="error-telefono" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('telefono')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -128,6 +135,7 @@
                 <label for="email">Email *</label>
                 <input type="email" id="email" name="email" value="{{ old('email', $restaurante->email) }}"
                     required>
+                <span id="error-email" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('email')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -136,6 +144,7 @@
             <div class="form-group">
                 <label for="web">Sitio Web</label>
                 <input type="url" id="web" name="web" value="{{ old('web', $restaurante->web) }}">
+                <span id="error-web" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('web')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -145,6 +154,7 @@
                 <label for="precio">Precio Promedio (€) *</label>
                 <input type="number" id="precio" name="precio" value="{{ old('precio', $restaurante->precio) }}"
                     step="0.01" required>
+                <span id="error-precio" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('precio')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -154,6 +164,7 @@
                 <label for="soles">Soles Repsol (0-3)</label>
                 <input type="number" id="soles" name="soles" value="{{ old('soles', $restaurante->soles) }}"
                     min="0" max="3">
+                <span id="error-soles" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('soles')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -164,6 +175,7 @@
                 <input type="number" id="valoracion_promedio" name="valoracion_promedio"
                     value="{{ old('valoracion_promedio', $restaurante->valoracion_promedio) }}" step="0.1"
                     min="0" max="5">
+                <span id="error-valoracion" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('valoracion_promedio')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -200,8 +212,9 @@
                         style="display: block; margin-bottom: 8px; font-weight: 500; color: #495057;">➕ Seleccionar
                         nuevas imágenes:</label>
                     <input type="file" id="imagenes" name="imagenes[]" accept="image/*" multiple
-                        onchange="previewImages(event)" style="margin-top: 5px;">
+                        onchange="previewImages(event); if(typeof comprobarImagenes === 'function') comprobarImagenes();" style="margin-top: 5px;">
                 </div>
+                <span id="error-imagenes" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('imagenes')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -225,6 +238,7 @@
         // Array global para imágenes existentes a eliminar
         window.imagenesAEliminar = [];
     </script>
+    <script src="{{ asset('js/validacion_admin_js/editar.js') }}"></script>
     <script src="{{ asset('js/admin_js/admin_edit.js') }}"></script>
 </body>
 
