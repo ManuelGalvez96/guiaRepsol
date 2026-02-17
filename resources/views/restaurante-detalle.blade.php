@@ -40,13 +40,18 @@
 
             return $restauranteImageMap[$key] ?? 'img/restaurantes/emigrante.webp';
         };
+
+        // La URL de la base de datos ya es correcta, solo aplicar asset()
+        $resolveImagenUrl = function (string $url): string {
+            return asset($url);
+        };
     @endphp
     <!-- Header -->
     <header class="header-detalle">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <button class="btn-menu-detalle" id="btnToggleMenu">
+                    <button class="btn-menu-detalle">
                         <i class="bi bi-list"></i>
                     </button>
                 </div>
@@ -72,18 +77,15 @@
             </div>
         </div>
     </header>
-
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
         <ul class="mobile-nav">
             <li><a href="{{ route('home') }}"><i class="bi bi-house"></i> Inicio</a></li>
             <li><a href="{{ route('restaurantes') }}"><i class="bi bi-list-ul"></i> Listado</a></li>
-            <li><a href="#" class="active"><i class="bi bi-info-circle"></i> Información</a></li>
             <li><a href="{{ route('formulario') }}"><i class="bi bi-shop"></i> Date a Conocer</a></li>
-            <li><a href="{{ route('restaurantes.guardados') }}"><i class="bi bi-bookmark-fill"></i> Guardados</a></li>
+            <li><a href="{{ route('restaurantes.guardados') }}" class="active"><i class="bi bi-bookmark-fill"></i> Guardados</a></li>
         </ul>
     </div>
-
     <!-- Tabs Navigation -->
     <div class="tabs-nav">
         <div class="container">
@@ -161,14 +163,12 @@
                         <div class="mt-3">
                             <button class="btn-guardar {{ $userHasSaved ? 'active' : '' }}" 
                                     id="btn-guardar" 
-                                    data-restaurante-id="{{ $restaurante->id }}"
-                                    onclick="saveRestaurant({{ $restaurante->id }}, 'desktop')">
+                                    data-restaurante-id="{{ $restaurante->id }}">
                                 <i class="bi bi-bookmark{{ $userHasSaved ? '-fill' : '' }}"></i> Guardar
                             </button>
                             <button class="btn-favorito {{ $userHasLiked ? 'active' : '' }}" 
                                     id="btn-favorito" 
-                                    data-restaurante-id="{{ $restaurante->id }}"
-                                    onclick="likeRestaurant({{ $restaurante->id }}, 'desktop')">
+                                    data-restaurante-id="{{ $restaurante->id }}">
                                 <i class="bi bi-heart{{ $userHasLiked ? '-fill' : '' }}"></i>
                                 <span id="like-count">{{ $totalLikes }}</span>
                             </button>
@@ -176,8 +176,9 @@
                                 @if(Auth::id() === $restaurante->user_id)
                                     <button class="btn-editar-gerente" 
                                             id="btn-editar-restaurante" 
-                                            data-restaurante-id="{{ $restaurante->id }}"
-                                            onclick="editRestaurant({{ $restaurante->id }})">
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#modalEditarRestaurante"
+                                            data-restaurante-id="{{ $restaurante->id }}">
                                         <i class="bi bi-pencil-square"></i> Editar
                                     </button>
                                 @endif
@@ -330,14 +331,7 @@
                     <!-- Imagen Principal -->
                     <div class="image-container">
                         @if($imagenPrincipal)
-                            @php
-                                // Si la URL empieza con 'img/', es una ruta pública directa
-                                // Si no, está en storage/app/public/
-                                $imagenUrl = str_starts_with($imagenPrincipal->url, 'img/') 
-                                    ? asset($imagenPrincipal->url) 
-                                    : asset('storage/' . $imagenPrincipal->url);
-                            @endphp
-                            <img src="{{ $imagenUrl }}" 
+                            <img src="{{ $resolveImagenUrl($imagenPrincipal->url) }}" 
                                  id="imagenPrincipalDisplay"
                                  alt="{{ $restaurante->nombre }}" 
                                  class="restaurant-image-main">
@@ -358,23 +352,13 @@
                         <div class="thumbnails-slider">
                             <div class="thumbnails-wrapper" id="thumbnailsWrapper">
                                 @if($imagenPrincipal)
-                                    @php
-                                        $imgPrincipalUrl = str_starts_with($imagenPrincipal->url, 'img/') 
-                                            ? asset($imagenPrincipal->url) 
-                                            : asset('storage/' . $imagenPrincipal->url);
-                                    @endphp
-                                    <div class="thumbnail-item active" data-image="{{ $imgPrincipalUrl }}">
-                                        <img src="{{ $imgPrincipalUrl }}" alt="Principal">
+                                    <div class="thumbnail-item active" data-image="{{ $resolveImagenUrl($imagenPrincipal->url) }}">
+                                        <img src="{{ $resolveImagenUrl($imagenPrincipal->url) }}" alt="Principal">
                                     </div>
                                 @endif
                                 @foreach($imagenesAdicionales as $imagen)
-                                    @php
-                                        $imgUrl = str_starts_with($imagen->url, 'img/') 
-                                            ? asset($imagen->url) 
-                                            : asset('storage/' . $imagen->url);
-                                    @endphp
-                                    <div class="thumbnail-item" data-image="{{ $imgUrl }}">
-                                        <img src="{{ $imgUrl }}" alt="Foto {{ $loop->iteration }}">
+                                    <div class="thumbnail-item" data-image="{{ $resolveImagenUrl($imagen->url) }}">
+                                        <img src="{{ $resolveImagenUrl($imagen->url) }}" alt="Foto {{ $loop->iteration }}">
                                     </div>
                                 @endforeach
                             </div>
@@ -411,26 +395,22 @@
                             @endforeach
                         </div>
 
-                        <div class="mt-3 d-flex flex-wrap gap-2">
-                            <button class="btn-guardar {{ $userHasSaved ? 'active' : '' }}" 
-                                    id="btn-guardar-mobile" 
-                                    data-restaurante-id="{{ $restaurante->id }}"
-                                    onclick="saveRestaurant({{ $restaurante->id }}, 'mobile')">
-                                <i class="bi bi-bookmark{{ $userHasSaved ? '-fill' : '' }}"></i> Guardar
+                        <div class="mt-3">
+                            <button class="btn-guardar">
+                                <i class="bi bi-bookmark"></i> Guardar
                             </button>
-                            <button class="btn-favorito {{ $userHasLiked ? 'active' : '' }}" 
-                                    id="btn-favorito-mobile" 
-                                    data-restaurante-id="{{ $restaurante->id }}"
-                                    onclick="likeRestaurant({{ $restaurante->id }}, 'mobile')">
-                                <i class="bi bi-heart{{ $userHasLiked ? '-fill' : '' }}"></i>
-                                <span id="like-count-mobile">{{ $totalLikes }}</span>
+                            <button class="btn-compartir">
+                                <i class="bi bi-share"></i>
+                            </button>
+                            <button class="btn-favorito">
+                                <i class="bi bi-heart"></i>
                             </button>
                             @auth
                                 @if(Auth::id() === $restaurante->user_id)
                                     <button class="btn-editar-gerente" 
-                                            id="btn-editar-restaurante-mobile" 
-                                            data-restaurante-id="{{ $restaurante->id }}"
-                                            onclick="editRestaurant({{ $restaurante->id }})">
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#modalEditarRestaurante"
+                                            data-restaurante-id="{{ $restaurante->id }}">
                                         <i class="bi bi-pencil-square"></i> Editar
                                     </button>
                                 @endif
@@ -722,23 +702,13 @@
                         </div>
                         <div class="carousel-inner">
                             @if($imagenPrincipal)
-                            @php
-                                $imagenPrincipalUrl = str_starts_with($imagenPrincipal->url, 'img/') 
-                                    ? asset($imagenPrincipal->url) 
-                                    : asset('storage/' . $imagenPrincipal->url);
-                            @endphp
                             <div class="carousel-item active">
-                                <img src="{{ $imagenPrincipalUrl }}" class="d-block w-100" alt="Foto principal">
+                                <img src="{{ $resolveImagenUrl($imagenPrincipal->url) }}" class="d-block w-100" alt="Foto principal">
                             </div>
                             @endif
                             @foreach($imagenesAdicionales as $imagen)
-                            @php
-                                $imagenUrl = str_starts_with($imagen->url, 'img/') 
-                                    ? asset($imagen->url) 
-                                    : asset('storage/' . $imagen->url);
-                            @endphp
                             <div class="carousel-item {{ !$imagenPrincipal && $loop->first ? 'active' : '' }}">
-                                <img src="{{ $imagenUrl }}" class="d-block w-100" alt="Foto del restaurante">
+                                <img src="{{ $resolveImagenUrl($imagen->url) }}" class="d-block w-100" alt="Foto del restaurante">
                             </div>
                             @endforeach
                         </div>
@@ -860,7 +830,7 @@
                             <small class="form-text text-muted">Dejar vacío si no desea cambiar la imagen</small>
                             @if($imagenPrincipal)
                                 <div class="mt-2">
-                                    <img src="{{ str_starts_with($imagenPrincipal->url, 'img/') ? asset($imagenPrincipal->url) : asset('storage/' . $imagenPrincipal->url) }}" 
+                                    <img src="{{ $resolveImagenUrl($imagenPrincipal->url) }}" 
                                          class="img-thumbnail" 
                                          style="max-width: 200px;">
                                 </div>
@@ -878,7 +848,7 @@
                                     <div class="d-flex gap-2 flex-wrap" id="imagenesActualesContainer">
                                         @foreach($imagenesAdicionales as $imagen)
                                             <div class="position-relative imagen-actual-item" data-imagen-id="{{ $imagen->id }}">
-                                                <img src="{{ str_starts_with($imagen->url, 'img/') ? asset($imagen->url) : asset('storage/' . $imagen->url) }}" 
+                                                <img src="{{ $resolveImagenUrl($imagen->url) }}" 
                                                      class="img-thumbnail" 
                                                      style="width: 100px; height: 100px; object-fit: cover;">
                                                 <button type="button" 
@@ -915,8 +885,6 @@
     <!-- Scripts personalizados -->
     <script src="{{ asset('js/validacion-editar-restaurante.js') }}"></script>
     <script src="{{ asset('js/restaurante-detalle.js') }}"></script>
-
-
 </body>
 </html>
 

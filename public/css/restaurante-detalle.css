@@ -20,7 +20,9 @@ body {
     color: var(--color-text);
     line-height: 1.6;
 }
-
+.mobile-menu {
+    display: none;
+}
 /* Header */
 .header-detalle {
     background-color: var(--color-white);
@@ -344,7 +346,7 @@ body {
 /* Sitios de interés */
 .sitios-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 300px);
     gap: 15px;
 }
 
@@ -483,7 +485,7 @@ body {
 /* Responsive */
 @media (max-width: 991px) {
     .sitios-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 100%;
     }
 
     .main-detalle .container {
@@ -1639,7 +1641,7 @@ body {
 /* Sitios de interés */
 .sitios-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 300px);
     gap: 15px;
 }
 
@@ -1778,11 +1780,60 @@ body {
 /* Responsive */
 @media (max-width: 991px) {
     .sitios-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 100%;
     }
 }
 
 @media (max-width: 767px) {
+   .mobile-menu {
+        display: none;
+        background-color: var(--color-white);
+        border-bottom: 1px solid var(--color-border);
+        padding: 12px 0;
+    }
+
+    .mobile-menu.active {
+        display: block;
+    }
+
+    .mobile-nav {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 0 12px;
+    }
+
+    .mobile-nav li {
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .mobile-nav li:last-child {
+        border-bottom: none;
+    }
+
+    .mobile-nav a {
+        display: flex;
+        text-decoration: none;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 0;
+        font-size: 14px;
+        color: var(--color-text);
+        transition: color 0.3s ease;
+    }
+
+    .mobile-nav a:hover {
+        color: var(--color-secondary);
+    }
+
+    .mobile-nav a.active {
+        color: var(--color-secondary);
+        font-weight: 600;
+    }
+
+    .mobile-nav i {
+        font-size: 18px;
+    }
     .restaurant-name-title {
         font-size: 24px;
     }
@@ -2349,7 +2400,7 @@ body {
 
 #modalEditarRestaurante .tipos-comida-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 200px));
     gap: 10px;
     margin-top: 10px;
 }

@@ -771,7 +771,7 @@ body {
 
 .form-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 480px 480px;
     gap: 20px;
 }
 
@@ -784,7 +784,7 @@ body {
 
 .checkbox-group {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
     gap: 12px;
     margin-top: 8px;
 }
@@ -893,7 +893,7 @@ body {
     }
 
     .form-row {
-        grid-template-columns: 1fr;
+        grid-template-columns: 100%;
     }
 
     .form-header h1 {
@@ -901,7 +901,7 @@ body {
     }
 
     .checkbox-group {
-        grid-template-columns: 1fr;
+        grid-template-columns: 100%;
     }
 }
 

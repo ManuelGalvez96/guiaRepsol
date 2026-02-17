@@ -677,7 +677,7 @@ textarea {
     }
     
     .tipos-comida-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 100%;
     }
     
 /* ==================== MODAL ==================== */
