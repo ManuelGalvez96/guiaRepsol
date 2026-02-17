@@ -1,10 +1,13 @@
 // JavaScript para crear restaurantes 
 var csrfToken;
-var ajaxObj;
-const READY_STATE_COMPLETE = 4;
 var selectedFiles = []; // Array para mantener archivos seleccionados
 
-window.onload = () => {
+const prevOnloadCreate = window.onload;
+window.onload = function(event) {
+    if (typeof prevOnloadCreate === 'function') {
+        prevOnloadCreate(event);
+    }
+
     // Obtener token CSRF del atributo data-csrf del body
     csrfToken = document.body.getAttribute('data-csrf');
     if (!csrfToken) {
@@ -18,32 +21,12 @@ window.onload = () => {
     if (form) {
         form.onsubmit = function (e) {
             e.preventDefault();
-            console.log('Enviando formulario...');
             crearRestaurante();
         }
     }
+};
 
-    console.log('Form de crear cargado');
-}
 
-// Función AJAX 
-function peticionAjax(url, metodo, funcionCallback, datos) {
-    ajaxObj = new XMLHttpRequest();
-    ajaxObj.open(metodo, url);
-
-    if (metodo === 'POST') {
-        ajaxObj.setRequestHeader('Accept', 'application/json');
-        ajaxObj.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-    }
-
-    ajaxObj.onreadystatechange = funcionCallback;
-
-    if (metodo === 'POST' && datos) {
-        ajaxObj.send(datos);
-    } else {
-        ajaxObj.send();
-    }
-}
 
 function crearRestaurante() {
     const form = document.getElementById('createRestauranteForm');
@@ -61,78 +44,95 @@ function crearRestaurante() {
     // Preparar datos
     const formData = new FormData(form);
 
-    // AJAX con patrón 
-    peticionAjax(form.action, 'POST', manejarCrear, formData);
-}
-
-function manejarCrear() {
-    if (ajaxObj.readyState == READY_STATE_COMPLETE) {
+    // Fetch
+    fetch(form.action, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: formData
+    })
+    .then(response => {
         const submitBtn = document.getElementById('submitBtn');
-
-        if (ajaxObj.status == 200) {
-            const data = JSON.parse(ajaxObj.responseText);
-            if (data.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: data.message,
-                    timer: 1500,
-                    showConfirmButton: false
-                }).then(() => {
-                    const adminIndexUrl = document.body.getAttribute('data-route-index') || '/admin';
-                    window.location.href = adminIndexUrl;
-                });
-            }
-        } else if (ajaxObj.status == 422) {
-            // Errores de validación
-            const error = JSON.parse(ajaxObj.responseText);
-            if (error.errors) {
-                Object.keys(error.errors).forEach(field => {
-                    const input = document.getElementById(field);
-                    if (input) {
-                        const errorDiv = document.createElement('div');
-                        errorDiv.className = 'error';
-                        errorDiv.textContent = error.errors[field][0];
-                        input.parentNode.appendChild(errorDiv);
-                    }
-                });
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error de validación',
-                    text: 'Por favor corrige los errores en el formulario'
-                });
-            }
-
-            // Restaurar botón
-            if (submitBtn) {
-                submitBtn.textContent = 'Crear Restaurante';
-                submitBtn.disabled = false;
-            }
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Error al crear el restaurante'
+        
+        if (response.status === 200) {
+            return response.json().then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: data.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        const adminIndexUrl = document.body.getAttribute('data-route-index') || '/admin';
+                        window.location.href = adminIndexUrl;
+                    });
+                }
             });
+        } else if (response.status === 422) {
+            // Errores de validación
+            return response.json().then(error => {
+                if (error.errors) {
+                    Object.keys(error.errors).forEach(field => {
+                        const input = document.getElementById(field);
+                        if (input) {
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'error';
+                            errorDiv.textContent = error.errors[field][0];
+                            input.parentNode.appendChild(errorDiv);
+                        }
+                    });
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error de validación',
+                        text: 'Por favor corrige los errores en el formulario'
+                    });
+                }
 
-            // Restaurar botón
-            if (submitBtn) {
-                submitBtn.textContent = 'Crear Restaurante';
-                submitBtn.disabled = false;
-            }
+                // Restaurar botón
+                if (submitBtn) {
+                    submitBtn.textContent = 'Crear Restaurante';
+                    submitBtn.disabled = false;
+                }
+            });
+        } else {
+            throw new Error('Error desconocido');
         }
-    }
+    })
+    .catch(error => {
+        const submitBtn = document.getElementById('submitBtn');
+        
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al crear el restaurante'
+        });
+
+        // Restaurar botón
+        if (submitBtn) {
+            submitBtn.textContent = 'Crear Restaurante';
+            submitBtn.disabled = false;
+        }
+    });
 }
 
 // Preview de múltiples imágenes con opción de eliminar
 function previewImages(event) {
     const files = event.target.files;
-    const imagesPreview = document.getElementById('imagesPreview');
+    const container = document.getElementById('allImagesContainer');
 
-    if (!imagesPreview) return;
+    if (!container) {
+        console.error('No se encontró el contenedor allImagesContainer');
+        return;
+    }
 
-    // Limpiar previews anteriores y resetear array
-    imagesPreview.innerHTML = '';
+    // Eliminar previews anteriores de nuevas imágenes (solo las que tienen la clase new-image-item)
+    const previousNewImages = container.querySelectorAll('.new-image-item');
+    previousNewImages.forEach(img => img.remove());
+
+    // Resetear array de archivos seleccionados
     selectedFiles = [];
 
     if (files && files.length > 0) {
@@ -144,36 +144,52 @@ function previewImages(event) {
         }
 
         if (selectedFiles.length === 0) {
-            imagesPreview.innerHTML = '<p id="noImagesMessage" style="width: 100%; text-align: center; color: #999; margin: 20px 0;">No se seleccionaron imágenes válidas. Intenta de nuevo.</p>';
             return;
         }
 
-        // Renderizar previews
+        // Eliminar mensaje "no hay imágenes" si existe
+        const noImagesMsg = document.getElementById('noImagesMessage');
+        if (noImagesMsg) {
+            noImagesMsg.remove();
+        }
+
+        // Renderizar previews en el mismo contenedor
         renderImagePreviews();
+
     } else {
-        imagesPreview.innerHTML = '<p id="noImagesMessage" style="width: 100%; text-align: center; color: #999; margin: 20px 0;">Selecciona imágenes para añadir.</p>';
+        // Si no hay archivos, mostrar mensaje
+        if (!document.getElementById('noImagesMessage')) {
+            const emptyMsg = document.createElement('p');
+            emptyMsg.id = 'noImagesMessage';
+            emptyMsg.style.cssText = 'width: 100%; text-align: center; color: #999; margin: 20px 0;';
+            emptyMsg.textContent = 'Selecciona imágenes para añadir.';
+            container.appendChild(emptyMsg);
+        }
     }
 }
 
 // Función para renderizar los previews de las imágenes
 function renderImagePreviews() {
-    const imagesPreview = document.getElementById('imagesPreview');
-    if (!imagesPreview) return;
-
-    imagesPreview.innerHTML = '';
+    const container = document.getElementById('allImagesContainer');
+    if (!container) {
+        console.error('No se encontró el contenedor allImagesContainer en renderImagePreviews');
+        return;
+    }
 
     selectedFiles.forEach((file, index) => {
         const reader = new FileReader();
         reader.onload = function (e) {
             const previewDiv = document.createElement('div');
             previewDiv.className = 'new-image-item';
+            previewDiv.style.cssText = 'position: relative; text-align: center; border: 3px solid #ffc107; border-radius: 8px; padding: 5px; background: #fffbf0; max-width: 170px; box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3); display: flex; flex-direction: column; align-items: center;';
 
-            // Botón X para eliminar
+            // Botón X para eliminar imagen NUEVA/SELECCIONADA (no guardada aún)
             const removeBtn = document.createElement('button');
             removeBtn.innerHTML = '×';
             removeBtn.className = 'btn-eliminar-imagen-nueva';
             removeBtn.title = 'Quitar imagen seleccionada';
-
+            removeBtn.type = 'button';
+            removeBtn.style.cssText = 'position: absolute; top: 3px; right: 3px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 1000; box-shadow: 0 2px 6px rgba(0,0,0,0.3); transition: all 0.2s ease;';
             removeBtn.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -183,24 +199,26 @@ function renderImagePreviews() {
             const img = document.createElement('img');
             img.src = e.target.result;
             img.alt = `Vista previa ${index + 1}`;
+            img.style.cssText = 'width: 150px; height: 100px; object-fit: cover; border-radius: 5px; display: block;';
 
             const fileName = document.createElement('small');
             fileName.textContent = file.name.length > 20 ? file.name.substring(0, 17) + '...' : file.name;
+            fileName.style.cssText = 'display: block; margin-top: 5px; color: #856404; text-align: center; font-size: 11px; font-weight: 600;';
 
             const badge = document.createElement('span');
             badge.textContent = 'NUEVA';
             badge.className = 'new-image-badge';
+            badge.style.cssText = 'display: inline-block; background: #ffc107; color: #000; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 700; margin-top: 5px; text-transform: uppercase;';
 
             previewDiv.appendChild(removeBtn);
             previewDiv.appendChild(img);
             previewDiv.appendChild(fileName);
             previewDiv.appendChild(badge);
-            imagesPreview.appendChild(previewDiv);
+
+            container.appendChild(previewDiv);
         }
         reader.readAsDataURL(file);
     });
-
-    console.log(`${selectedFiles.length} imágenes seleccionadas`);
 }
 
 // Función para eliminar una imagen específica
@@ -212,17 +230,25 @@ function removeImage(index) {
         // Actualizar el input file con los archivos restantes
         updateFileInput();
 
+        // Limpiar imágenes nuevas del contenedor
+        const container = document.getElementById('allImagesContainer');
+        if (container) {
+            const newImages = container.querySelectorAll('.new-image-item');
+            newImages.forEach(img => img.remove());
+        }
+
         // Si quedan archivos, renderizar de nuevo
         if (selectedFiles.length > 0) {
             renderImagePreviews();
-            console.log(`Imagen "${fileName}" eliminada. Quedan ${selectedFiles.length} imagen(es)`);
         } else {
-            // Si no quedan archivos, mostrar mensaje por defecto
-            const imagesPreview = document.getElementById('imagesPreview');
-            if (imagesPreview) {
-                imagesPreview.innerHTML = '<p id="noImagesMessage" style="width: 100%; text-align: center; color: #999; margin: 20px 0;">Selecciona imágenes para añadir.</p>';
+            // Si no quedan archivos, mostrar mensaje
+            const noImagesMsg = document.createElement('p');
+            noImagesMsg.id = 'noImagesMessage';
+            noImagesMsg.style.cssText = 'width: 100%; text-align: center; color: #999; margin: 20px 0;';
+            noImagesMsg.textContent = 'Selecciona imágenes para añadir.';
+            if (container && !container.querySelector('#noImagesMessage')) {
+                container.appendChild(noImagesMsg);
             }
-            console.log(`Imagen "${fileName}" eliminada. No quedan más imágenes seleccionadas`);
         }
     } else {
         console.error('Índice de imagen no válido:', index);

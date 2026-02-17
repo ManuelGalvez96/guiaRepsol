@@ -6,14 +6,16 @@
     <div class="form-group">
         <label for="nombre">Nombre del Restaurante *</label>
         <input type="text" id="nombre" name="nombre" value="{{ old('nombre') }}">
+        <span id="error-nombre" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
         @error('nombre')
             <div class="error">{{ $message }}</div>
         @enderror
     </div>
 
     <div class="form-group">
-        <label for="descripcion">Descripción</label>
+        <label for="descripcion">Descripción *</label>
         <textarea id="descripcion" name="descripcion">{{ old('descripcion') }}</textarea>
+        <span id="error-descripcion" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
         @error('descripcion')
             <div class="error">{{ $message }}</div>
         @enderror
@@ -29,6 +31,7 @@
                 </option>
             @endforeach
         </select>
+        <span id="error-categoria" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
         @error('categoria_id')
             <div class="error">{{ $message }}</div>
         @enderror
@@ -44,6 +47,7 @@
                 </option>
             @endforeach
         </select>
+        <span id="error-ubicacion" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
         @error('ubicacion_id')
             <div class="error">{{ $message }}</div>
         @enderror
@@ -59,6 +63,7 @@
                 </option>
             @endforeach
         </select>
+        <span id="error-gerente" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
         @error('user_id')
             <div class="error">{{ $message }}</div>
         @enderror
@@ -67,6 +72,7 @@
     <div class="form-group">
         <label for="direccion">Dirección *</label>
         <input type="text" id="direccion" name="direccion" value="{{ old('direccion') }}">
+        <span id="error-direccion" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
         @error('direccion')
             <div class="error">{{ $message }}</div>
         @enderror
@@ -96,6 +102,7 @@
     <div class="form-group">
         <label for="telefono">Teléfono</label>
         <input type="text" id="telefono" name="telefono" value="{{ old('telefono') }}">
+        <span id="error-telefono" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
         @error('telefono')
             <div class="error">{{ $message }}</div>
         @enderror
@@ -104,6 +111,7 @@
     <div class="form-group">
         <label for="email">Email *</label>
         <input type="email" id="email" name="email" value="{{ old('email') }}">
+        <span id="error-email" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
         @error('email')
             <div class="error">{{ $message }}</div>
         @enderror
@@ -112,6 +120,7 @@
     <div class="form-group">
         <label for="web">Sitio Web</label>
         <input type="url" id="web" name="web" value="{{ old('web') }}">
+        <span id="error-web" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
         @error('web')
             <div class="error">{{ $message }}</div>
         @enderror
@@ -120,6 +129,7 @@
     <div class="form-group">
         <label for="precio">Precio Promedio (€) *</label>
         <input type="number" id="precio" name="precio" value="{{ old('precio') }}" step="0.01">
+        <span id="error-precio" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
         @error('precio')
             <div class="error">{{ $message }}</div>
         @enderror
@@ -128,6 +138,7 @@
     <div class="form-group">
         <label for="soles">Soles Repsol (0-3)</label>
         <input type="number" id="soles" name="soles" value="{{ old('soles', 0) }}" min="0" max="3">
+        <span id="error-soles" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
         @error('soles')
             <div class="error">{{ $message }}</div>
         @enderror
@@ -136,18 +147,26 @@
     <div class="form-group">
         <label for="valoracion_promedio">Valoración (0-5)</label>
         <input type="number" id="valoracion_promedio" name="valoracion_promedio" value="{{ old('valoracion_promedio') }}" step="0.1" min="0" max="5">
+        <span id="error-valoracion" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
         @error('valoracion_promedio')
             <div class="error">{{ $message }}</div>
         @enderror
     </div>
 
     <div class="form-group">
-        <label for="imagenes">Imágenes del Restaurante (múltiples)</label>
-        <input type="file" id="imagenes" name="imagenes[]" accept="image/*" multiple onchange="previewImages(event)">
+        <label for="imagenes">Imágenes del Restaurante *</label>
+        <div class="images-container" id="allImagesContainer"
+            style="display: flex; flex-wrap: wrap; gap: 15px; margin: 10px 0; padding: 15px; background: #f8f9fa; border-radius: 6px; min-height: 140px;">
+            <p id="noImagesMessage" style="width: 100%; text-align: center; color: #999; margin: 20px 0;">Selecciona imágenes para añadir.</p>
+        </div>
+        <div style="margin-top: 15px;">
+            <label for="imagenes" style="display: block; margin-bottom: 8px; font-weight: 500; color: #495057;">➕ Seleccionar imágenes:</label>
+            <input type="file" id="imagenes" name="imagenes[]" accept="image/*" multiple onchange="previewImages(event); if(typeof comprobarImagenes === 'function') comprobarImagenes();" style="margin-top: 5px;">
+        </div>
+        <span id="error-imagenes" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
         @error('imagenes')
             <div class="error">{{ $message }}</div>
         @enderror
-        
     </div>
 
     <div class="button-group">

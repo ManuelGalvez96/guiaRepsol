@@ -62,6 +62,13 @@ class AuthUser extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'redirect' => url('/login')
+            ]);
+        }
+
         return redirect('/');
     }
 

@@ -194,7 +194,7 @@ class RestauranteController extends Controller
 
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
-            'descripcion' => 'nullable|string',
+            'descripcion' => 'required|string|min:100|max:1000',
             'categoria_id' => 'required|exists:categorias,id',
             'direccion' => 'required|string',
             'telefono' => 'nullable|string',
@@ -206,6 +206,10 @@ class RestauranteController extends Controller
             'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'fotos_adicionales' => 'nullable|array|max:8',
             'fotos_adicionales.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120',
+        ], [
+            'descripcion.required' => 'La descripción es obligatoria',
+            'descripcion.min' => 'La descripción debe tener al menos 100 caracteres',
+            'descripcion.max' => 'La descripción no puede exceder 1000 caracteres',
         ]);
 
         // Actualizar datos básicos del restaurante

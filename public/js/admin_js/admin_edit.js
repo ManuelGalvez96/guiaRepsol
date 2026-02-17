@@ -1,7 +1,5 @@
 // JavaScript para editar restaurantes 
 var csrfToken;
-var ajaxObj;
-var READY_STATE_COMPLETE = 4;
 var selectedFiles = []; // Array para mantener archivos seleccionados
 var processingClick = false; // Flag para evitar clics múltiples
 
@@ -12,7 +10,6 @@ if (typeof window.imagenesAEliminar === 'undefined') {
 
 // Al cargar la pagina
 window.onload = function () {
-    console.log('Iniciando formulario de editar...');
     // Pequeño delay para asegurar que el DOM esté listo
     setTimeout(function() {
         initializeEditForm();
@@ -36,7 +33,6 @@ function initializeEditForm() {
     if (form) {
         form.onsubmit = function (e) {
             e.preventDefault();
-            console.log('Actualizando restaurante...');
             actualizarRestaurante();
         }
     }
@@ -44,7 +40,6 @@ function initializeEditForm() {
     // Usar delegación de eventos para botones de eliminar imágenes existentes
     setupImageDelegation();
 
-    console.log('Form de editar cargado completamente');
 }
 
 // Delegación de eventos: un solo listener en el contenedor maneja todos los clicks
@@ -55,7 +50,6 @@ function setupImageDelegation() {
         return;
     }
     
-    console.log('=== Configurando delegación de eventos en #allImagesContainer ===');
 }
 
 
@@ -70,7 +64,6 @@ function setupEditFormHandler() {
     // Cuando se envie el formulario
     form.onsubmit = function (e) {
         e.preventDefault();
-        console.log('Actualizando restaurante...');
 
         // Quitar errores anteriores
         document.querySelectorAll('.error').forEach(el => el.remove());
@@ -98,7 +91,6 @@ function setupEditFormHandler() {
             body: formData
         })
             .then(response => {
-                console.log('Respuesta recibida:', response.status);
                 if (!response.ok) {
                     return response.json().then(data => {
                         throw data;
@@ -108,8 +100,6 @@ function setupEditFormHandler() {
             })
             .then(data => {
                 if (data.success) {
-                    console.log('Restaurante actualizado correctamente!');
-
                     // Mensaje de exito
                     Swal.fire({
                         icon: 'success',
@@ -209,7 +199,6 @@ function setupHoverEffects() {
 function removeExistingImage(imagenId) {
     // Evitar procesamiento múltiple en rápida sucesión
     if (processingClick) {
-        console.log('Click ignorado - procesamiento en curso');
         return;
     }
     
@@ -220,7 +209,6 @@ function removeExistingImage(imagenId) {
 
     if (!isAlreadyMarked) {
         // MARCAR PARA ELIMINAR
-        console.log('>>> Marcando imagen para eliminar:', id);
         window.imagenesAEliminar.push(id);
 
         const hiddenInput = document.getElementById('imagenes_eliminar');
@@ -229,7 +217,6 @@ function removeExistingImage(imagenId) {
         }
 
         const imageItem = document.querySelector('.current-image-item[data-imagen-id="' + id + '"]');
-        console.log('>>> ImageItem encontrado:', imageItem);
         
         if (imageItem) {
             imageItem.style.opacity = '0.3';
@@ -245,8 +232,6 @@ function removeExistingImage(imagenId) {
 
             // Cambiar botón X por botón +
             const btn = imageItem.querySelector('.btn-eliminar-imagen-existente');
-            console.log('>>> Botón encontrado:', btn);
-            console.log('>>> Estilos actuales del botón:', btn ? btn.style.cssText : 'N/A');
             
             if (btn) {
                 // Agregar clase para modo restaurar
@@ -275,20 +260,13 @@ function removeExistingImage(imagenId) {
                 btn.innerHTML = '+';
                 btn.title = 'Restaurar imagen';
                 btn.setAttribute('data-action', 'restore');
-                
-                console.log('>>> Botón cambiado a +');
-                console.log('>>> Background aplicado:', btn.style.backgroundColor);
             } else {
-                console.log('>>> ERROR: No se encontró el botón');
             }
             
             // Reconfigurar hover effects
             setupHoverEffects();
         } else {
-            console.log('>>> ERROR: No se encontró el imageItem');
         }
-        
-        console.log('Imagen marcada para eliminar:', id);
     } else {
         // RESTAURAR IMAGEN
         window.imagenesAEliminar = window.imagenesAEliminar.filter(existingId => String(existingId) !== id);
@@ -338,14 +316,17 @@ function removeExistingImage(imagenId) {
                 btn.innerHTML = '×';
                 btn.title = 'Eliminar imagen';
                 btn.setAttribute('data-action', 'delete');
-                console.log('>>> Botón cambiado a X roja');
             }
             
             // Reconfigurar hover effects
             setupHoverEffects();
         }
         
-        console.log('Imagen restaurada:', id);
+    }
+    
+    // Llamar a la función de validación si está disponible
+    if (typeof window.comprobarImagenes === 'function') {
+        window.comprobarImagenes();
     }
     
     // Liberar el flag después de un breve delay
@@ -354,25 +335,7 @@ function removeExistingImage(imagenId) {
     }, 300);
 }
 
-// Función AJAX 
-function peticionAjax(url, metodo, funcionCallback, datos) {
-    ajaxObj = new XMLHttpRequest();
-    ajaxObj.open(metodo, url);
 
-    // Enviar token CSRF para POST, PUT y DELETE
-    if (metodo === 'POST' || metodo === 'PUT' || metodo === 'DELETE') {
-        ajaxObj.setRequestHeader('Accept', 'application/json');
-        ajaxObj.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-    }
-
-    ajaxObj.onreadystatechange = funcionCallback;
-
-    if (metodo === 'POST' && datos) {
-        ajaxObj.send(datos);
-    } else {
-        ajaxObj.send();
-    }
-}
 
 function actualizarRestaurante() {
     const form = document.getElementById('editRestauranteForm');
@@ -390,70 +353,81 @@ function actualizarRestaurante() {
     // Preparar datos
     const formData = new FormData(form);
 
-    // AJAX con patrón 
-    peticionAjax(form.action, 'POST', manejarActualizar, formData);
-}
-
-function manejarActualizar() {
-    if (ajaxObj.readyState == READY_STATE_COMPLETE) {
+    // Fetch
+    fetch(form.action, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: formData
+    })
+    .then(response => {
         const submitBtn = document.getElementById('submitBtn');
-
-        if (ajaxObj.status == 200) {
-            const data = JSON.parse(ajaxObj.responseText);
-            if (data.success) {
-                if (typeof window.closeModal === 'function') {
-                    window.closeModal();
-                }
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Actualizado!',
-                    text: data.message,
-                    timer: 1500,
-                    showConfirmButton: false
-                }).then(() => {
-                    const adminIndexUrl = document.body.getAttribute('data-route-index') || '/admin';
-                    window.location.href = adminIndexUrl;
-                });
-            }
-        } else if (ajaxObj.status == 422) {
-            // Errores de validación
-            const error = JSON.parse(ajaxObj.responseText);
-            if (error.errors) {
-                Object.keys(error.errors).forEach(field => {
-                    const input = document.getElementById(field);
-                    if (input) {
-                        const errorDiv = document.createElement('div');
-                        errorDiv.className = 'error';
-                        errorDiv.textContent = error.errors[field][0];
-                        input.parentNode.appendChild(errorDiv);
+        
+        if (response.status === 200) {
+            return response.json().then(data => {
+                if (data.success) {
+                    if (typeof window.closeModal === 'function') {
+                        window.closeModal();
                     }
-                });
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error de validación',
-                    text: 'Por favor corrige los errores en el formulario'
-                });
-            }
-
-            // Restaurar botón
-            if (submitBtn) {
-                submitBtn.textContent = 'Actualizar Restaurante';
-                submitBtn.disabled = false;
-            }
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Error al actualizar el restaurante'
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Actualizado!',
+                        text: data.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        const adminIndexUrl = document.body.getAttribute('data-route-index') || '/admin';
+                        window.location.href = adminIndexUrl;
+                    });
+                }
             });
+        } else if (response.status === 422) {
+            // Errores de validación
+            return response.json().then(error => {
+                if (error.errors) {
+                    Object.keys(error.errors).forEach(field => {
+                        const input = document.getElementById(field);
+                        if (input) {
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'error';
+                            errorDiv.textContent = error.errors[field][0];
+                            input.parentNode.appendChild(errorDiv);
+                        }
+                    });
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error de validación',
+                        text: 'Por favor corrige los errores en el formulario'
+                    });
+                }
 
-            // Restaurar botón
-            if (submitBtn) {
-                submitBtn.textContent = 'Actualizar Restaurante';
-                submitBtn.disabled = false;
-            }
+                // Restaurar botón
+                if (submitBtn) {
+                    submitBtn.textContent = 'Actualizar Restaurante';
+                    submitBtn.disabled = false;
+                }
+            });
+        } else {
+            throw new Error('Error desconocido');
         }
-    }
+    })
+    .catch(error => {
+        const submitBtn = document.getElementById('submitBtn');
+        
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al actualizar el restaurante'
+        });
+
+        // Restaurar botón
+        if (submitBtn) {
+            submitBtn.textContent = 'Actualizar Restaurante';
+            submitBtn.disabled = false;
+        }
+    });
 }
 
 // Preview de múltiples imágenes con opción de eliminar
@@ -491,7 +465,6 @@ function previewImages(event) {
         // Renderizar previews en el mismo contenedor
         renderImagePreviews();
 
-        console.log(`${selectedFiles.length} nuevas imágenes agregadas al contenedor`);
     }
 }
 
@@ -537,16 +510,12 @@ function renderImagePreviews() {
         reader.readAsDataURL(file);
     });
 
-    console.log(`${selectedFiles.length} imágenes seleccionadas renderizadas`);
 }
 
 // Función para eliminar una imagen SELECCIONADA/NUEVA (no guardada aún)
 function removeSelectedImage(index) {
-    console.log('Eliminando imagen seleccionada en índice:', index);
-
     if (index >= 0 && index < selectedFiles.length) {
         selectedFiles.splice(index, 1);
-        console.log('Imágenes restantes:', selectedFiles.length);
 
         // Actualizar el input file con los archivos restantes
         updateFileInput();
@@ -562,7 +531,6 @@ function removeSelectedImage(index) {
         if (selectedFiles.length > 0) {
             renderImagePreviews();
         } else {
-            console.log('No quedan imágenes seleccionadas');
         }
     }
 }
