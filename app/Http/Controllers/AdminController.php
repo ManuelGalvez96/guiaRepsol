@@ -3,13 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Restaurante;
-use App\Models\RestaurantePendiente;
 use App\Models\Categoria;
 use App\Models\TipoComida;
 use App\Models\Ubicacion;
-use App\Models\UbicacionRestaurantePendiente;
 use App\Models\ImagenRestaurante;
-use App\Models\ImagenRestaurantePendiente;
 use App\Mail\Restaurante_Modificado_o_eliminado;
 use App\Mail\Restaurante_Eliminado;
 use Illuminate\Http\Request;
@@ -25,11 +22,60 @@ class AdminController extends Controller
 {
     private function checkAdmin()
     {
-        if (Auth::user()->rol !== 'administrador') {
-            abort(403, 'No tienes permisos para acceder a esta sección');
+        $user = Auth::user();
+        
+        if (!$user) {
+            redirect()->route('login')->withErrors(['error' => 'Debes iniciar sesión para acceder a esta sección.'])->send();
+        }
+        
+        if ($user->rol !== 'administrador') {
+            redirect()->route('restaurantes')->withErrors(['error' => 'No tienes permisos para acceder a esta sección.'])->send();
         }
     }
 
+    /**
+     * Dashboard principal del administrador con estadísticas
+     */
+    public function dashboard()
+    {
+        $this->checkAdmin();
+        
+        // Estadísticas generales
+        $totalRestaurantes = Restaurante::where('estado', 'aceptado')->count();
+        $restaurantesPendientes = Restaurante::where('estado', 'pendiente')->count();
+        $restaurantesRechazados = Restaurante::where('estado', 'rechazado')->count();
+        $totalValoraciones = DB::table('valoraciones')->count();
+        $totalUsuarios = DB::table('users')->where('rol', 'usuario')->count();
+        
+        // Restaurantes mejor valorados
+        $mejoresRestaurantes = Restaurante::where('estado', 'aceptado')
+            ->orderBy('valoracion_promedio', 'desc')
+            ->take(5)
+            ->get();
+        
+        // Últimas valoraciones (CORREGIDO: usar usuario_id en lugar de user_id)
+        $ultimasValoraciones = DB::table('valoraciones')
+            ->join('restaurantes', 'valoraciones.restaurante_id', '=', 'restaurantes.id')
+            ->join('users', 'valoraciones.usuario_id', '=', 'users.id')
+            ->select('valoraciones.*', 'restaurantes.nombre as restaurante_nombre', 'users.name as usuario_nombre')
+            ->orderBy('valoraciones.created_at', 'desc')
+            ->take(10)
+            ->get();
+        
+        return view('admin.dashboard', compact(
+            'totalRestaurantes',
+            'restaurantesPendientes', 
+            'restaurantesRechazados',
+            'totalValoraciones',
+            'totalUsuarios',
+            'mejoresRestaurantes',
+            'ultimasValoraciones'
+        ));
+    }
+
+    /**
+     * Listado de restaurantes (antes era el index)
+     */
     public function index(Request $request)
     {
         $this->checkAdmin();
@@ -44,6 +90,11 @@ class AdminController extends Controller
                       $qGerente->where('name', 'LIKE', '%' . $buscar);
                   });
             });
+        }
+
+        // Filtro de estado (todos por defecto)
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
         }
 
         // Filtros
@@ -89,29 +140,22 @@ class AdminController extends Controller
         $categorias = Categoria::all();
         $tiposComida = TipoComida::all();
 
-        return view('admin.index', compact('restaurantes', 'categorias', 'tiposComida'));
+        return view('admin.restaurantes', compact('restaurantes', 'categorias', 'tiposComida'));
     }
 
+    /**
+     * Solicitudes de restaurantes pendientes
+     */
     public function solicitudes(Request $request)
     {
+        $this->checkAdmin();
         $perPage = $request->input('per_page', 10);
         
-        // Obtener restaurantes pendientes de aprobación de la tabla restaurante_pendiente
-        $solicitudes = RestaurantePendiente::with(['categoria', 'ubicacionPendiente', 'usuario'])
+        // Obtener restaurantes con estado 'pendiente'
+        $solicitudes = Restaurante::with(['categoria', 'ubicacion', 'imagenes', 'tiposComida', 'gerente'])
+            ->where('estado', 'pendiente')
             ->orderBy('created_at', 'desc')
             ->paginate($perPage)->appends($request->except('page'));
-
-        // Cargar imágenes manualmente para cada solicitud
-        foreach ($solicitudes as $solicitud) {
-            $solicitud->imagenes = ImagenRestaurantePendiente::where('restaurante_pendiente_id', $solicitud->id)->get();
-            
-            // Cargar tipos de comida
-            $solicitud->tiposComida = DB::table('tipo_comida_restaurante_pendiente')
-                ->join('tipo_comida', 'tipo_comida_restaurante_pendiente.tipo_comida_id', '=', 'tipo_comida.id')
-                ->where('tipo_comida_restaurante_pendiente.restaurante_pendiente_id', $solicitud->id)
-                ->select('tipo_comida.*')
-                ->get();
-        }
 
         return view('admin.solicitudes', compact('solicitudes'));
     }
@@ -147,14 +191,17 @@ class AdminController extends Controller
             'web' => 'nullable|url',
             'precio' => 'required|numeric',
             'soles' => 'nullable|integer|min:0|max:3',
-            'valoracion_promedio' => 'nullable|numeric|min:0|max:5',
             'tipos_comida' => 'nullable|array',
             'tipos_comida.*' => 'exists:tipo_comida,id',
             'imagenes' => 'nullable|array',
             'imagenes.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
-        $restaurante = Restaurante::create($validated);
+        // Crear restaurante con estado 'aceptado' por defecto (creado por admin)
+        $dataRestaurante = $validated;
+        $dataRestaurante['estado'] = 'aceptado';
+        
+        $restaurante = Restaurante::create($dataRestaurante);
 
         // Sincronizar tipos de comida
         if ($request->has('tipos_comida')) {
@@ -236,7 +283,6 @@ class AdminController extends Controller
             'web' => 'nullable|url',
             'precio' => 'required|numeric',
             'soles' => 'nullable|integer|min:0|max:3',
-            'valoracion_promedio' => 'nullable|numeric|min:0|max:5',
             'tipos_comida' => 'nullable|array',
             'tipos_comida.*' => 'exists:tipo_comida,id',
             'imagenes' => 'nullable|array',
@@ -381,88 +427,22 @@ class AdminController extends Controller
         return Redirect::route('admin.index')->with('success', 'Restaurante actualizado exitosamente');
     }
 
+    /**
+     * Aprobar solicitud de restaurante (cambiar estado a 'aceptado')
+     */
     public function aprobarSolicitud($id)
     {
         try {
-            $pendiente = RestaurantePendiente::with(['ubicacionPendiente'])->findOrFail($id);
+            $restaurante = Restaurante::findOrFail($id);
             
-            // Crear o encontrar ubicación en la tabla principal
-            $ubicacion = Ubicacion::firstOrCreate([
-                'comunidad_autonoma' => $pendiente->ubicacionPendiente->comunidad_autonoma,
-                'provincia' => $pendiente->ubicacionPendiente->provincia,
-                'ciudad' => $pendiente->ubicacionPendiente->ciudad,
-                'codigo_postal' => $pendiente->ubicacionPendiente->codigo_postal,
-            ]);
-            
-            // Crear restaurante en tabla principal
-            $restaurante = Restaurante::create([
-                'nombre' => $pendiente->nombre,
-                'descripcion' => $pendiente->descripcion,
-                'user_id' => $pendiente->user_id,
-                'categoria_id' => $pendiente->categoria_id,
-                'ubicacion_id' => $ubicacion->id,
-                'direccion' => $pendiente->direccion,
-                'telefono' => $pendiente->telefono,
-                'email' => $pendiente->email,
-                'web' => $pendiente->web,
-                'precio' => $pendiente->precio,
-                'soles' => 0,
-                'valoracion_promedio' => 0,
-                'activo' => true,
-            ]);
+            // Cambiar estado a aceptado
+            $restaurante->update(['estado' => 'aceptado']);
             
             // Si el usuario no es gerente, cambiar su rol a gerente
-            $usuario = \App\Models\User::find($pendiente->user_id);
-            if ($usuario && $usuario->rol !== 'gerente') {
+            $usuario = \App\Models\User::find($restaurante->user_id);
+            if ($usuario && $usuario->rol !== 'gerente' && $usuario->rol !== 'administrador') {
                 $usuario->update(['rol' => 'gerente']);
             }
-            
-            // Migrar imágenes: trasladar de img/restaurantes/pendiente/ a img/restaurantes/
-            $imagenesPendientes = ImagenRestaurantePendiente::where('restaurante_pendiente_id', $id)->get();
-            foreach ($imagenesPendientes as $imagenPendiente) {
-                $oldPath = $imagenPendiente->url;
-                
-                // Cambiar ruta de: img/restaurantes/pendiente/archivo.jpg a img/restaurantes/archivo.jpg
-                $newPath = str_replace('img/restaurantes/pendiente/', 'img/restaurantes/', $oldPath);
-                
-                // Obtener rutas completas usando public_path()
-                $oldFullPath = public_path($oldPath);
-                $newFullPath = public_path($newPath);
-                
-                // Mover archivo del sistema de archivos
-                if (File::exists($oldFullPath)) {
-                    // Asegurar que la carpeta destino existe
-                    $destDir = dirname($newFullPath);
-                    if (!File::isDirectory($destDir)) {
-                        File::makeDirectory($destDir, 0755, true);
-                    }
-                    // Mover el archivo
-                    File::move($oldFullPath, $newFullPath);
-                }
-                
-                // Crear registro de imagen en tabla restaurantes con la nueva ruta
-                ImagenRestaurante::create([
-                    'restaurante_id' => $restaurante->id,
-                    'url' => $newPath,  // Ruta actualizada en la BD
-                    'alt' => $imagenPendiente->alt,
-                    'principal' => $imagenPendiente->principal,
-                    'orden' => $imagenPendiente->orden,
-                ]);
-            }
-            
-            // Migrar tipos de comida
-            $tiposComida = DB::table('tipo_comida_restaurante_pendiente')
-                ->where('restaurante_pendiente_id', $id)
-                ->pluck('tipo_comida_id');
-            
-            $restaurante->tiposComida()->attach($tiposComida);
-            
-            // Eliminar de tablas pendientes
-            DB::table('tipo_comida_restaurante_pendiente')
-                ->where('restaurante_pendiente_id', $id)
-                ->delete();
-            ImagenRestaurantePendiente::where('restaurante_pendiente_id', $id)->delete();
-            $pendiente->delete();
             
             return response()->json([
                 'success' => true,
@@ -477,25 +457,16 @@ class AdminController extends Controller
         }
     }
     
+    /**
+     * Rechazar solicitud de restaurante (cambiar estado a 'rechazado')
+     */
     public function rechazarSolicitud($id)
     {
         try {
-            $pendiente = RestaurantePendiente::findOrFail($id);
+            $restaurante = Restaurante::findOrFail($id);
             
-            // Eliminar imágenes del storage
-            $imagenes = ImagenRestaurantePendiente::where('restaurante_pendiente_id', $id)->get();
-            foreach ($imagenes as $imagen) {
-                if (Storage::disk('public')->exists($imagen->url)) {
-                    Storage::disk('public')->delete($imagen->url);
-                }
-            }
-            
-            // Eliminar de tablas relacionadas
-            DB::table('tipo_comida_restaurante_pendiente')
-                ->where('restaurante_pendiente_id', $id)
-                ->delete();
-            ImagenRestaurantePendiente::where('restaurante_pendiente_id', $id)->delete();
-            $pendiente->delete();
+            // Cambiar estado a rechazado
+            $restaurante->update(['estado' => 'rechazado']);
             
             return response()->json([
                 'success' => true,

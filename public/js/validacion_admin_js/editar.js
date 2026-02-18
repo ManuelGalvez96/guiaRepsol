@@ -1,4 +1,6 @@
 function initValidacionEditar() {
+    console.log('=== initValidacionEditar() ===');
+    
     // Elementos de error
     const eNombre = document.getElementById("error-nombre");
     const eDescripcion = document.getElementById("error-descripcion");
@@ -11,7 +13,6 @@ function initValidacionEditar() {
     const eWeb = document.getElementById("error-web");
     const ePrecio = document.getElementById("error-precio");
     const eSoles = document.getElementById("error-soles");
-    const eValoracion = document.getElementById("error-valoracion");
     const eImagenes = document.getElementById("error-imagenes");
 
     // Inputs del formulario
@@ -26,70 +27,101 @@ function initValidacionEditar() {
     const webInput = document.getElementById("web");
     const precioInput = document.getElementById("precio");
     const solesInput = document.getElementById("soles");
-    const valoracionInput = document.getElementById("valoracion_promedio");
     const imagenesInput = document.getElementById("imagenes");
     const botonEnviar = document.getElementById("submitBtn");
 
+    console.log('Elementos del formulario encontrados:', {
+        nombreInput: !!nombreInput,
+        botonEnviar: !!botonEnviar,
+        descripcionInput: !!descripcionInput,
+        emailInput: !!emailInput
+    });
+
     // Verificar que los elementos existen antes de continuar
     if (!nombreInput || !botonEnviar) {
+        console.warn('⚠ Formulario de edición incompleto, saltando validaciones');
         return; // No inicializar si no están los elementos del formulario
     }
 
-    // Comprobar botón al cargar
-    comprobarBoton();
-    comprobarImagenes();
+    try {
+        // Comprobar botón al cargar
+        if (typeof comprobarBoton === 'function') comprobarBoton();
+        if (typeof comprobarImagenes === 'function') comprobarImagenes();
 
-    // Eventos blur para validación al salir del campo
-    nombreInput.onblur = comprobarNombre;
-    descripcionInput.onblur = comprobarDescripcion;
-    categoriaInput.onblur = comprobarCategoria;
-    ubicacionInput.onblur = comprobarUbicacion;
-    gerenteInput.onblur = comprobarGerente;
-    direccionInput.onblur = comprobarDireccion;
-    telefonoInput.onblur = comprobarTelefono;
-    emailInput.onblur = comprobarEmail;
-    webInput.onblur = comprobarWeb;
-    precioInput.onblur = comprobarPrecio;
-    solesInput.onblur = comprobarSoles;
-    valoracionInput.onblur = comprobarValoracion;
+        // Eventos blur para validación al salir del campo
+        if (nombreInput) nombreInput.onblur = comprobarNombre;
+        if (descripcionInput) descripcionInput.onblur = comprobarDescripcion;
+        if (categoriaInput) categoriaInput.onblur = comprobarCategoria;
+        if (ubicacionInput) ubicacionInput.onblur = comprobarUbicacion;
+        if (gerenteInput) gerenteInput.onblur = comprobarGerente;
+        if (direccionInput) direccionInput.onblur = comprobarDireccion;
+        if (telefonoInput) telefonoInput.onblur = comprobarTelefono;
+        if (emailInput) emailInput.onblur = comprobarEmail;
+        if (webInput) webInput.onblur = comprobarWeb;
+        if (precioInput) precioInput.onblur = comprobarPrecio;
+        if (solesInput) solesInput.onblur = comprobarSoles;
 
-    // Eventos input para validación en tiempo real
-    nombreInput.oninput = function() {
-        comprobarNombre();
-    };
-    descripcionInput.oninput = function() {
-        comprobarDescripcion();
-    };
-    categoriaInput.onchange = function() {
-        comprobarCategoria();
-    };
-    ubicacionInput.onchange = function() {
-        comprobarUbicacion();
-    };
-    gerenteInput.onchange = function() {
-        comprobarGerente();
-    };
-    direccionInput.oninput = function() {
-        comprobarDireccion();
-    };
-    telefonoInput.oninput = function() {
-        comprobarTelefono();
-    };
-    emailInput.oninput = function() {
-        comprobarEmail();
-    };
-    webInput.oninput = function() {
-        comprobarWeb();
-    };
-    precioInput.oninput = function() {
-        comprobarPrecio();
-    };
-    solesInput.oninput = function() {
-        comprobarSoles();
-    };
-    valoracionInput.oninput = function() {
-        comprobarValoracion();
-    };
+        // Eventos input para validación en tiempo real
+        if (nombreInput) {
+            nombreInput.oninput = function() {
+                comprobarNombre();
+            };
+        }
+        if (descripcionInput) {
+            descripcionInput.oninput = function() {
+                comprobarDescripcion();
+            };
+        }
+        if (categoriaInput) {
+            categoriaInput.onchange = function() {
+                comprobarCategoria();
+            };
+        }
+        if (ubicacionInput) {
+            ubicacionInput.onchange = function() {
+                comprobarUbicacion();
+            };
+        }
+        if (gerenteInput) {
+            gerenteInput.onchange = function() {
+                comprobarGerente();
+            };
+        }
+        if (direccionInput) {
+            direccionInput.oninput = function() {
+                comprobarDireccion();
+            };
+        }
+        if (telefonoInput) {
+            telefonoInput.oninput = function() {
+                comprobarTelefono();
+            };
+        }
+        if (emailInput) {
+            emailInput.oninput = function() {
+                comprobarEmail();
+            };
+        }
+        if (webInput) {
+            webInput.oninput = function() {
+                comprobarWeb();
+            };
+        }
+        if (precioInput) {
+            precioInput.oninput = function() {
+                comprobarPrecio();
+            };
+        }
+        if (solesInput) {
+            solesInput.oninput = function() {
+                comprobarSoles();
+            };
+        }
+        console.log('✓ Validaciones de edición inicializadas correctamente');
+    } catch (e) {
+        console.error('✗ Error al inicializar validaciones:', e);
+    }
+
 
     function comprobarBoton() {
         // Verificar que todos los spans de error estén vacíos
@@ -105,7 +137,6 @@ function initValidacionEditar() {
             eWeb.innerText === '' &&
             ePrecio.innerText === '' &&
             eSoles.innerText === '' &&
-            eValoracion.innerText === '' &&
             eImagenes.innerText === '';
 
         // Verificar que los campos obligatorios estén completos
@@ -283,19 +314,6 @@ function initValidacionEditar() {
             eSoles.innerText = 'Los soles Repsol deben estar entre 0 y 3.';
         } else {
             eSoles.innerText = '';
-        }
-        comprobarBoton();
-    }
-
-    function comprobarValoracion() {
-        const valoracion = valoracionInput.value.trim();
-        const valoracionNum = parseFloat(valoracion);
-
-        // La valoración es opcional, pero si se llena debe estar entre 0 y 5
-        if (valoracion !== '' && (isNaN(valoracionNum) || valoracionNum < 0 || valoracionNum > 5)) {
-            eValoracion.innerText = 'La valoración debe estar entre 0 y 5.';
-        } else {
-            eValoracion.innerText = '';
         }
         comprobarBoton();
     }

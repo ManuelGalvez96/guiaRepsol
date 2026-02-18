@@ -1,9 +1,130 @@
 // Configurar CSRF token para todas las peticiones AJAX
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+let csrfToken;
+
+// Inicializar modal de Bootstrap
+let detallesModal;
+document.addEventListener('DOMContentLoaded', function() {
+    // Obtener CSRF token de forma segura
+    const metaCsrf = document.querySelector('meta[name="csrf-token"]');
+    if (metaCsrf) {
+        csrfToken = metaCsrf.getAttribute('content');
+        console.log('CSRF Token obtenido correctamente');
+    } else {
+        console.error('ERROR: No se encontró el meta tag csrf-token');
+    }
+    
+    // Pequeño delay para asegurar que Bootstrap esté cargado
+    setTimeout(function() {
+        const modalElement = document.getElementById('detallesModal');
+        if (modalElement && typeof bootstrap !== 'undefined') {
+            detallesModal = new bootstrap.Modal(modalElement);
+        } else if (!modalElement) {
+            console.error('Modal element #detallesModal no encontrado');
+        } else if (typeof bootstrap === 'undefined') {
+            console.error('Bootstrap no está cargado');
+        }
+    }, 100);
+    
+    // Configurar event listeners para botones
+    setupSolicitudesEventListeners();
+});
+
+// Función para configurar event listeners
+function setupSolicitudesEventListeners() {
+    console.log('=== setupSolicitudesEventListeners() ===');
+    
+    // Botón de logout
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: '¿Cerrar sesión?',
+                text: '¿Estás seguro?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#e74c3c',
+                cancelButtonColor: '#95a5a6',
+                confirmButtonText: 'Sí, cerrar sesión',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const logoutUrl = document.body.getAttribute('data-route-logout') || '/logout';
+                    fetch(logoutUrl, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        }
+                    })
+                    .then(() => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Sesión cerrada',
+                            timer: 1500,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '/';
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error al cerrar sesión:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Error al cerrar sesión'
+                        });
+                    });
+                }
+            });
+        });
+    }
+    
+    // Delegación de eventos en la tabla
+    const tbody = document.querySelector('table tbody');
+    console.log('✓ table tbody encontrado:', !!tbody);
+    
+    if (tbody) {
+        tbody.addEventListener('click', function(e) {
+            console.log('🖱 Click en tabla solicitudes. Target:', e.target.className);
+            
+            // Botón de ver detalles
+            const detallesBtn = e.target.closest('.action-ver-detalles-btn');
+            if (detallesBtn) {
+                const solicitudId = detallesBtn.getAttribute('data-solicitud-id');
+                console.log('✓ Click en VER DETALLES. ID:', solicitudId);
+                verDetalles(solicitudId);
+                return;
+            }
+            
+            // Botón de aprobar
+            const aprobarBtn = e.target.closest('.action-aprobar-btn');
+            if (aprobarBtn) {
+                const solicitudId = aprobarBtn.getAttribute('data-solicitud-id');
+                console.log('✓ Click en APROBAR. ID:', solicitudId);
+                aprobarSolicitud(solicitudId);
+                return;
+            }
+            
+            // Botón de rechazar
+            const rechazarBtn = e.target.closest('.action-rechazar-btn');
+            if (rechazarBtn) {
+                const solicitudId = rechazarBtn.getAttribute('data-solicitud-id');
+                console.log('✓ Click en RECHAZAR. ID:', solicitudId);
+                rechazarSolicitud(solicitudId);
+                return;
+            }
+        });
+        console.log('✓ Event listeners configurados para tabla solicitudes');
+    } else {
+        console.warn('⚠ table tbody NO encontrado');
+    }
+}
 
 // Función para mostrar modal con detalles
 function verDetalles(id) {
-    const modal = document.getElementById('detallesModal');
     const data = window.solicitudesData[id];
     
     if (!data) {
@@ -24,9 +145,11 @@ function verDetalles(id) {
             const img = document.createElement('img');
             img.src = url;
             img.alt = 'Imagen adicional';
+            img.className = 'img-thumbnail';
+            img.style.maxWidth = '100px';
+            img.style.cursor = 'pointer';
             img.onclick = function() {
                 document.getElementById('modalImagen').src = url;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
             };
             imagenesAdicionalesDiv.appendChild(img);
         });
@@ -51,26 +174,24 @@ function verDetalles(id) {
     document.getElementById('modalUsuario').textContent = data.usuario;
     document.getElementById('modalFecha').textContent = data.fecha;
     
-    // Mostrar el modal
-    modal.style.display = 'block';
+    // Mostrar el modal con Bootstrap
+    if (detallesModal) {
+        detallesModal.show();
+    }
 }
 
-// Función para cerrar modal
+// Función para cerrar modal (mantener para compatibilidad)
 function cerrarModal() {
-    const modal = document.getElementById('detallesModal');
-    modal.style.display = 'none';
-}
-
-// Cerrar modal al hacer clic fuera de él
-window.onclick = function(event) {
-    const modal = document.getElementById('detallesModal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
+    if (detallesModal) {
+        detallesModal.hide();
     }
 }
 
 // Función para aprobar solicitud
 function aprobarSolicitud(id) {
+    console.log('aprobarSolicitud() llamado con ID:', id);
+    console.log('CSRF Token disponible:', csrfToken);
+    
     Swal.fire({
         title: '¿Aprobar esta solicitud?',
         text: "El restaurante será visible para todos los usuarios",
@@ -91,7 +212,10 @@ function aprobarSolicitud(id) {
                 }
             });
 
-            fetch(`/admin/solicitudes/${id}/aprobar`, {
+            const url = `/admin/solicitudes/${id}/aprobar`;
+            console.log('Enviando POST a:', url);
+            
+            fetch(url, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
@@ -99,8 +223,15 @@ function aprobarSolicitud(id) {
                     'Content-Type': 'application/json'
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log('Response data:', data);
                 if (data.success) {
                     Swal.fire({
                         icon: 'success',
@@ -120,11 +251,11 @@ function aprobarSolicitud(id) {
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Error completo:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Error al aprobar la solicitud'
+                    text: 'Error al aprobar la solicitud: ' + error.message
                 });
             });
         }
@@ -133,6 +264,9 @@ function aprobarSolicitud(id) {
 
 // Función para rechazar solicitud
 function rechazarSolicitud(id) {
+    console.log('rechazarSolicitud() llamado con ID:', id);
+    console.log('CSRF Token disponible:', csrfToken);
+    
     Swal.fire({
         title: '¿Rechazar esta solicitud?',
         text: "El restaurante será eliminado de la base de datos",
@@ -153,7 +287,10 @@ function rechazarSolicitud(id) {
                 }
             });
 
-            fetch(`/admin/solicitudes/${id}/rechazar`, {
+            const url = `/admin/solicitudes/${id}/rechazar`;
+            console.log('Enviando DELETE a:', url);
+            
+            fetch(url, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
@@ -161,8 +298,15 @@ function rechazarSolicitud(id) {
                     'Content-Type': 'application/json'
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log('Response data:', data);
                 if (data.success) {
                     Swal.fire({
                         icon: 'success',
@@ -182,13 +326,19 @@ function rechazarSolicitud(id) {
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Error completo:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Error al rechazar la solicitud'
+                    text: 'Error al rechazar la solicitud: ' + error.message
                 });
             });
         }
     });
 }
+
+// Hacer funciones disponibles globalmente
+window.verDetalles = verDetalles;
+window.cerrarModal = cerrarModal;
+window.aprobarSolicitud = aprobarSolicitud;
+window.rechazarSolicitud = rechazarSolicitud;

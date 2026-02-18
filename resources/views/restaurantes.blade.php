@@ -112,6 +112,12 @@
         </div>
     </div>
 
+    @if(session('error'))
+        <div class="alert alert-danger text-center m-0">
+            {{ session('error') }}
+        </div>
+    @endif
+    
     <!-- Main Content -->
     <div class="main-content">
         <div class="container">

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\RestauranteController;
 use App\Http\Controllers\ValoracionController;
 use App\Http\Controllers\AuthUser;
@@ -20,17 +21,33 @@ Route::post('/logout', [AuthUser::class, 'logout'])->name('logout');
 
 // Rutas del panel de administración
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [AdminController::class, 'index'])->name('index');
+    // Dashboard principal
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    
+    // Gestión de restaurantes
+    Route::get('/restaurantes', [AdminController::class, 'index'])->name('index');
+    Route::get('/restaurantes/create', [AdminController::class, 'create'])->name('create');
+    Route::post('/restaurantes', [AdminController::class, 'store'])->name('store');
+    Route::get('/restaurantes/{restaurante}/edit', [AdminController::class, 'edit'])->name('edit');
+    Route::put('/restaurantes/{restaurante}', [AdminController::class, 'update'])->name('update');
+    Route::delete('/restaurantes/{restaurante}', [AdminController::class, 'destroy'])->name('destroy');
+    
+    // Gestión de usuarios
+    Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
+    Route::get('/usuarios/crear', [UserController::class, 'create'])->name('usuarios.create');
+    Route::post('/usuarios', [UserController::class, 'store'])->name('usuarios.store');
+    Route::get('/usuarios/{usuario}/editar', [UserController::class, 'edit'])->name('usuarios.edit');
+    Route::put('/usuarios/{usuario}', [UserController::class, 'update'])->name('usuarios.update');
+    Route::delete('/usuarios/{usuario}', [UserController::class, 'destroy'])->name('usuarios.destroy');
+    
+    // Solicitudes de negocio (restaurantes pendientes)
     Route::get('/solicitudes', [AdminController::class, 'solicitudes'])->name('solicitudes');
     Route::post('/solicitudes/{id}/aprobar', [AdminController::class, 'aprobarSolicitud'])->name('solicitudes.aprobar');
     Route::delete('/solicitudes/{id}/rechazar', [AdminController::class, 'rechazarSolicitud'])->name('solicitudes.rechazar');
-    Route::get('/create', [AdminController::class, 'create'])->name('create');
-    Route::post('/', [AdminController::class, 'store'])->name('store');
-    Route::get('/{restaurante}/edit', [AdminController::class, 'edit'])->name('edit');
-    Route::put('/{restaurante}', [AdminController::class, 'update'])->name('update');
-    Route::delete('/{restaurante}', [AdminController::class, 'destroy'])->name('destroy');
-    Route::get('/{restaurante}/email-preview-modificado', [AdminController::class, 'emailPreviewModificado'])->name('emailPreview.modificado');
-    Route::get('/{restaurante}/email-preview-eliminado', [AdminController::class, 'emailPreviewEliminado'])->name('emailPreview.eliminado');
+    
+    // Previews de emails
+    Route::get('/restaurantes/{restaurante}/email-preview-modificado', [AdminController::class, 'emailPreviewModificado'])->name('emailPreview.modificado');
+    Route::get('/restaurantes/{restaurante}/email-preview-eliminado', [AdminController::class, 'emailPreviewEliminado'])->name('emailPreview.eliminado');
 });
 
 // Rutas protegidas - Solo accesibles para usuarios autenticados

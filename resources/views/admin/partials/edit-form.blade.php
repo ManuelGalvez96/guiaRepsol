@@ -75,7 +75,7 @@
     <div class="form-group">
         <label for="direccion">Dirección *</label>
         <input type="text" id="direccion" name="direccion" value="{{ old('direccion', $restaurante->direccion) }}"
-            required>
+            >
         <span id="error-direccion" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
         @error('direccion')
             <div class="error">{{ $message }}</div>
@@ -132,7 +132,7 @@
     <div class="form-group">
         <label for="precio">Precio Promedio (€) *</label>
         <input type="number" id="precio" name="precio" value="{{ old('precio', $restaurante->precio) }}"
-            step="0.01" required>
+            step="0.01" >
         <span id="error-precio" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
         @error('precio')
             <div class="error">{{ $message }}</div>
@@ -150,17 +150,6 @@
     </div>
 
     <div class="form-group">
-        <label for="valoracion_promedio">Valoración (0-5)</label>
-        <input type="number" id="valoracion_promedio" name="valoracion_promedio"
-            value="{{ old('valoracion_promedio', $restaurante->valoracion_promedio) }}" step="0.1" min="0"
-            max="5">
-        <span id="error-valoracion" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
-        @error('valoracion_promedio')
-            <div class="error">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div class="form-group">
         <label for="imagenes">Imágenes del Restaurante</label>
         <div class="images-container" id="allImagesContainer"
             style="display: flex; flex-wrap: wrap; gap: 15px; margin: 10px 0; padding: 15px; background: #f8f9fa; border-radius: 6px; min-height: 140px;">
@@ -170,7 +159,6 @@
                         style="position: relative; text-align: center; border: 2px solid #ddd; border-radius: 8px; padding: 5px; background: white; max-width: 170px;">
                         <button type="button" class="btn-eliminar-imagen-existente"
                             data-imagen-id="{{ $imagen->id }}"
-                            onclick="removeExistingImage('{{ $imagen->id }}')"
                             data-action="delete"
                             style="position: absolute; top: 3px; right: 3px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 1000; box-shadow: 0 2px 6px rgba(0,0,0,0.3); transition: all 0.2s ease;"
                             title="Eliminar imagen">×</button>
@@ -198,8 +186,8 @@
         @enderror
     </div>
 
-    <div class="button-group">
-        <button type="submit" class="btn btn-primary" id="submitBtn">Actualizar Restaurante</button>
-        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+    <div class="button-group" style="display: flex; gap: 10px; margin-top: 20px; width: 100%;">
+        <button type="submit" class="btn btn-primary" id="submitBtn" style="flex: 1; min-width: 0; padding: 10px 20px; background-color: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; transition: background-color 0.3s;">Actualizar Restaurante</button>
+        <button type="button" class="btn btn-secondary close-modal-btn" style="flex: 1; min-width: 0; padding: 10px 20px; background-color: #95a5a6; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; transition: background-color 0.3s;">Cancelar</button>
     </div>
 </form>

@@ -8,15 +8,35 @@ if (typeof window.imagenesAEliminar === 'undefined') {
     window.imagenesAEliminar = [];
 }
 
-// Al cargar la pagina
-window.onload = function () {
-    // Pequeño delay para asegurar que el DOM esté listo
+// Al cargar la página - usar DOMContentLoaded primero
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('admin_edit.js DOMContentLoaded');
     setTimeout(function() {
         initializeEditForm();
     }, 100);
-};
+});
+
+// Fallback por si el script se carga después de DOMContentLoaded
+// (por ejemplo, cuando se inyecta dinámicamente en el modal)
+if (document.readyState === 'loading') {
+    // Documento aún se está cargando, usar DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('admin_edit.js DOMContentLoaded (fallback)');
+        setTimeout(function() {
+            initializeEditForm();
+        }, 100);
+    });
+} else {
+    // Documento ya está cargado, llamar directamente
+    console.log('admin_edit.js - Documento ya cargado, inicializando directamente');
+    setTimeout(function() {
+        initializeEditForm();
+    }, 50);
+}
 
 function initializeEditForm() {
+    console.log('=== initializeEditForm() ===');
+    
     // Resetear array de imágenes a eliminar
     window.imagenesAEliminar = [];
 
@@ -28,28 +48,94 @@ function initializeEditForm() {
             csrfToken = metaToken.getAttribute('content');
         }
     }
+    console.log('✓ CSRF Token obtenido:', !!csrfToken);
 
     const form = document.getElementById('editRestauranteForm');
+    console.log('✓ Formulario encontrado:', !!form);
+    
     if (form) {
         form.onsubmit = function (e) {
             e.preventDefault();
             actualizarRestaurante();
         }
+    } else {
+        console.warn('⚠ Formulario editar no encontrado, esperando a que se cargue en modal');
+        return;
     }
 
     // Usar delegación de eventos para botones de eliminar imágenes existentes
-    setupImageDelegation();
-
+    try {
+        setupImageDelegation();
+        console.log('✓ Image delegation configurado');
+    } catch (e) {
+        console.error('✗ Error en setupImageDelegation:', e);
+    }
+    
+    // Configurar listeners para cerrar modal
+    try {
+        setupEditFormEventListeners();
+        console.log('✓ Edit form listeners configurados');
+    } catch (e) {
+        console.error('✗ Error en setupEditFormEventListeners:', e);
+    }
 }
 
 // Delegación de eventos: un solo listener en el contenedor maneja todos los clicks
 function setupImageDelegation() {
     var container = document.getElementById('allImagesContainer');
+    console.log('setupImageDelegation - Container encontrado:', !!container);
+    
     if (!container) {
-        console.error('No se encontró el contenedor de imágenes');
+        console.warn('⚠ allImagesContainer no encontrado en el formulario, saltando setup de imágenes');
         return;
     }
     
+    // Agregar event listener para delegación
+    container.addEventListener('click', function(e) {
+        // Botón para eliminar/restaurar imagen existente
+        const btn = e.target.closest('.btn-eliminar-imagen-existente');
+        if (btn) {
+            const imagenId = btn.getAttribute('data-imagen-id');
+            if (imagenId) {
+                removeExistingImage(imagenId);
+            }
+        }
+    }, true); // Usar captura para asegurar que se ejecute primero
+}
+
+// Configurar event listeners para el formulario de edición
+function setupEditFormEventListeners() {
+    console.log('setupEditFormEventListeners called');
+    
+    // Botones de cerrar modal
+    const closeModalBtns = document.querySelectorAll('.close-modal-btn');
+    console.log('Botones close-modal-btn encontrados:', closeModalBtns.length);
+    
+    closeModalBtns.forEach((btn, index) => {
+        // Remover listeners previos
+        btn.removeEventListener('click', function() {
+            if (typeof window.closeModal === 'function') {
+                window.closeModal();
+            }
+        });
+        
+        // Agregar nuevo listener
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log(`Botón close-modal ${index + 1} clickeado`);
+            if (typeof window.closeModal === 'function') {
+                window.closeModal();
+            } else {
+                console.warn('⚠ window.closeModal no está definido');
+            }
+        });
+        console.log(`Listener de cierre de modal configurado para botón ${index + 1}`);
+    });
+    
+    if (closeModalBtns.length === 0) {
+        console.warn('⚠ No se encontraron botones close-modal-btn');
+    }
 }
 
 

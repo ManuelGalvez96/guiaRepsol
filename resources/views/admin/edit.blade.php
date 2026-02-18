@@ -23,7 +23,7 @@
             <div class="form-group">
                 <label for="nombre">Nombre del Restaurante *</label>
                 <input type="text" id="nombre" name="nombre" value="{{ old('nombre', $restaurante->nombre) }}"
-                    required>
+                    >
                 <span id="error-nombre" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('nombre')
                     <div class="error">{{ $message }}</div>
@@ -94,7 +94,7 @@
             <div class="form-group">
                 <label for="direccion">Dirección *</label>
                 <input type="text" id="direccion" name="direccion"
-                    value="{{ old('direccion', $restaurante->direccion) }}" required>
+                    value="{{ old('direccion', $restaurante->direccion) }}" >
                 <span id="error-direccion" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('direccion')
                     <div class="error">{{ $message }}</div>
@@ -134,7 +134,7 @@
             <div class="form-group">
                 <label for="email">Email *</label>
                 <input type="email" id="email" name="email" value="{{ old('email', $restaurante->email) }}"
-                    required>
+                    >
                 <span id="error-email" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('email')
                     <div class="error">{{ $message }}</div>
@@ -153,7 +153,7 @@
             <div class="form-group">
                 <label for="precio">Precio Promedio (€) *</label>
                 <input type="number" id="precio" name="precio" value="{{ old('precio', $restaurante->precio) }}"
-                    step="0.01" required>
+                    step="0.01" >
                 <span id="error-precio" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('precio')
                     <div class="error">{{ $message }}</div>
@@ -191,7 +191,6 @@
                                 style="position: relative; text-align: center; border: 2px solid #ddd; border-radius: 8px; padding: 5px; background: white; max-width: 170px;">
                                 <button type="button" class="btn-eliminar-imagen-existente"
                                     data-imagen-id="{{ $imagen->id }}"
-                                    onclick="removeExistingImage('{{ $imagen->id }}')"
                                     style="position: absolute; top: 3px; right: 3px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 1000; box-shadow: 0 2px 6px rgba(0,0,0,0.3);"
                                     title="Eliminar imagen">×</button>
                                 <img src="{{ asset($imagen->url) }}" alt="{{ $restaurante->nombre }}"
@@ -212,7 +211,7 @@
                         style="display: block; margin-bottom: 8px; font-weight: 500; color: #495057;">➕ Seleccionar
                         nuevas imágenes:</label>
                     <input type="file" id="imagenes" name="imagenes[]" accept="image/*" multiple
-                        onchange="previewImages(event); if(typeof comprobarImagenes === 'function') comprobarImagenes();" style="margin-top: 5px;">
+                        onchange="if(typeof previewImages === 'function') previewImages(event); if(typeof comprobarImagenes === 'function') comprobarImagenes();" style="margin-top: 5px;">
                 </div>
                 <span id="error-imagenes" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('imagenes')
@@ -220,9 +219,9 @@
                 @enderror
             </div>
 
-            <div class="button-group">
-                <button type="submit" class="btn btn-primary" id="submitBtn">Actualizar Restaurante</button>
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+            <div class="button-group" style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="submit" class="btn btn-primary" id="submitBtn" style="flex: 1; padding: 10px 20px; background-color: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; transition: background-color 0.3s;">Actualizar Restaurante</button>
+                <button type="button" class="btn btn-secondary close-modal-btn" style="flex: 1; padding: 10px 20px; background-color: #95a5a6; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; transition: background-color 0.3s;">Cancelar</button>
             </div>
         </form>
     </div>

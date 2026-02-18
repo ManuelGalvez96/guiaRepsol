@@ -37,11 +37,14 @@ class AuthUser extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             
+            // Crear variable de sesión para confirmar login
+            session(['user_logged_in' => true]);
+            
             // Redirigir según el rol del usuario
             $user = Auth::user();
             
             return match($user->rol) {
-                'administrador' => redirect()->route('admin.index'),
+                'administrador' => redirect()->route('admin.dashboard'),
                 'gerente' => redirect()->route('restaurantes'),
                 'usuario' => redirect()->route('restaurantes'),
                 default => redirect()->route('restaurantes'),
@@ -58,6 +61,9 @@ class AuthUser extends Controller
      */
     public function logout(Request $request)
     {
+        // Eliminar variable de sesión de login
+        session()->forget('user_logged_in');
+        
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

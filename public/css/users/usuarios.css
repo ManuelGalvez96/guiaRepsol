@@ -1,0 +1,117 @@
+.badge-admin { 
+    background-color: #3498db; 
+}
+
+.badge-gerente { 
+    background-color: #f39c12; 
+}
+
+.badge-usuario { 
+    background-color: #95a5a6; 
+}
+
+.actions-btn { 
+    padding: 5px 10px; 
+    font-size: 12px; 
+    margin: 0 2px; 
+}
+
+.search-box { 
+    margin-bottom: 20px; 
+}
+
+/* Botones de los modales */
+.modal-footer .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+    font-weight: 500;
+    padding: 8px 20px;
+    transition: all 0.3s ease;
+}
+
+.modal-footer .btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.modal-footer .btn-secondary:active {
+    background-color: #545b62;
+    border-color: #4e555b;
+    transform: translateY(0);
+}
+
+.modal-footer .btn-primary {
+    font-weight: 500;
+    padding: 8px 20px;
+    transition: all 0.3s ease;
+}
+
+.modal-footer .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.modal-footer .btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Modal responsive: evita que se corte en pantallas pequeñas */
+.modal-dialog {
+    margin: 0.75rem auto;
+}
+
+.modal-content {
+    max-height: 90vh;
+}
+
+.modal-body {
+    overflow-y: auto;
+    max-height: calc(90vh - 140px);
+}
+
+@media (max-width: 576px) {
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    .modal-content {
+        max-height: 92vh;
+    }
+    
+    .modal-body {
+        max-height: calc(92vh - 130px);
+    }
+}
+
+/* Tabla responsive con scroll horizontal */
+@media (max-width: 768px) {
+    #tabla-container {
+        overflow-x: visible;
+    }
+
+    #tabla-container table {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+    }
+
+    #tabla-container th,
+    #tabla-container td {
+        white-space: normal;
+        padding: 8px;
+        font-size: 13px;
+    }
+
+    #tabla-container th:nth-child(4),
+    #tabla-container td:nth-child(4) {
+        display: none;
+    }
+
+    #tabla-container th:nth-child(2),
+    #tabla-container td:nth-child(2) {
+        display: none;
+    }
+}

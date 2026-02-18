@@ -163,12 +163,14 @@
                         <div class="mt-3">
                             <button class="btn-guardar {{ $userHasSaved ? 'active' : '' }}" 
                                     id="btn-guardar" 
-                                    data-restaurante-id="{{ $restaurante->id }}">
+                                    data-restaurante-id="{{ $restaurante->id }}"
+                                    onclick="saveRestaurant({{ $restaurante->id }}, 'desktop')">
                                 <i class="bi bi-bookmark{{ $userHasSaved ? '-fill' : '' }}"></i> Guardar
                             </button>
                             <button class="btn-favorito {{ $userHasLiked ? 'active' : '' }}" 
                                     id="btn-favorito" 
-                                    data-restaurante-id="{{ $restaurante->id }}">
+                                    data-restaurante-id="{{ $restaurante->id }}"
+                                    onclick="likeRestaurant({{ $restaurante->id }}, 'desktop')">
                                 <i class="bi bi-heart{{ $userHasLiked ? '-fill' : '' }}"></i>
                                 <span id="like-count">{{ $totalLikes }}</span>
                             </button>
@@ -396,14 +398,21 @@
                         </div>
 
                         <div class="mt-3">
-                            <button class="btn-guardar">
-                                <i class="bi bi-bookmark"></i> Guardar
+                            <button class="btn-guardar {{ $userHasSaved ? 'active' : '' }}" 
+                                    id="btn-guardar-mobile"
+                                    data-restaurante-id="{{ $restaurante->id }}"
+                                    onclick="saveRestaurant({{ $restaurante->id }}, 'mobile')">
+                                <i class="bi bi-bookmark{{ $userHasSaved ? '-fill' : '' }}"></i> Guardar
                             </button>
                             <button class="btn-compartir">
                                 <i class="bi bi-share"></i>
                             </button>
-                            <button class="btn-favorito">
-                                <i class="bi bi-heart"></i>
+                            <button class="btn-favorito {{ $userHasLiked ? 'active' : '' }}" 
+                                    id="btn-favorito-mobile"
+                                    data-restaurante-id="{{ $restaurante->id }}"
+                                    onclick="likeRestaurant({{ $restaurante->id }}, 'mobile')">
+                                <i class="bi bi-heart{{ $userHasLiked ? '-fill' : '' }}"></i>
+                                <span id="like-count-mobile">{{ $totalLikes }}</span>
                             </button>
                             @auth
                                 @if(Auth::id() === $restaurante->user_id)

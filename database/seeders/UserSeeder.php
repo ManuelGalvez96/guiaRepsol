@@ -3,328 +3,467 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $password = Hash::make('password');
+        User::create([
+            'name' => 'Admin',
+            'apellidos' => 'Sistema',
+            'email' => 'admin@guiarepsol.com',
+            'password' => Hash::make('admin123'),
+            'rol' => 'administrador',
+        ]);
 
-        // Administradores
+        User::create([
+            'name' => 'Carlos',
+            'apellidos' => 'García López',
+            'email' => 'gerente1@restaurant.com',
+            'password' => Hash::make('gerente123'),
+            'rol' => 'gerente',
+        ]);
+
         User::create([
             'name' => 'María',
-            'apellidos' => 'García López',
-            'email' => 'maria.garcia@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'administrador',
-            'password' => $password,
+            'apellidos' => 'Rodríguez Pérez',
+            'email' => 'gerente2@restaurant.com',
+            'password' => Hash::make('gerente123'),
+            'rol' => 'gerente',
         ]);
 
-        User::create([
-            'name' => 'Roberto',
-            'apellidos' => 'Sánchez',
-            'email' => 'roberto.sanchez@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'administrador',
-            'password' => $password,
-        ]);
-
-        User::create([
-            'name' => 'Victoria',
-            'apellidos' => 'Ruiz Navarro',
-            'email' => 'victoria.ruiz@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'administrador',
-            'password' => $password,
-        ]);
-
-        // 15 Gerentes (uno por restaurante)
         User::create([
             'name' => 'Juan',
-            'apellidos' => 'Martínez Pérez',
-            'email' => 'juan.martinez@email.com',
-            'email_verified_at' => now(),
+            'apellidos' => 'Martínez Sánchez',
+            'email' => 'gerente3@restaurant.com',
+            'password' => Hash::make('gerente123'),
             'rol' => 'gerente',
-            'password' => $password,
         ]);
 
         User::create([
             'name' => 'Ana',
-            'apellidos' => 'López',
-            'email' => 'ana.lopez@email.com',
-            'email_verified_at' => now(),
+            'apellidos' => 'Fernández Gómez',
+            'email' => 'gerente4@restaurant.com',
+            'password' => Hash::make('gerente123'),
             'rol' => 'gerente',
-            'password' => $password,
-        ]);
-
-        User::create([
-            'name' => 'Carlos',
-            'apellidos' => 'Fernández García',
-            'email' => 'carlos.fernandez@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'gerente',
-            'password' => $password,
-        ]);
-
-        User::create([
-            'name' => 'Laura',
-            'apellidos' => 'Sánchez',
-            'email' => 'laura.sanchez@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'gerente',
-            'password' => $password,
-        ]);
-
-        User::create([
-            'name' => 'Andrés',
-            'apellidos' => 'Martín Díaz',
-            'email' => 'andres.martin@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'gerente',
-            'password' => $password,
-        ]);
-
-        User::create([
-            'name' => 'Isabel',
-            'apellidos' => 'Rodríguez',
-            'email' => 'isabel.rodriguez@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'gerente',
-            'password' => $password,
         ]);
 
         User::create([
             'name' => 'Pedro',
-            'apellidos' => 'Jiménez Ruiz',
-            'email' => 'pedro.jimenez@email.com',
-            'email_verified_at' => now(),
+            'apellidos' => 'López Martín',
+            'email' => 'gerente5@restaurant.com',
+            'password' => Hash::make('gerente123'),
             'rol' => 'gerente',
-            'password' => $password,
         ]);
 
         User::create([
-            'name' => 'María',
-            'apellidos' => 'Pérez',
-            'email' => 'maria.perez@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'gerente',
-            'password' => $password,
+            'name' => 'Laura',
+            'apellidos' => 'González Ruiz',
+            'email' => 'usuario@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
         ]);
 
         User::create([
-            'name' => 'Miguel',
-            'apellidos' => 'Torres Sánchez',
-            'email' => 'miguel.torres@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'gerente',
-            'password' => $password,
-        ]);
-
-        User::create([
-            'name' => 'Sofia',
-            'apellidos' => 'González Moreno',
-            'email' => 'sofia.gonzalez@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'gerente',
-            'password' => $password,
-        ]);
-
-        User::create([
-            'name' => 'Ricardo',
-            'apellidos' => 'López',
-            'email' => 'ricardo.lopez@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'gerente',
-            'password' => $password,
-        ]);
-
-        User::create([
-            'name' => 'Elena',
-            'apellidos' => 'García Fernández',
-            'email' => 'elena.garcia@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'gerente',
-            'password' => $password,
-        ]);
-
-        User::create([
-            'name' => 'Francisco',
+            'name' => 'Diego',
             'apellidos' => 'Sánchez',
-            'email' => 'francisco.sanchez@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'gerente',
-            'password' => $password,
+            'email' => 'usuario2@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
         ]);
 
         User::create([
-            'name' => 'Beatriz',
-            'apellidos' => 'Ruiz Torres',
-            'email' => 'beatriz.ruiz@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'gerente',
-            'password' => $password,
+            'name' => 'Sofía',
+            'apellidos' => 'Pérez',
+            'email' => 'usuario3@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Javier',
-            'apellidos' => 'Moreno',
-            'email' => 'javier.moreno@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'gerente',
-            'password' => $password,
-        ]);
-
-        // Usuarios normales
-        User::create([
-            'name' => 'David',
-            'apellidos' => 'Jiménez Vega',
-            'email' => 'david.jimenez@email.com',
-            'email_verified_at' => now(),
+            'apellidos' => 'García',
+            'email' => 'usuario4@example.com',
+            'password' => Hash::make('usuario123'),
             'rol' => 'usuario',
-            'password' => $password,
         ]);
 
         User::create([
-            'name' => 'Patricia',
-            'apellidos' => 'Martín',
-            'email' => 'patricia.martin@email.com',
-            'email_verified_at' => now(),
+            'name' => 'Elena',
+            'apellidos' => 'López',
+            'email' => 'usuario5@example.com',
+            'password' => Hash::make('usuario123'),
             'rol' => 'usuario',
-            'password' => $password,
         ]);
 
         User::create([
-            'name' => 'Enrique',
-            'apellidos' => 'Gómez Ramírez',
-            'email' => 'enrique.gomez@email.com',
-            'email_verified_at' => now(),
+            'name' => 'Roberto',
+            'apellidos' => 'González',
+            'email' => 'usuario6@example.com',
+            'password' => Hash::make('usuario123'),
             'rol' => 'usuario',
-            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Isabel',
+            'apellidos' => 'Martínez',
+            'email' => 'usuario7@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Francisco',
+            'apellidos' => 'Rodríguez',
+            'email' => 'usuario8@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Marta',
-            'apellidos' => 'López',
-            'email' => 'marta.lopez@email.com',
-            'email_verified_at' => now(),
+            'apellidos' => 'Hernández',
+            'email' => 'usuario9@example.com',
+            'password' => Hash::make('usuario123'),
             'rol' => 'usuario',
-            'password' => $password,
         ]);
 
         User::create([
-            'name' => 'Fernando',
-            'apellidos' => 'Blanco Castro',
-            'email' => 'fernando.blanco@email.com',
-            'email_verified_at' => now(),
+            'name' => 'Antonio',
+            'apellidos' => 'Jiménez',
+            'email' => 'usuario10@example.com',
+            'password' => Hash::make('usuario123'),
             'rol' => 'usuario',
-            'password' => $password,
         ]);
 
         User::create([
-            'name' => 'Cristina',
-            'apellidos' => 'Vega',
-            'email' => 'cristina.vega@email.com',
-            'email_verified_at' => now(),
+            'name' => 'Rosa',
+            'apellidos' => 'Díaz',
+            'email' => 'usuario11@example.com',
+            'password' => Hash::make('usuario123'),
             'rol' => 'usuario',
-            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Miguel',
+            'apellidos' => 'Ramos',
+            'email' => 'usuario12@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Andrea',
+            'apellidos' => 'Ruiz',
+            'email' => 'usuario13@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Raúl',
+            'apellidos' => 'Moreno',
+            'email' => 'usuario14@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Patricia',
+            'apellidos' => 'Navarro',
+            'email' => 'usuario15@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Alfonso',
+            'apellidos' => 'Vargas',
+            'email' => 'usuario16@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Beatriz',
+            'apellidos' => 'Castillo',
+            'email' => 'usuario17@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Vicente',
+            'apellidos' => 'Rojas',
+            'email' => 'usuario18@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Catalina',
+            'apellidos' => 'Molina',
+            'email' => 'usuario19@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Luis',
+            'apellidos' => 'Domínguez',
+            'email' => 'usuario20@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Dolores',
+            'apellidos' => 'Rivera',
+            'email' => 'usuario21@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Ángel',
-            'apellidos' => 'Delgado Prieto',
-            'email' => 'angel.delgado@email.com',
-            'email_verified_at' => now(),
+            'apellidos' => 'Vázquez',
+            'email' => 'usuario22@example.com',
+            'password' => Hash::make('usuario123'),
             'rol' => 'usuario',
-            'password' => $password,
         ]);
 
         User::create([
-            'name' => 'Raquel',
-            'apellidos' => 'Morales',
-            'email' => 'raquel.morales@email.com',
-            'email_verified_at' => now(),
+            'name' => 'Francisca',
+            'apellidos' => 'Torres',
+            'email' => 'usuario23@example.com',
+            'password' => Hash::make('usuario123'),
             'rol' => 'usuario',
-            'password' => $password,
         ]);
 
         User::create([
-            'name' => 'Carlos',
-            'apellidos' => 'Medina Ortiz',
-            'email' => 'carlos.medina@email.com',
-            'email_verified_at' => now(),
+            'name' => 'Gonzalo',
+            'apellidos' => 'Ortiz',
+            'email' => 'usuario24@example.com',
+            'password' => Hash::make('usuario123'),
             'rol' => 'usuario',
-            'password' => $password,
         ]);
 
         User::create([
-            'name' => 'Lucia',
-            'apellidos' => 'Romero',
-            'email' => 'lucia.romero@email.com',
-            'email_verified_at' => now(),
+            'name' => 'Magdalena',
+            'apellidos' => 'Flores',
+            'email' => 'usuario25@example.com',
+            'password' => Hash::make('usuario123'),
             'rol' => 'usuario',
-            'password' => $password,
         ]);
 
         User::create([
-            'name' => 'David',
-            'apellidos' => 'Navarro Iglesias',
-            'email' => 'david.navarro@email.com',
-            'email_verified_at' => now(),
+            'name' => 'Enrique',
+            'apellidos' => 'Silva',
+            'email' => 'usuario26@example.com',
+            'password' => Hash::make('usuario123'),
             'rol' => 'usuario',
-            'password' => $password,
         ]);
 
         User::create([
-            'name' => 'Paula',
-            'apellidos' => 'Cabrera',
-            'email' => 'paula.cabrera@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'usuario',
-            'password' => $password,
-        ]);
-
-        User::create([
-            'name' => 'Hector',
-            'apellidos' => 'Salas Ramos',
-            'email' => 'hector.salas@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'usuario',
-            'password' => $password,
-        ]);
-
-        User::create([
-            'name' => 'Silvia',
-            'apellidos' => 'Pardo',
-            'email' => 'silvia.pardo@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'usuario',
-            'password' => $password,
-        ]);
-
-        User::create([
-            'name' => 'Ruben',
-            'apellidos' => 'Molina Herrera',
-            'email' => 'ruben.molina@email.com',
-            'email_verified_at' => now(),
-            'rol' => 'usuario',
-            'password' => $password,
-        ]);
-
-        User::create([
-            'name' => 'Clara',
+            'name' => 'Concepción',
             'apellidos' => 'Santos',
-            'email' => 'clara.santos@email.com',
-            'email_verified_at' => now(),
+            'email' => 'usuario27@example.com',
+            'password' => Hash::make('usuario123'),
             'rol' => 'usuario',
-            'password' => $password,
+        ]);
+
+        User::create([
+            'name' => 'Rafael',
+            'apellidos' => 'Campos',
+            'email' => 'usuario28@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Amparo',
+            'apellidos' => 'Medina',
+            'email' => 'usuario29@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Eugenio',
+            'apellidos' => 'Reyes',
+            'email' => 'usuario30@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Casilda',
+            'apellidos' => 'Guerrero',
+            'email' => 'usuario31@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Agustín',
+            'apellidos' => 'Herrera',
+            'email' => 'usuario32@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Rosario',
+            'apellidos' => 'Fernández',
+            'email' => 'usuario33@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Gregorio',
+            'apellidos' => 'Salazar',
+            'email' => 'usuario34@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Trinidad',
+            'apellidos' => 'Figueroa',
+            'email' => 'usuario35@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Marino',
+            'apellidos' => 'Bravo',
+            'email' => 'usuario36@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Esperanza',
+            'apellidos' => 'Fuentes',
+            'email' => 'usuario37@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Heriberto',
+            'apellidos' => 'Carrillo',
+            'email' => 'usuario38@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Soledad',
+            'apellidos' => 'Palacios',
+            'email' => 'usuario39@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Leopoldo',
+            'apellidos' => 'Suárez',
+            'email' => 'usuario40@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Carmen',
+            'apellidos' => 'Ramírez',
+            'email' => 'usuario41@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Aurelio',
+            'apellidos' => 'Beltrán',
+            'email' => 'usuario42@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Milagros',
+            'apellidos' => 'Crespo',
+            'email' => 'usuario43@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Jesús',
+            'apellidos' => 'Gómez',
+            'email' => 'usuario44@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Virtudes',
+            'apellidos' => 'Estrada',
+            'email' => 'usuario45@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Olegario',
+            'apellidos' => 'Vega',
+            'email' => 'usuario46@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Encarnación',
+            'apellidos' => 'Segura',
+            'email' => 'usuario47@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Otilio',
+            'apellidos' => 'Valenzuela',
+            'email' => 'usuario48@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Paz',
+            'apellidos' => 'Lozano',
+            'email' => 'usuario49@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Diego',
+            'apellidos' => 'López',
+            'email' => 'usuario50@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
+        ]);
+
+        User::create([
+            'name' => 'Sofía',
+            'apellidos' => 'García',
+            'email' => 'usuario51@example.com',
+            'password' => Hash::make('usuario123'),
+            'rol' => 'usuario',
         ]);
     }
 }

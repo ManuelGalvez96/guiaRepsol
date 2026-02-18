@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Restaurante;
-use App\Models\RestaurantePendiente;
 use App\Models\Categoria;
 use App\Models\TipoComida;
 use App\Models\Ubicacion;
-use App\Models\UbicacionRestaurantePendiente;
 use App\Models\ImagenRestaurante;
 use App\Models\LikeRestaurante;
 use App\Models\GuardarRestaurante;
@@ -16,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use App\Models\ImagenRestaurantePendiente;
 use Illuminate\Support\Facades\DB;
 
 class RestauranteController extends Controller
@@ -352,7 +349,7 @@ class RestauranteController extends Controller
             'codigo_postal' => 'required|string|size:5|regex:/^[0-9]{5}$/',
             'comunidad_autonoma' => 'required|string|max:255',
             'telefono' => 'nullable|string|max:20',
-            'email' => 'required|email|unique:restaurante_pendiente,email',
+            'email' => 'required|email|unique:restaurantes,email',
             'web' => 'nullable|url',
             'precio' => 'required|numeric|min:0.01|max:9999.99',
             'foto_principal' => 'required|image|mimes:jpeg,jpg,png,webp|max:5120',
@@ -392,44 +389,45 @@ class RestauranteController extends Controller
             'tipos_comida.*.exists' => 'Uno o más tipos de comida seleccionados no son válidos',
         ]);
 
-        // Crear ubicación pendiente
-        $ubicacionPendiente = UbicacionRestaurantePendiente::create([
+        // Crear ubicación
+        $ubicacion = Ubicacion::create([
             'comunidad_autonoma' => $request->comunidad_autonoma,
             'provincia' => $request->provincia,
             'ciudad' => $request->ciudad,
             'codigo_postal' => $request->codigo_postal,
         ]);
 
-        // Crear el restaurante pendiente
-        $restaurantePendiente = RestaurantePendiente::create([
+        // Crear el restaurante con estado pendiente
+        $restaurante = Restaurante::create([
             'nombre' => $request->nombre,
             'descripcion' => $request->descripcion,
             'user_id' => Auth::id() ?? 1, // Si no hay usuario autenticado, usar ID 1
             'categoria_id' => $request->categoria_id,
-            'ubicacion_pendiente_id' => $ubicacionPendiente->id,
+            'ubicacion_id' => $ubicacion->id,
             'direccion' => $request->direccion,
             'telefono' => $request->telefono,
             'email' => $request->email,
             'web' => $request->web,
             'precio' => $request->precio,
-            'activo' => true, // En tabla pendiente, activo = true indica que está pendiente
+            'activo' => true,
+            'estado' => 'pendiente', // Estado pendiente esperando aprobación
         ]);
 
         // Subir foto principal
         if ($request->hasFile('foto_principal')) {
             $file = $request->file('foto_principal');
-            $directory = public_path('img/restaurantes/pendiente');
+            $directory = public_path('img/restaurantes');
 
             if (!File::isDirectory($directory)) {
                 File::makeDirectory($directory, 0755, true);
             }
 
-            $filename = uniqid('rest_p_') . '.' . $file->getClientOriginalExtension();
+            $filename = uniqid('rest_') . '.' . $file->getClientOriginalExtension();
             $file->move($directory, $filename);
-            $path = 'img/restaurantes/pendiente/' . $filename;
+            $path = 'img/restaurantes/' . $filename;
 
-            ImagenRestaurantePendiente::create([
-                'restaurante_pendiente_id' => $restaurantePendiente->id,
+            ImagenRestaurante::create([
+                'restaurante_id' => $restaurante->id,
                 'url' => $path,
                 'principal' => true,
                 'orden' => 0
@@ -439,19 +437,19 @@ class RestauranteController extends Controller
         // Subir fotos adicionales
         if ($request->hasFile('fotos_adicionales')) {
             $orden = 1;
-            $directory = public_path('img/restaurantes/pendiente');
+            $directory = public_path('img/restaurantes');
 
             if (!File::isDirectory($directory)) {
                 File::makeDirectory($directory, 0755, true);
             }
 
             foreach ($request->file('fotos_adicionales') as $foto) {
-                $filename = uniqid('rest_p_') . '.' . $foto->getClientOriginalExtension();
+                $filename = uniqid('rest_') . '.' . $foto->getClientOriginalExtension();
                 $foto->move($directory, $filename);
-                $path = 'img/restaurantes/pendiente/' . $filename;
+                $path = 'img/restaurantes/' . $filename;
 
-                ImagenRestaurantePendiente::create([
-                    'restaurante_pendiente_id' => $restaurantePendiente->id,
+                ImagenRestaurante::create([
+                    'restaurante_id' => $restaurante->id,
                     'url' => $path,
                     'principal' => false,
                     'orden' => $orden++
@@ -459,11 +457,11 @@ class RestauranteController extends Controller
             }
         }
 
-        // Asociar tipos de comida (guardar en tabla tipo_comida_restaurante_pendiente)
+        // Asociar tipos de comida
         if ($request->has('tipos_comida')) {
             foreach ($request->tipos_comida as $tipoComidaId) {
-                DB::table('tipo_comida_restaurante_pendiente')->insert([
-                    'restaurante_pendiente_id' => $restaurantePendiente->id,
+                DB::table('restaurante_tipo_comida')->insert([
+                    'restaurante_id' => $restaurante->id,
                     'tipo_comida_id' => $tipoComidaId,
                     'created_at' => now(),
                     'updated_at' => now(),

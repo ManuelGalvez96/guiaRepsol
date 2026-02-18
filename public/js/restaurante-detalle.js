@@ -66,7 +66,7 @@ function syncSaveButtons() {
 }
 
 // Función para dar like/unlike
-function likeRestaurant(restauranteId, origin) {
+window.likeRestaurant = function(restauranteId, origin) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     
     fetch(`/restaurante/${restauranteId}/like`, {
@@ -91,7 +91,7 @@ function likeRestaurant(restauranteId, origin) {
 }
 
 // Función para guardar/quitar de guardados
-function saveRestaurant(restauranteId, origin) {
+window.saveRestaurant = function(restauranteId, origin) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     
     fetch(`/restaurante/${restauranteId}/guardar`, {
