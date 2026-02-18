@@ -9,6 +9,7 @@ use App\Models\Ubicacion;
 use App\Models\ImagenRestaurante;
 use App\Models\LikeRestaurante;
 use App\Models\GuardarRestaurante;
+use App\Models\SolicitudEliminacionRestaurante;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -602,4 +603,67 @@ class RestauranteController extends Controller
 
         return view('restaurantes-guardados', compact('restaurantes'));
     }
+
+    /**
+     * Solicitar la eliminación de un restaurante (solo gerentes)
+     */
+    public function solicitarEliminacion(Request $request, $id)
+    {
+        $restaurante = Restaurante::findOrFail($id);
+
+        // Verificar que el usuario autenticado es el gerente del restaurante
+        if ($restaurante->user_id !== Auth::id()) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'No tienes permiso para solicitar la eliminación de este restaurante.'], 403);
+            }
+            return redirect()->back()->with('error', 'No tienes permiso para solicitar la eliminación de este restaurante.');
+        }
+
+        $request->validate([
+            'razon' => 'nullable|string|max:500',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // Verificar que no existe ya una solicitud pendiente
+            $existeSolicitud = SolicitudEliminacionRestaurante::where('restaurante_id', $id)
+                ->where('estado', 'pendiente')
+                ->first();
+
+            if ($existeSolicitud) {
+                DB::rollBack();
+                if ($request->expectsJson()) {
+                    return response()->json(['error' => 'Ya existe una solicitud pendiente para este restaurante.'], 422);
+                }
+                return redirect()->back()->with('error', 'Ya existe una solicitud pendiente para este restaurante.');
+            }
+
+            SolicitudEliminacionRestaurante::create([
+                'restaurante_id' => $id,
+                'gerente_id' => Auth::id(),
+                'razon' => $request->razon,
+                'estado' => 'pendiente',
+            ]);
+
+            DB::commit();
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Solicitud de eliminación enviada correctamente. Un administrador la revisará.'
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Solicitud de eliminación enviada correctamente.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Error al enviar la solicitud.'], 500);
+            }
+            return redirect()->back()->with('error', 'Error al enviar la solicitud.');
+        }
+    }
 }
+

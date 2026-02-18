@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Valoracion;
 use App\Models\Restaurante;
+use App\Models\DenunciaValoracion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ValoracionController extends Controller
 {
@@ -155,6 +157,68 @@ class ValoracionController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Respuesta eliminada correctamente.');
+    }
+
+    /**
+     * Reportar una valoración (denunciarla)
+     */
+    public function reportar(Request $request, $id)
+    {
+        $valoracion = Valoracion::findOrFail($id);
+        
+        // No se puede reportar la propia valoración
+        if ($valoracion->usuario_id === Auth::id()) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'No puedes reportar tu propia valoración.'], 403);
+            }
+            return redirect()->back()->with('error', 'No puedes reportar tu propia valoración.');
+        }
+
+        $request->validate([
+            'razon' => 'required|string|min:10|max:500',
+        ]);
+
+        try {
+            DB::beginTransaction();
+            
+            // Verificar que el usuario no haya reportado ya esta valoración
+            $existeReporte = DenunciaValoracion::where('user_id', Auth::id())
+                ->where('valoracion_id', $id)
+                ->first();
+            
+            if ($existeReporte) {
+                DB::rollBack();
+                if ($request->expectsJson()) {
+                    return response()->json(['error' => 'Ya has reportado esta valoración.'], 422);
+                }
+                return redirect()->back()->with('error', 'Ya has reportado esta valoración.');
+            }
+
+            DenunciaValoracion::create([
+                'user_id' => Auth::id(),
+                'valoracion_id' => $id,
+                'razon' => $request->razon,
+                'estado' => 'pendiente',
+            ]);
+
+            DB::commit();
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Reporte enviado correctamente. Un administrador revisará la valoración.'
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Reporte enviado correctamente.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Error al enviar el reporte.'], 500);
+            }
+            return redirect()->back()->with('error', 'Error al enviar el reporte.');
+        }
     }
 
     /**

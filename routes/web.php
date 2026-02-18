@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RestauranteController;
 use App\Http\Controllers\ValoracionController;
 use App\Http\Controllers\AuthUser;
+use App\Http\Controllers\PerfilController;
 
 Route::get('/', function () {
     return view('index');
@@ -45,6 +46,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/solicitudes/{id}/aprobar', [AdminController::class, 'aprobarSolicitud'])->name('solicitudes.aprobar');
     Route::delete('/solicitudes/{id}/rechazar', [AdminController::class, 'rechazarSolicitud'])->name('solicitudes.rechazar');
     
+    // Denuncias de valoraciones
+    Route::get('/denuncias', [AdminController::class, 'verDenuncias'])->name('denuncias.index');
+    Route::get('/denuncias/{id}', [AdminController::class, 'revisarDenuncia'])->name('denuncias.revisar');
+    Route::post('/denuncias/{id}/resolver', [AdminController::class, 'resolverDenuncia'])->name('denuncias.resolver');
+    
+    // Solicitudes de eliminación de restaurantes
+    Route::get('/solicitudes-eliminacion', [AdminController::class, 'verSolicitudesEliminacion'])->name('solicitudes-eliminacion.index');
+    Route::post('/solicitudes-eliminacion/{id}/responder', [AdminController::class, 'responderSolicitudEliminacion'])->name('solicitudes-eliminacion.responder');
+    
     // Previews de emails
     Route::get('/restaurantes/{restaurante}/email-preview-modificado', [AdminController::class, 'emailPreviewModificado'])->name('emailPreview.modificado');
     Route::get('/restaurantes/{restaurante}/email-preview-eliminado', [AdminController::class, 'emailPreviewEliminado'])->name('emailPreview.eliminado');
@@ -55,17 +65,29 @@ Route::middleware('auth')->group(function () {
     Route::get('/restaurantes', [RestauranteController::class, 'index'])->name('restaurantes');
     Route::get('/restaurante/{id}', [RestauranteController::class, 'show'])->name('restaurante.detalle');
     
+    // Rutas de perfil y notificaciones
+    Route::get('/perfil', [PerfilController::class, 'show'])->name('perfil.show');
+    Route::put('/perfil', [PerfilController::class, 'update'])->name('perfil.update');
+    Route::get('/notificaciones', [PerfilController::class, 'obtenerNotificaciones'])->name('notificaciones.obtener');
+    Route::put('/notificaciones/{id}/leida', [PerfilController::class, 'marcarNotificacionLeida'])->name('notificaciones.leida');
+    Route::put('/notificaciones/marcar-todas-leidas', [PerfilController::class, 'marcarTodasLeidas'])->name('notificaciones.marcar-todas');
+    Route::delete('/notificaciones/{id}', [PerfilController::class, 'eliminarNotificacion'])->name('notificaciones.eliminar');
+    
     // Rutas de valoraciones
     Route::post('/restaurante/{id}/valoracion', [ValoracionController::class, 'store'])->name('valoracion.store');
     Route::put('/valoracion/{id}', [ValoracionController::class, 'update'])->name('valoracion.update');
     Route::delete('/valoracion/{id}', [ValoracionController::class, 'destroy'])->name('valoracion.destroy');
     Route::post('/valoracion/{id}/responder', [ValoracionController::class, 'responder'])->name('valoracion.responder');
     Route::delete('/valoracion/{id}/respuesta', [ValoracionController::class, 'eliminarRespuesta'])->name('valoracion.eliminarRespuesta');
+    Route::post('/valoracion/{id}/reportar', [ValoracionController::class, 'reportar'])->name('valoracion.reportar');
     
     // Rutas de likes y guardados
     Route::post('/restaurante/{id}/like', [RestauranteController::class, 'toggleLike'])->name('restaurante.like');
     Route::post('/restaurante/{id}/guardar', [RestauranteController::class, 'toggleGuardar'])->name('restaurante.guardar');
     Route::get('/restaurantes-guardados', [RestauranteController::class, 'guardados'])->name('restaurantes.guardados');
+    
+    // Solicitar eliminación de restaurante (solo gerentes)
+    Route::post('/restaurante/{id}/solicitar-eliminacion', [RestauranteController::class, 'solicitarEliminacion'])->name('restaurante.solicitar-eliminacion');
     
     // Ruta para actualizar restaurante (solo gerentes)
     Route::post('/restaurante/{id}', [RestauranteController::class, 'update'])->name('restaurante.update');

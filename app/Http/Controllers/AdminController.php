@@ -7,6 +7,8 @@ use App\Models\Categoria;
 use App\Models\TipoComida;
 use App\Models\Ubicacion;
 use App\Models\ImagenRestaurante;
+use App\Models\DenunciaValoracion;
+use App\Models\SolicitudEliminacionRestaurante;
 use App\Mail\Restaurante_Modificado_o_eliminado;
 use App\Mail\Restaurante_Eliminado;
 use Illuminate\Http\Request;
@@ -532,6 +534,204 @@ class AdminController extends Controller
         return view('emails.restaurante_eliminado', [
             'nombre' => $restaurante->nombre,
             'restaurante_id' => $restaurante->id
+        ]);
+    }
+
+    /**
+     * Ver denuncias/reportes de valoraciones
+     */
+    public function verDenuncias(Request $request)
+    {
+        $this->checkAdmin();
+
+        $query = DenunciaValoracion::with(['usuario', 'valoracion' => function($q) {
+            $q->with(['restaurante' => function($r) {
+                $r->select('id', 'nombre');
+            }, 'usuario' => function($u) {
+                $u->select('id', 'name', 'apellidos');
+            }]);
+        }]);
+
+        // Filtro por estado
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        } else {
+            // Por defecto mostrar pendientes
+            $query->where('estado', 'pendiente');
+        }
+
+        $denuncias = $query->orderBy('created_at', 'desc')->paginate(15);
+
+        return view('admin.denuncias', compact('denuncias'));
+    }
+
+    /**
+     * Revisar una denuncia específica
+     */
+    public function revisarDenuncia(Request $request, $id)
+    {
+        $this->checkAdmin();
+
+        $denuncia = DenunciaValoracion::with(['usuario', 'valoracion' => function($q) {
+            $q->with(['restaurante', 'usuario']);
+        }])->findOrFail($id);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'denuncia' => $denuncia
+            ]);
+        }
+
+        return view('admin.revisar-denuncia', compact('denuncia'));
+    }
+
+    /**
+     * Resolver una denuncia (aceptar o rechazar)
+     */
+    public function resolverDenuncia(Request $request, $id)
+    {
+        $this->checkAdmin();
+
+        $request->validate([
+            'accion' => 'required|in:aceptar,rechazar',
+        ]);
+
+        $denuncia = DenunciaValoracion::findOrFail($id);
+
+        try {
+            DB::beginTransaction();
+
+            $accion = $request->accion;
+
+            if ($accion === 'aceptar') {
+                // Eliminar la valoración reportada
+                $valoracion = $denuncia->valoracion;
+                if ($valoracion) {
+                    $restauranteId = $valoracion->restaurante_id;
+                    $valoracion->delete();
+
+                    // Actualizar valoración promedio del restaurante
+                    $this->actualizarValoracionPromedio($restauranteId);
+                }
+
+                $denuncia->update(['estado' => 'revisado']);
+            } else {
+                // Rechazar denuncia
+                $denuncia->update(['estado' => 'rechazado']);
+            }
+
+            DB::commit();
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Denuncia resuelta correctamente.'
+                ]);
+            }
+
+            return redirect()->route('admin.denuncias')->with('success', 'Denuncia resuelta correctamente.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Error al resolver la denuncia.'], 500);
+            }
+            return redirect()->back()->with('error', 'Error al resolver la denuncia.');
+        }
+    }
+
+    /**
+     * Ver solicitudes de eliminación de restaurantes
+     */
+    public function verSolicitudesEliminacion(Request $request)
+    {
+        $this->checkAdmin();
+
+        $query = SolicitudEliminacionRestaurante::with(['restaurante', 'gerente', 'admin']);
+
+        // Filtro por estado
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        } else {
+            // Por defecto mostrar pendientes
+            $query->where('estado', 'pendiente');
+        }
+
+        $solicitudes = $query->orderBy('created_at', 'desc')->paginate(15);
+
+        return view('admin.solicitudes-eliminacion', compact('solicitudes'));
+    }
+
+    /**
+     * Responder a una solicitud de eliminación
+     */
+    public function responderSolicitudEliminacion(Request $request, $id)
+    {
+        $this->checkAdmin();
+
+        $request->validate([
+            'accion' => 'required|in:aceptar,rechazar',
+        ]);
+
+        $solicitud = SolicitudEliminacionRestaurante::findOrFail($id);
+
+        try {
+            DB::beginTransaction();
+
+            $accion = $request->accion;
+
+            if ($accion === 'aceptar') {
+                // Eliminar el restaurante
+                $restaurante = $solicitud->restaurante;
+                if ($restaurante) {
+                    $restaurante->delete();
+                }
+
+                $solicitud->update([
+                    'estado' => 'aceptada',
+                    'admin_id' => Auth::id(),
+                    'respondido_at' => now(),
+                ]);
+            } else {
+                // Rechazar solicitud
+                $solicitud->update([
+                    'estado' => 'rechazada',
+                    'admin_id' => Auth::id(),
+                    'respondido_at' => now(),
+                ]);
+            }
+
+            DB::commit();
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Solicitud resuelta correctamente.'
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Solicitud resuelta correctamente.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Error al resolver la solicitud.'], 500);
+            }
+            return redirect()->back()->with('error', 'Error al resolver la solicitud.');
+        }
+    }
+
+    /**
+     * Actualizar la valoración promedio de un restaurante
+     */
+    private function actualizarValoracionPromedio($restauranteId)
+    {
+        $restaurante = Restaurante::findOrFail($restauranteId);
+        $promedio = $restaurante->valoraciones()->avg('puntuacion');
+        
+        $restaurante->update([
+            'valoracion_promedio' => $promedio ? round($promedio, 2) : 0
         ]);
     }
 }

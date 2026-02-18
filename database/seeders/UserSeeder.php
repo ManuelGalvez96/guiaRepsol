@@ -10,460 +10,473 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        // Admin
         User::create([
             'name' => 'Admin',
             'apellidos' => 'Sistema',
             'email' => 'admin@guiarepsol.com',
-            'password' => Hash::make('admin123'),
+            'password' => Hash::make('password'),
             'rol' => 'administrador',
         ]);
 
+        // Gerentes reales
         User::create([
             'name' => 'Carlos',
             'apellidos' => 'García López',
-            'email' => 'gerente1@restaurant.com',
-            'password' => Hash::make('gerente123'),
+            'email' => 'carlos.garcia@restaurante.es',
+            'password' => Hash::make('password'),
             'rol' => 'gerente',
         ]);
 
         User::create([
             'name' => 'María',
             'apellidos' => 'Rodríguez Pérez',
-            'email' => 'gerente2@restaurant.com',
-            'password' => Hash::make('gerente123'),
+            'email' => 'maria.rodriguez@restaurante.es',
+            'password' => Hash::make('password'),
             'rol' => 'gerente',
         ]);
 
         User::create([
             'name' => 'Juan',
             'apellidos' => 'Martínez Sánchez',
-            'email' => 'gerente3@restaurant.com',
-            'password' => Hash::make('gerente123'),
+            'email' => 'juan.martinez@restaurante.es',
+            'password' => Hash::make('password'),
             'rol' => 'gerente',
         ]);
 
         User::create([
             'name' => 'Ana',
             'apellidos' => 'Fernández Gómez',
-            'email' => 'gerente4@restaurant.com',
-            'password' => Hash::make('gerente123'),
+            'email' => 'ana.fernandez@restaurante.es',
+            'password' => Hash::make('password'),
             'rol' => 'gerente',
         ]);
 
         User::create([
             'name' => 'Pedro',
             'apellidos' => 'López Martín',
-            'email' => 'gerente5@restaurant.com',
-            'password' => Hash::make('gerente123'),
+            'email' => 'pedro.lopez@restaurante.es',
+            'password' => Hash::make('password'),
             'rol' => 'gerente',
         ]);
 
+        // Usuario con email del desarrollador
+        User::create([
+            'name' => 'Diego',
+            'apellidos' => 'Zenon Developer',
+            'email' => 'darkzenon89@gmail.com',
+            'password' => Hash::make('password'),
+            'rol' => 'gerente',
+        ]);
+
+        // Usuarios normales
         User::create([
             'name' => 'Laura',
             'apellidos' => 'González Ruiz',
-            'email' => 'usuario@example.com',
-            'password' => Hash::make('usuario123'),
+            'email' => 'laura.gonzalez@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Diego',
-            'apellidos' => 'Sánchez',
-            'email' => 'usuario2@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Sánchez Martín',
+            'email' => 'diego.sanchez@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Sofía',
-            'apellidos' => 'Pérez',
-            'email' => 'usuario3@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Pérez García',
+            'email' => 'sofia.perez@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Javier',
-            'apellidos' => 'García',
-            'email' => 'usuario4@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'García López',
+            'email' => 'javier.garcia@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Elena',
-            'apellidos' => 'López',
-            'email' => 'usuario5@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'López Fernández',
+            'email' => 'elena.lopez@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Roberto',
-            'apellidos' => 'González',
-            'email' => 'usuario6@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'González Rodríguez',
+            'email' => 'roberto.gonzalez@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Isabel',
-            'apellidos' => 'Martínez',
-            'email' => 'usuario7@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Martínez Pérez',
+            'email' => 'isabel.martinez@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Francisco',
-            'apellidos' => 'Rodríguez',
-            'email' => 'usuario8@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Rodríguez García',
+            'email' => 'francisco.rodriguez@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Marta',
-            'apellidos' => 'Hernández',
-            'email' => 'usuario9@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Hernández López',
+            'email' => 'marta.hernandez@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Antonio',
-            'apellidos' => 'Jiménez',
-            'email' => 'usuario10@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Jiménez García',
+            'email' => 'antonio.jimenez@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Rosa',
-            'apellidos' => 'Díaz',
-            'email' => 'usuario11@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Díaz Rodríguez',
+            'email' => 'rosa.diaz@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Miguel',
-            'apellidos' => 'Ramos',
-            'email' => 'usuario12@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Ramos García',
+            'email' => 'miguel.ramos@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Andrea',
-            'apellidos' => 'Ruiz',
-            'email' => 'usuario13@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Ruiz López',
+            'email' => 'andrea.ruiz@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Raúl',
-            'apellidos' => 'Moreno',
-            'email' => 'usuario14@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Moreno García',
+            'email' => 'raul.moreno@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Patricia',
-            'apellidos' => 'Navarro',
-            'email' => 'usuario15@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Navarro Pérez',
+            'email' => 'patricia.navarro@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Alfonso',
-            'apellidos' => 'Vargas',
-            'email' => 'usuario16@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Vargas García',
+            'email' => 'alfonso.vargas@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Beatriz',
-            'apellidos' => 'Castillo',
-            'email' => 'usuario17@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Castillo López',
+            'email' => 'beatriz.castillo@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Vicente',
-            'apellidos' => 'Rojas',
-            'email' => 'usuario18@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Rojas García',
+            'email' => 'vicente.rojas@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Catalina',
-            'apellidos' => 'Molina',
-            'email' => 'usuario19@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Molina Pérez',
+            'email' => 'catalina.molina@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Luis',
-            'apellidos' => 'Domínguez',
-            'email' => 'usuario20@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Domínguez García',
+            'email' => 'luis.dominguez@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Dolores',
-            'apellidos' => 'Rivera',
-            'email' => 'usuario21@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Rivera López',
+            'email' => 'dolores.rivera@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Ángel',
-            'apellidos' => 'Vázquez',
-            'email' => 'usuario22@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Vázquez García',
+            'email' => 'angel.vazquez@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Francisca',
-            'apellidos' => 'Torres',
-            'email' => 'usuario23@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Torres López',
+            'email' => 'francisca.torres@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Gonzalo',
-            'apellidos' => 'Ortiz',
-            'email' => 'usuario24@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Ortiz García',
+            'email' => 'gonzalo.ortiz@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Magdalena',
-            'apellidos' => 'Flores',
-            'email' => 'usuario25@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Flores López',
+            'email' => 'magdalena.flores@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Enrique',
-            'apellidos' => 'Silva',
-            'email' => 'usuario26@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Silva García',
+            'email' => 'enrique.silva@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Concepción',
-            'apellidos' => 'Santos',
-            'email' => 'usuario27@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Santos López',
+            'email' => 'concepcion.santos@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Rafael',
-            'apellidos' => 'Campos',
-            'email' => 'usuario28@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Campos García',
+            'email' => 'rafael.campos@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Amparo',
-            'apellidos' => 'Medina',
-            'email' => 'usuario29@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Medina López',
+            'email' => 'amparo.medina@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Eugenio',
-            'apellidos' => 'Reyes',
-            'email' => 'usuario30@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Reyes García',
+            'email' => 'eugenio.reyes@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Casilda',
-            'apellidos' => 'Guerrero',
-            'email' => 'usuario31@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Guerrero López',
+            'email' => 'casilda.guerrero@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Agustín',
-            'apellidos' => 'Herrera',
-            'email' => 'usuario32@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Herrera García',
+            'email' => 'agustin.herrera@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Rosario',
-            'apellidos' => 'Fernández',
-            'email' => 'usuario33@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Fernández López',
+            'email' => 'rosario.fernandez@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Gregorio',
-            'apellidos' => 'Salazar',
-            'email' => 'usuario34@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Salazar García',
+            'email' => 'gregorio.salazar@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Trinidad',
-            'apellidos' => 'Figueroa',
-            'email' => 'usuario35@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Figueroa López',
+            'email' => 'trinidad.figueroa@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Marino',
-            'apellidos' => 'Bravo',
-            'email' => 'usuario36@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Bravo García',
+            'email' => 'marino.bravo@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Esperanza',
-            'apellidos' => 'Fuentes',
-            'email' => 'usuario37@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Fuentes López',
+            'email' => 'esperanza.fuentes@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Heriberto',
-            'apellidos' => 'Carrillo',
-            'email' => 'usuario38@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Carrillo García',
+            'email' => 'heriberto.carrillo@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Soledad',
-            'apellidos' => 'Palacios',
-            'email' => 'usuario39@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Palacios López',
+            'email' => 'soledad.palacios@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Leopoldo',
-            'apellidos' => 'Suárez',
-            'email' => 'usuario40@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Suárez García',
+            'email' => 'leopoldo.suarez@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Carmen',
-            'apellidos' => 'Ramírez',
-            'email' => 'usuario41@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Ramírez López',
+            'email' => 'carmen.ramirez@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Aurelio',
-            'apellidos' => 'Beltrán',
-            'email' => 'usuario42@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Beltrán García',
+            'email' => 'aurelio.beltran@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Milagros',
-            'apellidos' => 'Crespo',
-            'email' => 'usuario43@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Crespo López',
+            'email' => 'milagros.crespo@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Jesús',
-            'apellidos' => 'Gómez',
-            'email' => 'usuario44@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Gómez García',
+            'email' => 'jesus.gomez@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Virtudes',
-            'apellidos' => 'Estrada',
-            'email' => 'usuario45@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Estrada López',
+            'email' => 'virtudes.estrada@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Olegario',
-            'apellidos' => 'Vega',
-            'email' => 'usuario46@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Vega García',
+            'email' => 'olegario.vega@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Encarnación',
-            'apellidos' => 'Segura',
-            'email' => 'usuario47@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Segura López',
+            'email' => 'encarnacion.segura@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Otilio',
-            'apellidos' => 'Valenzuela',
-            'email' => 'usuario48@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Valenzuela García',
+            'email' => 'otilio.valenzuela@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Paz',
-            'apellidos' => 'Lozano',
-            'email' => 'usuario49@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'Lozano López',
+            'email' => 'paz.lozano@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
-            'name' => 'Diego',
-            'apellidos' => 'López',
-            'email' => 'usuario50@example.com',
-            'password' => Hash::make('usuario123'),
+            'name' => 'Javier',
+            'apellidos' => 'López García',
+            'email' => 'javier.lopez@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
 
         User::create([
             'name' => 'Sofía',
-            'apellidos' => 'García',
-            'email' => 'usuario51@example.com',
-            'password' => Hash::make('usuario123'),
+            'apellidos' => 'García López',
+            'email' => 'sofia.garcia@email.com',
+            'password' => Hash::make('password'),
             'rol' => 'usuario',
         ]);
     }
 }
+

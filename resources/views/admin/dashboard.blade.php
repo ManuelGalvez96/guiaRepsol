@@ -30,6 +30,8 @@
                 <a href="{{ route('admin.index') }}" class="create-btn" style="background-color: #3498db;">Gestión de Restaurantes</a>
                 <a href="{{ route('admin.solicitudes') }}" class="create-btn" style="background-color: #f39c12;">Solicitudes de Negocio</a>
                 <a href="{{ route('admin.usuarios.index') }}" class="create-btn" style="background-color: #27ae60;">👥 Gestión de Usuarios</a>
+                <a href="{{ route('admin.denuncias.index') }}" class="create-btn" style="background-color: #e74c3c;">📋 Reportes de Valoraciones</a>
+                <a href="{{ route('admin.solicitudes-eliminacion.index') }}" class="create-btn" style="background-color: #c0392b;">🗑️ Solicitudes Eliminación</a>
             </div>
         </div>
 

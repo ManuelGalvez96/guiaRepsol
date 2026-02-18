@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Notificacion;
+use App\Mail\PerfilModificado;
+use App\Mail\PerfilEliminado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -322,16 +327,66 @@ class UserController extends Controller
         }
 
         try {
-            $usuario->update([
-                'name' => $validated['name'],
-                'apellidos' => $validated['apellidos'],
-                'email' => $validated['email'],
-                'rol' => $validated['rol'],
-            ]);
-
-            if ($request->filled('password')) {
-                $usuario->update(['password' => Hash::make($validated['password'])]);
+            // Detectar cambios antes de actualizar
+            $cambios = [];
+            if ($usuario->name !== $validated['name']) {
+                $cambios[] = "Nombre: {$usuario->name} → {$validated['name']}";
             }
+            if ($usuario->apellidos !== $validated['apellidos']) {
+                $cambios[] = "Apellidos: {$usuario->apellidos} → {$validated['apellidos']}";
+            }
+            if ($usuario->email !== $validated['email']) {
+                $cambios[] = "Email: {$usuario->email} → {$validated['email']}";
+            }
+            if ($usuario->rol !== $validated['rol']) {
+                $cambios[] = "Rol: {$usuario->rol} → {$validated['rol']}";
+            }
+            if ($request->filled('password')) {
+                $cambios[] = "Contraseña modificada";
+            }
+
+            // Iniciar transacción
+            DB::beginTransaction();
+
+            // Actualizar usuario
+            $usuario->name = $validated['name'];
+            $usuario->apellidos = $validated['apellidos'];
+            $usuario->email = $validated['email'];
+            $usuario->rol = $validated['rol'];
+            if ($request->filled('password')) {
+                $usuario->password = Hash::make($validated['password']);
+            }
+            $usuario->save();
+
+            // Si hay cambios, notificar al usuario
+            if (!empty($cambios)) {
+                $cambiosText = implode(', ', $cambios);
+
+                // Crear notificación en la base de datos
+                Notificacion::create([
+                    'user_id' => $usuario->id,
+                    'titulo' => 'Tu perfil ha sido modificado',
+                    'mensaje' => 'Tu perfil fue modificado por un administrador. Cambios: ' . $cambiosText,
+                    'tipo' => 'info',
+                    'leida' => false,
+                    'referencia_tipo' => 'usuario',
+                    'referencia_id' => $usuario->id,
+                ]);
+
+                // Enviar correo al usuario
+                try {
+                    Mail::to($usuario->email)->send(new PerfilModificado($usuario, $cambiosText));
+                } catch (\Exception $e) {
+                    // Log error de correo pero continuar con la actualización
+                    Log::warning('Error al enviar correo de notificación: ' . $e->getMessage());
+                }
+            }
+
+            // Confirmar transacción
+            DB::commit();
+
+            // Confirmar transacción
+            DB::commit();
 
             // Si es AJAX, devolver JSON
             if ($request->ajax() || $request->expectsJson()) {
@@ -344,6 +399,9 @@ class UserController extends Controller
             return redirect()->route('admin.usuarios.index')
                 ->with('success', 'Usuario actualizado exitosamente.');
         } catch (\Exception $e) {
+            // Revertir transacción en caso de error
+            DB::rollBack();
+            
             if ($request->ajax() || $request->expectsJson()) {
                 return response()->json([
                     'success' => false,
@@ -382,6 +440,13 @@ class UserController extends Controller
                         'message' => 'No puedes eliminar este gerente porque tiene restaurantes asociados.'
                     ], 409);
                 }
+            }
+
+            // Enviar email de perfil eliminado
+            try {
+                Mail::to($usuario->email)->send(new PerfilEliminado($usuario));
+            } catch (\Exception $e) {
+                Log::error('Error al enviar email de perfil eliminado: ' . $e->getMessage());
             }
 
             $usuario->delete();

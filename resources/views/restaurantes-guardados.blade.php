@@ -57,12 +57,27 @@
                 <div class="col">
                 </div>
                 <div class="col-auto">
-                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                        @csrf
-                        <button type="submit" class="btn-acceso-detalle">
-                            <i class="bi bi-person"></i> Cerrar Sesión
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <!-- Botón de Notificaciones -->
+                        <div style="position: relative;">
+                            <button id="btnNotificaciones" class="btn-perfil-header btn-notificaciones" onclick="abrirPanelNotificaciones()" style="position: relative;">
+                                <i class="bi bi-bell-fill" style="font-size: 20px; color: #00a3e0;"></i>
+                                <span id="notificacionesBadge" class="notificaciones-badge" style="display: none; position: absolute; top: -5px; right: -5px;">0</span>
+                            </button>
+                        </div>
+                        <!-- Botón de Perfil -->
+                        <button class="btn-perfil-header" onclick="abrirModalPerfil()">
+                            <img id="avatarHeaderImg" src="{{ Auth::user()->foto_perfil ? asset(Auth::user()->foto_perfil) : asset('img/avatares/default-avatar.png') }}" alt="Perfil" class="perfil-avatar-small">
+                            <span style="font-size: 12px; color: #333;">{{ Auth::user()->name }}</span>
                         </button>
-                    </form>
+                        <!-- Form Logout -->
+                        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                            @csrf
+                            <button type="submit" class="btn-acceso-detalle">
+                                <i class="bi bi-box-arrow-right"></i> Salir
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -211,11 +226,72 @@
         </div>
     </div>
 
+    <!-- Modal de Perfil -->
+    <div class="modal fade" id="modalPerfil" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Mi Perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formPerfil">
+                        <div class="perfil-avatar-section text-center mb-4">
+                            <img id="perfilAvatarImg" src="{{ Auth::user()->foto_perfil ? asset(Auth::user()->foto_perfil) : asset('img/avatares/default-avatar.png') }}" alt="Avatar" class="perfil-avatar-img rounded-circle" style="width: 120px; height: 120px; object-fit: cover; margin-bottom: 15px;">
+                            <div class="perfil-avatar-upload">
+                                <input type="file" id="perfilFotoInput" class="d-none" accept="image/*">
+                                <label for="perfilFotoInput" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-cloud-upload"></i> Cambiar Foto
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="perfilNombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="perfilNombre" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="perfilApellidos" class="form-label">Apellidos</label>
+                            <input type="text" class="form-control" id="perfilApellidos" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="perfilEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="perfilEmail" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarPerfil()">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel de Notificaciones -->
+    <div id="notificacionesPanel" class="notificaciones-panel">
+        <div class="notificaciones-header">
+            <h3>Notificaciones <span id="notificacionesBadgeHeader" class="notificaciones-badge"></span></h3>
+            <button class="notificaciones-close" onclick="cerrarPanelNotificaciones()">×</button>
+        </div>
+        <div id="notificacionesContenido" class="notificaciones-content">
+            <!-- Las notificaciones se cargarán aquí -->
+        </div>
+        <div class="notificaciones-footer">
+            <button class="notificaciones-btn-marcar-todo" onclick="marcarTodasLeidas()">Marcar todo como leído</button>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="{{ asset('css/perfil.css') }}">
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="{{ asset('js/mobile-menu.js') }}"></script>
     <script src="{{ asset('js/restaurantes-guardados.js') }}"></script>
+    <script src="{{ asset('js/perfil.js') }}"></script>
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 </body>
 

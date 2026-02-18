@@ -24,6 +24,7 @@ class User extends Authenticatable
         'password',
         'rol',
         'email_verified_at',
+        'foto_perfil',
     ];
 
     /**
@@ -73,5 +74,13 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Restaurante::class, 'tbl_guardar_restaurante')
             ->withTimestamps();
+    }
+
+    /**
+     * Notificaciones del usuario.
+     */
+    public function notificaciones()
+    {
+        return $this->hasMany(Notificacion::class);
     }
 }
