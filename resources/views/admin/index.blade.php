@@ -31,6 +31,8 @@
             <div style="display: flex; gap: 10px;">
                 <a href="{{ route('admin.solicitudes') }}" class="create-btn"
                     style="background-color: #f39c12;">Solicitudes de negocio</a>
+                <a href="{{ route('admin.usuarios') }}" class="create-btn"
+                    style="background-color: #3498db; color: #fff;">Gestión de Usuarios</a>
                 <a href="#" onclick="openCreateModal(); return false;" class="create-btn">Crear Restaurante</a>
             </div>
         </div>

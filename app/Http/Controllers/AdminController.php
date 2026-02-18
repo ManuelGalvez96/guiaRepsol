@@ -563,4 +563,143 @@ class AdminController extends Controller
             'restaurante_id' => $restaurante->id
         ]);
     }
+
+    // ==================== GESTIÓN DE USUARIOS ====================
+
+    public function usuarios(Request $request)
+    {
+        $this->checkAdmin();
+
+        $query = \App\Models\User::query();
+
+        // Filtro de búsqueda por nombre, apellidos o email
+        if ($request->filled('buscar')) {
+            $buscar = $request->buscar;
+            $query->where(function ($q) use ($buscar) {
+                $q->where('name', 'LIKE', '%' . $buscar . '%')
+                  ->orWhere('apellidos', 'LIKE', '%' . $buscar . '%')
+                  ->orWhere('email', 'LIKE', '%' . $buscar . '%');
+            });
+        }
+
+        // Filtro por rol
+        if ($request->filled('rol')) {
+            $query->where('rol', $request->rol);
+        }
+
+        $usuarios = $query->orderBy('created_at', 'desc')->paginate(10);
+        $usuarios->appends($request->query());
+
+        // Para peticiones AJAX, devolver solo la tabla
+        if ($request->ajax() || $request->wantsJson()) {
+            return view('admin.partials.usuarios-table', compact('usuarios'))->render();
+        }
+
+        return view('admin.usuarios', compact('usuarios'));
+    }
+
+    public function crearUsuario(Request $request)
+    {
+        $this->checkAdmin();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return view('admin.partials.usuario-create-form')->render();
+        }
+
+        return view('admin.partials.usuario-create-form');
+    }
+
+    public function guardarUsuario(Request $request)
+    {
+        $this->checkAdmin();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'apellidos' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
+            'rol' => 'required|in:administrador,usuario,gerente',
+        ]);
+
+        $usuario = \App\Models\User::create($validated);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Usuario creado exitosamente'
+            ], 201);
+        }
+
+        return redirect()->route('admin.usuarios')->with('success', 'Usuario creado exitosamente');
+    }
+
+    public function editarUsuario(Request $request, $id)
+    {
+        $this->checkAdmin();
+
+        $usuario = \App\Models\User::findOrFail($id);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return view('admin.partials.usuario-edit-form', compact('usuario'))->render();
+        }
+
+        return view('admin.partials.usuario-edit-form', compact('usuario'));
+    }
+
+    public function actualizarUsuario(Request $request, $id)
+    {
+        $this->checkAdmin();
+
+        $usuario = \App\Models\User::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'apellidos' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $usuario->id,
+            'password' => 'nullable|string|min:6',
+            'rol' => 'required|in:administrador,usuario,gerente',
+        ]);
+
+        // Si no se envía contraseña, no la actualizamos
+        if (empty($validated['password'])) {
+            unset($validated['password']);
+        }
+
+        $usuario->update($validated);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Usuario actualizado exitosamente'
+            ]);
+        }
+
+        return redirect()->route('admin.usuarios')->with('success', 'Usuario actualizado exitosamente');
+    }
+
+    public function eliminarUsuario(Request $request, $id)
+    {
+        $this->checkAdmin();
+
+        $usuario = \App\Models\User::findOrFail($id);
+
+        // No permitir eliminarse a sí mismo
+        if ($usuario->id === Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No puedes eliminarte a ti mismo'
+            ], 403);
+        }
+
+        $usuario->delete();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Usuario eliminado exitosamente'
+            ]);
+        }
+
+        return redirect()->route('admin.usuarios')->with('success', 'Usuario eliminado exitosamente');
+    }
 }

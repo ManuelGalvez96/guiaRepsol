@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/soletes.css') }}">
     <link rel="stylesheet" href="{{ asset('css/restaurantes.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/formulario.css') }}">
 </head>
 
 <body>

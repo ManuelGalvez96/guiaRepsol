@@ -1408,3 +1408,60 @@ textarea:focus {
     }
 }
 }
+
+/* ==================== BADGES DE ROL (USUARIOS) ==================== */
+.rol-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.rol-administrador {
+    background: #fde8e8;
+    color: #c0392b;
+}
+
+.rol-usuario {
+    background: #e8f4fd;
+    color: #2980b9;
+}
+
+.rol-gerente {
+    background: #e8fde8;
+    color: #27ae60;
+}
+
+/* ==================== FORMULARIOS USUARIOS ==================== */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.btn-cancel {
+    background: #95a5a6;
+    color: #fff;
+}
+
+.btn-cancel:hover {
+    background: #7f8c8d;
+}
+
+.btn-submit {
+    background: #ffd500;
+    color: #333;
+}
+
+.btn-submit:hover {
+    background: #e6c000;
+}
+
+.required {
+    color: #e74c3c;
+}
