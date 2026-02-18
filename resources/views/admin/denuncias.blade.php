@@ -27,8 +27,8 @@
         <div class="top-section">
             <h1>📋 Reportes de Valoraciones</h1>
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <a href="{{ route('admin.dashboard') }}" class="create-btn" style="background-color: #95a5a6;">← Volver al Dashboard</a>
-                <a href="{{ route('admin.solicitudes-eliminacion.index') }}" class="create-btn" style="background-color: #3498db;">Ver Solicitudes de Eliminación</a>
+                <a href="{{ route('admin.dashboard') }}" class="create-btn">Volver al Dashboard</a>
+                <a href="{{ route('admin.solicitudes-eliminacion.index') }}" class="create-btn">Ver Solicitudes de Eliminación</a>
             </div>
         </div>
 

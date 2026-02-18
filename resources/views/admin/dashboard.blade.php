@@ -24,107 +24,106 @@
 
     <!-- Contenedor principal -->
     <div class="container">
-        <div class="top-section">
+        <div class="top-section" style="flex-direction: column; align-items: center; gap: 15px;">
             <h1>Dashboard de Administración</h1>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <a href="{{ route('admin.index') }}" class="create-btn" style="background-color: #3498db;">Gestión de Restaurantes</a>
-                <a href="{{ route('admin.solicitudes') }}" class="create-btn" style="background-color: #f39c12;">Solicitudes de Negocio</a>
-                <a href="{{ route('admin.usuarios.index') }}" class="create-btn" style="background-color: #27ae60;">👥 Gestión de Usuarios</a>
-                <a href="{{ route('admin.denuncias.index') }}" class="create-btn" style="background-color: #e74c3c;">📋 Reportes de Valoraciones</a>
-                <a href="{{ route('admin.solicitudes-eliminacion.index') }}" class="create-btn" style="background-color: #c0392b;">🗑️ Solicitudes Eliminación</a>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <a href="{{ route('admin.index') }}" class="create-btn">Gestión de Restaurantes</a>
+                <a href="{{ route('admin.solicitudes') }}" class="create-btn">Solicitudes de Negocio</a>
+                <a href="{{ route('admin.usuarios.index') }}" class="create-btn">Gestión de Usuarios</a>
+                <a href="{{ route('admin.denuncias.index') }}" class="create-btn">Reportes de Valoraciones</a>
+                <a href="{{ route('admin.solicitudes-eliminacion.index') }}" class="create-btn">Solicitudes Eliminación</a>
             </div>
         </div>
 
         <!-- Estadísticas generales -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0;">
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 10px; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <h3 style="margin: 0 0 10px 0; font-size: 16px; opacity: 0.9;">Restaurantes Activos</h3>
-                <p style="font-size: 36px; font-weight: bold; margin: 0;">{{ $totalRestaurantes }}</p>
-            </div>
-            
-            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 25px; border-radius: 10px; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <h3 style="margin: 0 0 10px 0; font-size: 16px; opacity: 0.9;">Solicitudes Pendientes</h3>
-                <p style="font-size: 36px; font-weight: bold; margin: 0;">{{ $restaurantesPendientes }}</p>
-            </div>
-            
-            <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); padding: 25px; border-radius: 10px; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <h3 style="margin: 0 0 10px 0; font-size: 16px; opacity: 0.9;">Total Valoraciones</h3>
-                <p style="font-size: 36px; font-weight: bold; margin: 0;">{{ $totalValoraciones }}</p>
-            </div>
-            
-            <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 25px; border-radius: 10px; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <h3 style="margin: 0 0 10px 0; font-size: 16px; opacity: 0.9;">Usuarios Registrados</h3>
-                <p style="font-size: 36px; font-weight: bold; margin: 0;">{{ $totalUsuarios }}</p>
-            </div>
-
-            <div style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); padding: 25px; border-radius: 10px; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <h3 style="margin: 0 0 10px 0; font-size: 16px; opacity: 0.9;">Restaurantes Rechazados</h3>
-                <p style="font-size: 36px; font-weight: bold; margin: 0;">{{ $restaurantesRechazados }}</p>
-            </div>
+        <div class="table-container" style="margin-bottom: 20px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">Restaurantes Activos</th>
+                        <th style="text-align: center;">Solicitudes Pendientes</th>
+                        <th style="text-align: center;">Total Valoraciones</th>
+                        <th style="text-align: center;">Usuarios Registrados</th>
+                        <th style="text-align: center;">Restaurantes Rechazados</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align: center;"><strong style="font-size: 28px;">{{ $totalRestaurantes }}</strong></td>
+                        <td style="text-align: center;"><strong style="font-size: 28px;">{{ $restaurantesPendientes }}</strong></td>
+                        <td style="text-align: center;"><strong style="font-size: 28px;">{{ $totalValoraciones }}</strong></td>
+                        <td style="text-align: center;"><strong style="font-size: 28px;">{{ $totalUsuarios }}</strong></td>
+                        <td style="text-align: center;"><strong style="font-size: 28px;">{{ $restaurantesRechazados }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
-        <!-- Mejores restaurantes -->
-        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px;">
-            <h2 style="margin: 0 0 20px 0; padding-bottom: 15px; border-bottom: 2px solid #f39c12;">⭐ Top 5 Restaurantes Mejor Valorados</h2>
-            
+        <!-- Top 5 Restaurantes Mejor Valorados -->
+        <h2 style="font-size: 18px; margin-bottom: 15px;">Top 5 Restaurantes Mejor Valorados</h2>
+        <div class="table-container" style="margin-bottom: 30px;">
             @if($mejoresRestaurantes->count() > 0)
-                <div style="display: grid; gap: 15px;">
-                    @foreach($mejoresRestaurantes as $restaurante)
-                        <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #f8f9fa; border-radius: 6px; transition: transform 0.2s;">
-                            @if($restaurante->imagenes->first())
-                                <img src="{{ asset($restaurante->imagenes->first()->url) }}" alt="{{ $restaurante->nombre }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 6px;">
-                            @else
-                                <div style="width: 80px; height: 80px; background: #ddd; border-radius: 6px;"></div>
-                            @endif
-                            
-                            <div style="flex: 1;">
-                                <h3 style="margin: 0 0 5px 0; font-size: 18px;">{{ $restaurante->nombre }}</h3>
-                                <p style="margin: 0; color: #666; font-size: 14px;">{{ $restaurante->ubicacion->ciudad ?? '' }}</p>
-                            </div>
-                            
-                            <div style="text-align: center;">
-                                <div style="font-size: 24px; font-weight: bold; color: #f39c12;">{{ number_format($restaurante->valoracion_promedio, 1) }}</div>
-                                <div style="font-size: 12px; color: #666;">⭐ Valoración</div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Ciudad</th>
+                            <th>Valoración</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($mejoresRestaurantes as $restaurante)
+                            <tr>
+                                <td>
+                                    @if($restaurante->imagenes->first())
+                                        <img src="{{ asset($restaurante->imagenes->first()->url) }}" alt="{{ $restaurante->nombre }}" class="restaurant-img">
+                                    @else
+                                        <div class="restaurant-img"></div>
+                                    @endif
+                                </td>
+                                <td><strong>{{ $restaurante->nombre }}</strong></td>
+                                <td>{{ $restaurante->ubicacion->ciudad ?? '-' }}</td>
+                                <td><strong style="color: #f39c12;">{{ number_format($restaurante->valoracion_promedio, 1) }} ★</strong></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             @else
                 <p style="text-align: center; color: #999; padding: 30px;">No hay restaurantes disponibles</p>
             @endif
         </div>
 
-        <!-- Últimas valoraciones -->
-        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <h2 style="margin: 0 0 20px 0; padding-bottom: 15px; border-bottom: 2px solid #3498db;">💬 Últimas Valoraciones</h2>
-            
+        <!-- Últimas Valoraciones -->
+        <h2 style="font-size: 18px; margin-bottom: 15px;">Últimas Valoraciones</h2>
+        <div class="table-container">
             @if($ultimasValoraciones->count() > 0)
-                <div style="display: grid; gap: 15px;">
-                    @foreach($ultimasValoraciones as $valoracion)
-                        <div style="padding: 15px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #3498db;">
-                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
-                                <div>
-                                    <strong style="color: #2c3e50;">{{ $valoracion->usuario_nombre }}</strong>
-                                    <span style="color: #999; font-size: 14px;"> valoró </span>
-                                    <strong style="color: #f39c12;">{{ $valoracion->restaurante_nombre }}</strong>
-                                </div>
-                                <div style="display: flex; gap: 5px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Restaurante</th>
+                            <th>Puntuación</th>
+                            <th>Comentario</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($ultimasValoraciones as $valoracion)
+                            <tr>
+                                <td><strong>{{ $valoracion->usuario_nombre }}</strong></td>
+                                <td>{{ $valoracion->restaurante_nombre }}</td>
+                                <td>
                                     @for($i = 1; $i <= 5; $i++)
                                         <span style="color: {{ $i <= $valoracion->puntuacion ? '#f39c12' : '#ddd' }};">★</span>
                                     @endfor
-                                </div>
-                            </div>
-                            
-                            @if($valoracion->comentario)
-                                <p style="margin: 0; color: #555; font-size: 14px; line-height: 1.5;">{{ Str::limit($valoracion->comentario, 150) }}</p>
-                            @endif
-                            
-                            <small style="color: #999; font-size: 12px; margin-top: 8px; display: block;">
-                                {{ \Carbon\Carbon::parse($valoracion->created_at)->diffForHumans() }}
-                            </small>
-                        </div>
-                    @endforeach
-                </div>
+                                </td>
+                                <td>{{ $valoracion->comentario ? Str::limit($valoracion->comentario, 100) : '-' }}</td>
+                                <td><small style="color: #999;">{{ \Carbon\Carbon::parse($valoracion->created_at)->diffForHumans() }}</small></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             @else
                 <p style="text-align: center; color: #999; padding: 30px;">No hay valoraciones disponibles</p>
             @endif
@@ -133,65 +132,7 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    
-    <script>
-        // Logout handler
-        document.addEventListener('DOMContentLoaded', function() {
-            const logoutBtn = document.querySelector('.logout-btn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    Swal.fire({
-                        title: '¿Cerrar sesión?',
-                        text: "¿Estás seguro de que quieres cerrar sesión?",
-                        icon: 'question',
-                        showCancelButton: true,
-                        confirmButtonColor: '#e74c3c',
-                        cancelButtonColor: '#95a5a6',
-                        confirmButtonText: 'Sí, cerrar sesión',
-                        cancelButtonText: 'Cancelar'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            const logoutUrl = document.body.getAttribute('data-route-logout') || '/logout';
-                            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                            
-                            fetch(logoutUrl, {
-                                method: 'POST',
-                                headers: {
-                                    'X-Requested-With': 'XMLHttpRequest',
-                                    'Accept': 'application/json',
-                                    'X-CSRF-TOKEN': csrfToken
-                                },
-                                redirect: 'follow'
-                            })
-                            .then(response => {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Sesión cerrada',
-                                    text: 'Hasta la próxima',
-                                    timer: 1500,
-                                    showConfirmButton: false
-                                }).then(() => {
-                                    window.location.href = '/';
-                                });
-                            })
-                            .catch(error => {
-                                console.error('Error al cerrar sesión:', error);
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: 'Error al cerrar sesión'
-                                }).then(() => {
-                                    window.location.href = '/';
-                                });
-                            });
-                        }
-                    });
-                });
-            }
-        });
-    </script>
+    <script src="{{ asset('js/admin_js/admin_dashboard.js') }}"></script>
 </body>
 
 </html>
