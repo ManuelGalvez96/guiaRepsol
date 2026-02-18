@@ -8,6 +8,7 @@ use App\Models\DenunciaValoracion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ValoracionController extends Controller
 {
@@ -164,10 +165,17 @@ class ValoracionController extends Controller
      */
     public function reportar(Request $request, $id)
     {
+        Log::info('=== INICIO REPORTAR VALORACIÓN ===');
+        Log::info('Valoración ID: ' . $id);
+        Log::info('Usuario autenticado: ' . Auth::id());
+        Log::info('Datos recibidos: ', $request->all());
+        
         $valoracion = Valoracion::findOrFail($id);
+        Log::info('Valoración encontrada - Usuario autor: ' . $valoracion->usuario_id);
         
         // No se puede reportar la propia valoración
         if ($valoracion->usuario_id === Auth::id()) {
+            Log::warning('Intento de reportar propia valoración');
             if ($request->expectsJson()) {
                 return response()->json(['error' => 'No puedes reportar tu propia valoración.'], 403);
             }
@@ -178,30 +186,40 @@ class ValoracionController extends Controller
             'razon' => 'required|string|min:10|max:500',
         ]);
 
+        Log::info('Validación pasada correctamente');
+
         try {
             DB::beginTransaction();
+            Log::info('Transacción iniciada');
             
             // Verificar que el usuario no haya reportado ya esta valoración
             $existeReporte = DenunciaValoracion::where('user_id', Auth::id())
                 ->where('valoracion_id', $id)
                 ->first();
             
+            Log::info('Verificación de reporte existente: ' . ($existeReporte ? 'SÍ EXISTE' : 'NO EXISTE'));
+            
             if ($existeReporte) {
                 DB::rollBack();
+                Log::warning('Usuario ya reportó esta valoración anteriormente');
                 if ($request->expectsJson()) {
                     return response()->json(['error' => 'Ya has reportado esta valoración.'], 422);
                 }
                 return redirect()->back()->with('error', 'Ya has reportado esta valoración.');
             }
 
-            DenunciaValoracion::create([
+            Log::info('Creando denuncia...');
+            $denuncia = DenunciaValoracion::create([
                 'user_id' => Auth::id(),
                 'valoracion_id' => $id,
                 'razon' => $request->razon,
                 'estado' => 'pendiente',
             ]);
+            
+            Log::info('Denuncia creada con ID: ' . $denuncia->id);
 
             DB::commit();
+            Log::info('Transacción completada exitosamente');
 
             if ($request->expectsJson()) {
                 return response()->json([
@@ -214,6 +232,11 @@ class ValoracionController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('ERROR AL REPORTAR VALORACIÓN');
+            Log::error('Mensaje: ' . $e->getMessage());
+            Log::error('Archivo: ' . $e->getFile() . ' Línea: ' . $e->getLine());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+            
             if ($request->expectsJson()) {
                 return response()->json(['error' => 'Error al enviar el reporte.'], 500);
             }

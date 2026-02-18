@@ -19,8 +19,21 @@ function cargarDatosPerfil() {
 // Abrir modal de perfil
 function abrirModalPerfil() {
     cargarDatosPerfil();
-    const modal = new bootstrap.Modal(document.getElementById('modalPerfil'));
-    modal.show();
+    const modalElement = document.getElementById('modalPerfil');
+    if (!modalElement) {
+        console.error('No se encontró el modal de perfil');
+        return;
+    }
+    
+    try {
+        let modal = bootstrap.Modal.getInstance(modalElement);
+        if (!modal) {
+            modal = new bootstrap.Modal(modalElement);
+        }
+        modal.show();
+    } catch (e) {
+        console.error('Error al abrir modal:', e);
+    }
 }
 
 // Guardar cambios del perfil
@@ -84,8 +97,8 @@ function guardarPerfil() {
         if (!['image/jpeg', 'image/png', 'image/webp', 'image/jpg'].includes(archivo.type)) {
             mostrarError('perfilFoto', 'La imagen debe ser JPG, PNG o WEBP');
             hayErrores = true;
-        } else if (archivo.size > 2048 * 1024) {
-            mostrarError('perfilFoto', 'La imagen no puede exceder 2MB');
+        } else if (archivo.size > 5120 * 1024) {
+            mostrarError('perfilFoto', 'La imagen no puede exceder 5MB');
             hayErrores = true;
         }
     }
@@ -148,8 +161,17 @@ function guardarPerfil() {
             
             // Cerrar modal después de 1 segundo
             setTimeout(() => {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('modalPerfil'));
-                modal.hide();
+                const modalElement = document.getElementById('modalPerfil');
+                if (modalElement) {
+                    try {
+                        const modal = bootstrap.Modal.getInstance(modalElement);
+                        if (modal) {
+                            modal.hide();
+                        }
+                    } catch (e) {
+                        console.error('Error al cerrar modal:', e);
+                    }
+                }
             }, 1000);
         }
     })
@@ -291,8 +313,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 
-                if (archivo.size > 2048 * 1024) {
-                    mostrarError('perfilFoto', 'La imagen no puede exceder 2MB');
+                if (archivo.size > 5120 * 1024) {
+                    mostrarError('perfilFoto', 'La imagen no puede exceder 5MB');
                     this.value = '';
                     return;
                 }

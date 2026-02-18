@@ -37,7 +37,8 @@
         @endif
 
         <!-- Formulario -->
-        <form action="{{ route('admin.usuarios.update', $usuario) }}" method="POST" id="editUserForm" style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <form action="{{ route('admin.usuarios.update', $usuario) }}" method="POST" id="editUserForm" 
+            enctype="multipart/form-data" style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
             @csrf
             @method('PUT')
 
@@ -85,6 +86,24 @@
                 <span id="error-rol" style="color: #e74c3c; font-size: 13px;"></span>
             </div>
 
+            <!-- Foto de Perfil -->
+            <div class="mb-3">
+                <label for="foto_perfil" class="form-label">Foto de Perfil</label>
+                
+                <!-- Vista previa de la foto actual -->
+                <div class="mb-2 text-center">
+                    <img id="preview-foto" src="{{ $usuario->foto_perfil ? asset($usuario->foto_perfil) : asset('img/avatares/default-avatar.png') }}" 
+                        alt="Foto de perfil" 
+                        style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 3px solid #ddd;">
+                </div>
+                
+                <input type="file" class="form-control @error('foto_perfil') is-invalid @enderror" 
+                    id="foto_perfil" name="foto_perfil" accept="image/jpeg,image/jpg,image/png,image/webp"
+                    onchange="previewImage(event)">
+                <small style="color: #666;">Formatos permitidos: JPG, PNG, WEBP. Máximo 5MB</small>
+                <span id="error-foto" style="color: #e74c3c; font-size: 13px; display: block;"></span>
+            </div>
+
             <!-- Información de registro -->
             <div class="mb-3" style="background: #f8f9fa; padding: 15px; border-radius: 6px;">
                 <small style="color: #666;">
@@ -127,5 +146,173 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Vista previa de la imagen seleccionada
+        function previewImage(event) {
+            const input = event.target;
+            const preview = document.getElementById('preview-foto');
+            const file = input.files[0];
+            
+            if (file) {
+                // Validar tipo
+                if (!['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(file.type)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Formato no válido',
+                        text: 'La imagen debe ser JPG, PNG o WEBP'
+                    });
+                    input.value = '';
+                    return;
+                }
+                
+                // Validar tamaño (5MB)
+                if (file.size > 5120 * 1024) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Imagen muy grande',
+                        text: 'La imagen no puede exceder 5MB'
+                    });
+                    input.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // Manejo del formulario
+        document.getElementById('editUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Guardar referencia al formulario
+            const form = this;
+            
+            // Validar contraseñas si se proporcionaron
+            const password = document.getElementById('password').value;
+            const passwordConfirm = document.getElementById('password_confirmation').value;
+            
+            if (password || passwordConfirm) {
+                if (password !== passwordConfirm) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Las contraseñas no coinciden'
+                    });
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'La contraseña debe tener al menos 6 caracteres'
+                    });
+                    return;
+                }
+            }
+            
+            // Confirmación antes de actualizar
+            Swal.fire({
+                title: '¿Actualizar usuario?',
+                text: "Se guardarán los cambios realizados",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3498db',
+                cancelButtonColor: '#95a5a6',
+                confirmButtonText: 'Sí, actualizar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Mostrar loading
+                    Swal.fire({
+                        title: 'Actualizando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Enviar formulario
+                    const formData = new FormData(form);
+                    
+                    console.log('Form action:', form.action);
+                    console.log('FormData entries:');
+                    for (let pair of formData.entries()) {
+                        console.log(pair[0], ':', pair[1]);
+                    }
+                    
+                    fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    })
+                    .then(response => {
+                        console.log('Response status:', response.status);
+                        console.log('Response ok:', response.ok);
+                        if (!response.ok) {
+                            return response.json().then(data => {
+                                console.error('Error data:', data);
+                                throw data;
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '¡Usuario actualizado!',
+                                text: data.message || 'Los cambios se han guardado correctamente',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                window.location.href = '{{ route("admin.usuarios.index") }}';
+                            });
+                        } else if (data.errors) {
+                            let errorMsg = '';
+                            for (let field in data.errors) {
+                                errorMsg += data.errors[field][0] + '\n';
+                            }
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Errores de validación',
+                                text: errorMsg
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: data.message || 'No se pudo actualizar el usuario'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error completo:', error);
+                        let errorMessage = 'Ocurrió un error al actualizar el usuario';
+                        
+                        if (error.message) {
+                            errorMessage = error.message;
+                        } else if (error.errors) {
+                            errorMessage = Object.values(error.errors).flat().join('\n');
+                        }
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: errorMessage
+                        });
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>

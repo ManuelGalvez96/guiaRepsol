@@ -130,6 +130,18 @@ function abrirModalEditar(usuarioId) {
             document.getElementById('editar_password').value = '';
             document.getElementById('editar_password_confirmation').value = '';
             
+            // Actualizar preview de foto de perfil
+            const previewFoto = document.getElementById('editar_preview_foto');
+            if (previewFoto) {
+                previewFoto.src = usuario.foto_perfil || '/img/avatares/default-avatar.png';
+            }
+            
+            // Limpiar input de foto
+            const fotoInput = document.getElementById('editar_foto_perfil');
+            if (fotoInput) {
+                fotoInput.value = '';
+            }
+            
             limpiarErrores('editar');
             const modal = new bootstrap.Modal(document.getElementById('modalEditar'));
             modal.show();
@@ -211,6 +223,12 @@ document.getElementById('formEditar').addEventListener('submit', function(e) {
     const formData = new FormData(this);
     formData.append('_method', 'PUT');
     
+    console.log('Submitting update for user:', usuarioId);
+    console.log('FormData entries:');
+    for (let pair of formData.entries()) {
+        console.log(pair[0], ':', pair[1]);
+    }
+    
     fetch(`/admin/usuarios/${usuarioId}`, {
         method: 'POST',
         headers: {
@@ -219,7 +237,16 @@ document.getElementById('formEditar').addEventListener('submit', function(e) {
         },
         body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status);
+        return response.json().then(data => {
+            if (!response.ok) {
+                console.error('Validation errors:', data);
+                throw data;
+            }
+            return data;
+        });
+    })
     .then(data => {
         if (data.success) {
             bootstrap.Modal.getInstance(document.getElementById('modalEditar')).hide();
@@ -232,14 +259,33 @@ document.getElementById('formEditar').addEventListener('submit', function(e) {
             });
             cargarUsuarios(currentPage);
         } else if (data.errors) {
+            console.log('Showing errors:', data.errors);
             mostrarErrores('editar', data.errors);
+            Swal.fire({
+                icon: 'error',
+                title: 'Errores de validación',
+                html: Object.values(data.errors).flat().join('<br>')
+            });
         } else {
             Swal.fire('Error', data.message || 'Error al actualizar el usuario', 'error');
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        Swal.fire('Error', 'Error al actualizar el usuario', 'error');
+        console.error('Error completo:', error);
+        
+        let errorMessage = 'Error al actualizar el usuario';
+        if (error.errors) {
+            mostrarErrores('editar', error.errors);
+            errorMessage = Object.values(error.errors).flat().join('\n');
+        } else if (error.message) {
+            errorMessage = error.message;
+        }
+        
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: errorMessage
+        });
     });
 });
 
@@ -293,6 +339,39 @@ function confirmarEliminar(usuarioId) {
 
 // Logout handler
 document.addEventListener('DOMContentLoaded', function() {
+    // Preview de foto en modal editar
+    const editarFotoInput = document.getElementById('editar_foto_perfil');
+    if (editarFotoInput) {
+        editarFotoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validar tipo de archivo
+                if (!['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(file.type)) {
+                    Swal.fire('Error', 'La imagen debe ser JPG, PNG o WEBP', 'error');
+                    this.value = '';
+                    return;
+                }
+                
+                // Validar tamaño (5MB)
+                if (file.size > 5120 * 1024) {
+                    Swal.fire('Error', 'La imagen no puede exceder 5MB', 'error');
+                    this.value = '';
+                    return;
+                }
+                
+                // Mostrar preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('editar_preview_foto');
+                    if (preview) {
+                        preview.src = e.target.result;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    
     const logoutBtn = document.querySelector('.logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function(e) {

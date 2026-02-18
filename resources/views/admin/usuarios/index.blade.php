@@ -141,7 +141,7 @@
                     <h5 class="modal-title" id="modalEditarLabel">✏️ Editar Usuario</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="formEditar">
+                <form id="formEditar" enctype="multipart/form-data">
                     <input type="hidden" id="editar_id" name="id">
                     <div class="modal-body">
                         <div class="alert alert-info mb-3">
@@ -176,6 +176,20 @@
                                 <option value="usuario">👥 Usuario</option>
                             </select>
                             <div class="invalid-feedback" id="error-editar-rol"></div>
+                        </div>
+                        
+                        <!-- Foto de Perfil -->
+                        <div class="mb-3">
+                            <label for="editar_foto_perfil" class="form-label">Foto de Perfil</label>
+                            <div class="text-center mb-3">
+                                <img id="editar_preview_foto" src="{{ asset('img/avatares/default-avatar.png') }}" 
+                                    alt="Foto de perfil" 
+                                    style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 3px solid #ddd;">
+                            </div>
+                            <input type="file" class="form-control" id="editar_foto_perfil" name="foto_perfil" 
+                                accept="image/jpeg,image/jpg,image/png,image/webp">
+                            <small class="text-muted">Formatos: JPG, PNG, WEBP. Máximo 5MB</small>
+                            <div class="invalid-feedback" id="error-editar-foto"></div>
                         </div>
                         
                         <hr>

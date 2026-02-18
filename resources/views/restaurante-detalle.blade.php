@@ -491,7 +491,8 @@
                                                 <i class="bi bi-reply"></i> Responder
                                             </button>
                                         @else
-                                            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportarValoracion{{ $valoracion->id }}">
+                                            <button type="button" class="btn btn-outline-danger btn-sm" 
+                                                onclick="abrirModalReportar({{ $valoracion->id }})">
                                                 <i class="bi bi-flag"></i> Reportar
                                             </button>
                                         @endif
@@ -601,37 +602,6 @@
                             </div>
                         </div>
 
-                        <!-- Modal Reportar Valoración -->
-                        @auth
-                        @unless($valoracion->usuario_id === Auth::id() || $restaurante->user_id === Auth::id())
-                        <div class="modal fade" id="modalReportarValoracion{{ $valoracion->id }}" tabindex="-1">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Reportar Valoración</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="mb-3">
-                                            <p style="color: #666; margin-bottom: 15px;">
-                                                ¿Por qué deseas reportar esta valoración?
-                                            </p>
-                                            <textarea id="razon-reporte-{{ $valoracion->id }}" class="form-control" rows="5" placeholder="Describe el motivo del reporte (mínimo 10 caracteres, máximo 500)..."></textarea>
-                                            <small class="form-text text-muted d-block mt-2">
-                                                Los administradores revisarán tu reporte y tomarán las medidas necesarias.
-                                            </small>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <button type="button" class="btn btn-danger" onclick="reportarValoracion({{ $valoracion->id }})">Enviar Reporte</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endunless
-                        @endauth
-
                         <!-- Modal Editar Respuesta -->
                         <div class="modal fade" id="modalEditarRespuesta{{ $valoracion->id }}" tabindex="-1">
                             <div class="modal-dialog">
@@ -684,6 +654,37 @@
                         </div>
                         @endif
                         @endauth
+
+                        <!-- Modal Reportar Valoración -->
+                        <div class="modal fade" id="modalReportarValoracion{{ $valoracion->id }}" 
+                             tabindex="-1"
+                             data-usuario-id="{{ $valoracion->usuario_id }}"
+                             data-gerente-id="{{ $restaurante->user_id }}"
+                             data-auth-id="{{ Auth::id() ?? 0 }}">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Reportar Valoración</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <p style="color: #666; margin-bottom: 15px;">
+                                                ¿Por qué deseas reportar esta valoración?
+                                            </p>
+                                            <textarea id="razon-reporte-{{ $valoracion->id }}" class="form-control" rows="5" placeholder="Describe el motivo del reporte (mínimo 10 caracteres, máximo 500)..."></textarea>
+                                            <small class="form-text text-muted d-block mt-2">
+                                                Los administradores revisarán tu reporte y tomarán las medidas necesarias.
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-danger" onclick="reportarValoracion({{ $valoracion->id }})">Enviar Reporte</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         @empty
                         <p class="text-muted text-center">No hay valoraciones aún.</p>
@@ -1042,10 +1043,28 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- Scripts personalizados -->
-    <script src="{{ asset('js/validacion-editar-restaurante.js') }}"></script>
-    <script src="{{ asset('js/restaurante-detalle.js') }}"></script>
-    <script src="{{ asset('js/perfil.js') }}"></script>
-    <script src="{{ asset('js/reportes.js') }}"></script>
+    <script src="{{ asset('js/validacion-editar-restaurante.js') }}?v=20260218184000"></script>
+    <script src="{{ asset('js/restaurante-detalle.js') }}?v=20260218184000"></script>
+    <script src="{{ asset('js/perfil.js') }}?v=20260218184000"></script>
+    <script src="{{ asset('js/reportes.js') }}?v=20260218184000"></script>
+
+    <!-- Script de verificación -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== Verificación de scripts de reportes ===');
+            console.log('Bootstrap disponible:', typeof bootstrap !== 'undefined');
+            console.log('SweetAlert2 disponible:', typeof Swal !== 'undefined');
+            console.log('Función reportarValoracion disponible:', typeof reportarValoracion === 'function');
+            
+            // Verificar si hay modales de reporte en la página
+            const modalesReporte = document.querySelectorAll('[id^="modalReportarValoracion"]');
+            console.log('Modales de reporte encontrados:', modalesReporte.length);
+            
+            // Verificar botones de reportar
+            const botonesReportar = document.querySelectorAll('[data-bs-target^="#modalReportarValoracion"]');
+            console.log('Botones de reportar encontrados:', botonesReportar.length);
+        });
+    </script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </body>

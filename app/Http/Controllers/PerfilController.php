@@ -46,7 +46,7 @@ class PerfilController extends Controller
             'name' => 'required|string|max:255|min:2',
             'apellidos' => 'required|string|max:255|min:2',
             'email' => 'required|email|unique:users,email,' . $usuario->id,
-            'foto_perfil' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'foto_perfil' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120',
         ], [
             'name.required' => 'El nombre es obligatorio',
             'name.min' => 'El nombre debe tener al menos 2 caracteres',
@@ -59,7 +59,7 @@ class PerfilController extends Controller
             'email.unique' => 'Este email ya está registrado',
             'foto_perfil.image' => 'El archivo debe ser una imagen',
             'foto_perfil.mimes' => 'La imagen debe ser formato JPG, PNG o WEBP',
-            'foto_perfil.max' => 'La imagen no puede exceder 2MB',
+            'foto_perfil.max' => 'La imagen no puede exceder 5MB',
         ]);
 
         $usuario->name = $request->name;

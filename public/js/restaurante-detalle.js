@@ -116,8 +116,21 @@ window.saveRestaurant = function(restauranteId, origin) {
 
 // Función para editar restaurante
 function editRestaurant(restauranteId) {
-    const modal = new bootstrap.Modal(document.getElementById('modalEditarRestaurante'));
-    modal.show();
+    const modalElement = document.getElementById('modalEditarRestaurante');
+    if (!modalElement) {
+        console.error('No se encontró el modal de edición');
+        return;
+    }
+    
+    try {
+        let modal = bootstrap.Modal.getInstance(modalElement);
+        if (!modal) {
+            modal = new bootstrap.Modal(modalElement);
+        }
+        modal.show();
+    } catch (e) {
+        console.error('Error al abrir modal:', e);
+    }
 }
 
 // Inicializar estado global basado en valores del servidor
@@ -289,8 +302,16 @@ window.onload = function() {
             
             // Cerrar modal
             const modalElement = document.getElementById(`modalEditarValoracion${valoracionId}`);
-            const modal = bootstrap.Modal.getInstance(modalElement);
-            if (modal) modal.hide();
+            if (modalElement) {
+                try {
+                    const modal = bootstrap.Modal.getInstance(modalElement);
+                    if (modal) {
+                        modal.hide();
+                    }
+                } catch (e) {
+                    console.error('Error al cerrar modal:', e);
+                }
+            }
             
             // Mostrar loading
             Swal.fire({

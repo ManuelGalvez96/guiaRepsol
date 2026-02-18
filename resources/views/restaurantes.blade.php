@@ -495,12 +495,17 @@
                 <div class="modal-body">
                     <form id="formPerfil">
                         <div class="perfil-avatar-section text-center mb-4">
-                            <img id="perfilAvatarImg" src="{{ Auth::user()->foto_perfil ? asset(Auth::user()->foto_perfil) : asset('img/avatares/default-avatar.png') }}" alt="Avatar" class="perfil-avatar-img rounded-circle" style="width: 120px; height: 120px; object-fit: cover; margin-bottom: 15px;">
+                            <div class="mb-2">
+                                <img id="perfilAvatarImg" src="{{ Auth::user()->foto_perfil ? asset(Auth::user()->foto_perfil) : asset('img/avatares/default-avatar.png') }}" alt="Avatar" class="perfil-avatar-img rounded-circle" style="width: 150px; height: 150px; object-fit: cover; border: 4px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            </div>
                             <div class="perfil-avatar-upload">
-                                <input type="file" id="perfilFotoInput" class="d-none" accept="image/*">
-                                <label for="perfilFotoInput" class="btn btn-sm btn-primary">
-                                    <i class="bi bi-cloud-upload"></i> Cambiar Foto
+                                <input type="file" id="perfilFotoInput" class="d-none" accept="image/jpeg,image/jpg,image/png,image/webp">
+                                <label for="perfilFotoInput" class="btn btn-primary" style="cursor: pointer;">
+                                    <i class="bi bi-camera-fill me-2"></i>Cambiar Foto de Perfil
                                 </label>
+                                <div class="mt-2">
+                                    <small class="text-muted">Formatos: JPG, PNG, WEBP. Máximo 5MB</small>
+                                </div>
                             </div>
                         </div>
 

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
@@ -279,6 +280,7 @@ class UserController extends Controller
                     'apellidos' => $usuario->apellidos,
                     'email' => $usuario->email,
                     'rol' => $usuario->rol,
+                    'foto_perfil' => $usuario->foto_perfil ? asset($usuario->foto_perfil) : asset('img/avatares/default-avatar.png'),
                     'created_at' => $usuario->created_at->format('d/m/Y H:i')
                 ]
             ]);
@@ -294,6 +296,11 @@ class UserController extends Controller
     {
         $this->checkAdmin();
         
+        Log::info('=== UPDATE USER REQUEST ===');
+        Log::info('User ID: ' . $usuario->id);
+        Log::info('Request data: ' . json_encode($request->except('password', 'password_confirmation')));
+        Log::info('Has file: ' . ($request->hasFile('foto_perfil') ? 'YES' : 'NO'));
+        
         try {
             $validated = $request->validate([
                 'name' => 'required|string|min:2|max:100',
@@ -301,6 +308,7 @@ class UserController extends Controller
                 'email' => 'required|email|unique:users,email,' . $usuario->id,
                 'rol' => 'required|in:administrador,gerente,usuario',
                 'password' => 'nullable|string|min:6|confirmed',
+                'foto_perfil' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120',
             ], [
                 'name.required' => 'El nombre es obligatorio.',
                 'name.min' => 'El nombre debe tener al menos 2 caracteres.',
@@ -315,8 +323,12 @@ class UserController extends Controller
                 'rol.in' => 'El rol seleccionado no es válido.',
                 'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
                 'password.confirmed' => 'Las contraseñas no coinciden.',
+                'foto_perfil.image' => 'El archivo debe ser una imagen.',
+                'foto_perfil.mimes' => 'La imagen debe ser formato JPG, PNG o WEBP.',
+                'foto_perfil.max' => 'La imagen no puede exceder 5MB.',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation failed: ' . json_encode($e->errors()));
             if ($request->ajax() || $request->expectsJson()) {
                 return response()->json([
                     'success' => false,
@@ -356,6 +368,29 @@ class UserController extends Controller
             if ($request->filled('password')) {
                 $usuario->password = Hash::make($validated['password']);
             }
+            
+            // Procesar foto de perfil
+            if ($request->hasFile('foto_perfil')) {
+                // Eliminar foto antigua si existe
+                if ($usuario->foto_perfil && file_exists(public_path($usuario->foto_perfil))) {
+                    unlink(public_path($usuario->foto_perfil));
+                }
+
+                // Crear directorio si no existe
+                $directory = public_path('img/avatares');
+                if (!File::isDirectory($directory)) {
+                    File::makeDirectory($directory, 0755, true);
+                }
+
+                // Guardar nueva foto
+                $file = $request->file('foto_perfil');
+                $filename = 'avatar_' . $usuario->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $file->move($directory, $filename);
+                $usuario->foto_perfil = 'img/avatares/' . $filename;
+                
+                $cambios[] = "Foto de perfil actualizada";
+            }
+            
             $usuario->save();
 
             // Si hay cambios, notificar al usuario
@@ -363,15 +398,19 @@ class UserController extends Controller
                 $cambiosText = implode(', ', $cambios);
 
                 // Crear notificación en la base de datos
-                Notificacion::create([
-                    'user_id' => $usuario->id,
-                    'titulo' => 'Tu perfil ha sido modificado',
-                    'mensaje' => 'Tu perfil fue modificado por un administrador. Cambios: ' . $cambiosText,
-                    'tipo' => 'info',
-                    'leida' => false,
-                    'referencia_tipo' => 'usuario',
-                    'referencia_id' => $usuario->id,
-                ]);
+                try {
+                    Notificacion::create([
+                        'user_id' => $usuario->id,
+                        'titulo' => 'Tu perfil ha sido modificado',
+                        'mensaje' => 'Tu perfil fue modificado por un administrador. Cambios: ' . $cambiosText,
+                        'tipo' => 'info',
+                        'leida' => false,
+                        'referencia_tipo' => 'usuario',
+                        'referencia_id' => $usuario->id,
+                    ]);
+                } catch (\Exception $e) {
+                    Log::warning('Error al crear notificación: ' . $e->getMessage());
+                }
 
                 // Enviar correo al usuario
                 try {
@@ -381,9 +420,6 @@ class UserController extends Controller
                     Log::warning('Error al enviar correo de notificación: ' . $e->getMessage());
                 }
             }
-
-            // Confirmar transacción
-            DB::commit();
 
             // Confirmar transacción
             DB::commit();
@@ -401,6 +437,9 @@ class UserController extends Controller
         } catch (\Exception $e) {
             // Revertir transacción en caso de error
             DB::rollBack();
+            
+            Log::error('Error updating user: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             
             if ($request->ajax() || $request->expectsJson()) {
                 return response()->json([
