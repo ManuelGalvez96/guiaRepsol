@@ -271,7 +271,7 @@ function deleteRestaurante(id) {
             });
 
             // Eliminar con fetch
-            fetch(`/admin/${id}`, {
+            fetch(`/admin/restaurantes/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
@@ -281,12 +281,17 @@ function deleteRestaurante(id) {
                 }
             })
             .then(response => {
+                console.log('Delete response status:', response.status);
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    return response.text().then(text => {
+                        console.error('Error response:', text);
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    });
                 }
                 return response.json();
             })
             .then(data => {
+                console.log('Delete response data:', data);
                 if (data.success) {
                     Swal.fire({
                         icon: 'success',
