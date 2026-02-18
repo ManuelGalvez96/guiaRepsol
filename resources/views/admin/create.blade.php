@@ -183,7 +183,7 @@
                 </div>
                 <div style="margin-top: 15px;">
                     <label for="imagenes" style="display: block; margin-bottom: 8px; font-weight: 500; color: #495057;">➕ Seleccionar imágenes:</label>
-                    <input type="file" id="imagenes" name="imagenes[]" accept="image/*" multiple onchange="previewImages(event); if(typeof comprobarImagenes === 'function') comprobarImagenes();" style="margin-top: 5px;">
+                    <input type="file" id="imagenes" name="imagenes[]" accept="image/*" multiple onchange="if(typeof previewImages === 'function') previewImages(event); if(typeof comprobarImagenes === 'function') comprobarImagenes();" style="margin-top: 5px;">
                 </div>
                 <span id="error-imagenes" style="color: #e74c3c; display: block; margin-top: 5px; font-size: 13px;"></span>
                 @error('imagenes')
@@ -191,9 +191,9 @@
                 @enderror
             </div>
 
-            <div class="button-group">
-                <button type="submit" class="btn btn-primary" id="submitBtn">Crear Restaurante</button>
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+            <div class="button-group" style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="submit" class="btn btn-primary" id="submitBtn" style="flex: 1; padding: 10px 20px; background-color: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; transition: background-color 0.3s;">Crear Restaurante</button>
+                <button type="button" class="btn btn-secondary close-modal-btn" style="flex: 1; padding: 10px 20px; background-color: #95a5a6; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; transition: background-color 0.3s;">Cancelar</button>
             </div>
         </form>
     </div>

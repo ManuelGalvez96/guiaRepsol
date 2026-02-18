@@ -2,310 +2,144 @@
 
 namespace Database\Seeders;
 
-use App\Models\ImagenRestaurante;
 use App\Models\Restaurante;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\ImagenRestaurante;
 use Illuminate\Database\Seeder;
 
 class ImagenRestauranteSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $restauranteIds = Restaurante::orderBy('id')->pluck('id')->all();
+        // Imágenes disponibles para restaurantes aceptados (excluir imágenes con prefijo rest_p_ que son pendientes)
+        $imagenesAceptados = [
+            'Abantal.jpg',
+            'Akelarre.jpg',
+            'Akelarre_1.jpg',
+            'Akelarre_2.jpg',
+            'Akelarre_3.jpg',
+            'alabardero-sevilla.jpg',
+            'Aponiente.jpg',
+            'Arzak.jpg',
+            'Atrio.jpg',
+            'Azurmendi.jpg',
+            'Bardal.jpg',
+            'Botín.jpg',
+            'Casa-Lucio.jpg',
+            'casa-marcelo.jpg',
+            'Casa_Gerardo.jpg',
+            'Casa_Mono.jpg',
+            'Cañadío.jpg',
+            'Cenador-de-Amós.jpg',
+            'CincSentits.jpg',
+            'Coque.jpg',
+            'Disfrutar.jpg',
+            'diverxo.jpg',
+            'El-Celler-Can-Roca.jpg',
+            'El-Club-Allard.jpg',
+            'El-Molino-Enmedio.jpg',
+            'el-poblet.jpg',
+            'Etxebarri.jpg',
+            'Kabuki.jpg',
+            'Kitchen154.jpg',
+            'L\'Escaleta.jpg',
+            'La Maruca.jpg',
+            'La-Salita.jpg',
+            'La-Terraza-del-Casino.jpg',
+            'latasquita.jpg',
+            'la_btiga.jpg',
+            'Maralba.jpg',
+            'Martín_Berasategui.jpg',
+            'miga_cena.jpg',
+            'Mugaritz.jpg',
+            'nerua.jpg',
+            'QuiqueDacosta.jpg',
+            'Ramón-Freixa-Madrid.jpg',
+            'Refectorio.jpg',
+            'restaurante-lasarte.jpg',
+            'restaurante-moments.jpg',
+            'Ricard_Camarena.jpg',
+            'Santceloni.jpg',
+            'Skina.jpg',
+            'Sollo.jpg',
+            'Tickets_portada.jpg',
+            'TopaSukaldería.jpg',
+            'tripea.jpg',
+            'Villena.jpg',
+            'Zalacaín.jpg',
+        ];
 
-        if (count($restauranteIds) < 15) {
-            return;
+        $restaurantesAceptados = Restaurante::where('estado', 'aceptado')->get();
+        $restaurantesPendientes = Restaurante::where('estado', 'pendiente')->get();
+
+        // Imágenes para restaurantes aceptados
+        $imagenIndex = 0;
+        foreach ($restaurantesAceptados as $restaurante) {
+            // Imagen principal
+            $imagen = $imagenesAceptados[$imagenIndex % count($imagenesAceptados)];
+            ImagenRestaurante::create([
+                'restaurante_id' => $restaurante->id,
+                'url' => 'img/restaurantes/' . $imagen,
+                'alt' => $restaurante->nombre,
+                'principal' => true,
+                'orden' => 0,
+            ]);
+
+            // 2-3 imágenes adicionales
+            $numImagenes = rand(2, 3);
+            for ($i = 1; $i <= $numImagenes; $i++) {
+                $imagenIndex++;
+                $imagen = $imagenesAceptados[$imagenIndex % count($imagenesAceptados)];
+                ImagenRestaurante::create([
+                    'restaurante_id' => $restaurante->id,
+                    'url' => 'img/restaurantes/' . $imagen,
+                    'alt' => $restaurante->nombre . ' - Imagen ' . $i,
+                    'principal' => false,
+                    'orden' => $i,
+                ]);
+            }
+            $imagenIndex++;
         }
 
-        // Crear imágenes para cada restaurante
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[0],
-            'url' => 'img/restaurantes/tripea.jpg',
-            'alt' => 'Foto principal Tripea',
-            'principal' => true,
-            'orden' => 1,
-        ]);
+        // Imágenes para restaurantes pendientes
+        $imagenesPendientes = [
+            'rest_p_69935c755246c.jpg',
+            'rest_p_69947ca89d3c4.jpg',
+            'rest_p_69947ca8a27a9.jpg',
+            'rest_p_69947ca8a58b3.jpg',
+            'rest_p_69947ca8a7c89.jpg',
+            'rest_p_69947ca8aa1f0.jpg',
+            'rest_p_69947ca8ac7cf.jpg',
+            'rest_p_69947ca8aeda5.jpg',
+            'rest_p_69947ca8b143a.jpg',
+            'rest_p_69947ca8b3b2b.jpg',
+        ];
 
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[1],
-            'url' => 'img/restaurantes/miga_cena.jpg',
-            'alt' => 'Foto principal Miga Cana',
-            'principal' => true,
-            'orden' => 1,
-        ]);
+        $imagenPendienteIndex = 0;
+        foreach ($restaurantesPendientes as $restaurante) {
+            // Imagen principal
+            $imagen = $imagenesPendientes[$imagenPendienteIndex % count($imagenesPendientes)];
+            ImagenRestaurante::create([
+                'restaurante_id' => $restaurante->id,
+                'url' => 'img/restaurantes/pendiente/' . $imagen,
+                'alt' => $restaurante->nombre,
+                'principal' => true,
+                'orden' => 0,
+            ]);
 
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[2],
-            'url' => 'img/restaurantes/Kitchen154.jpg',
-            'alt' => 'Foto principal Kitchen 154',
-            'principal' => true,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[3],
-            'url' => 'img/restaurantes/Martín_Berasategui.jpg',
-            'alt' => 'Foto principal Martín Berasategui',
-            'principal' => true,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[4],
-            'url' => 'img/restaurantes/Akelarre.jpg',
-            'alt' => 'Foto principal Akelarre',
-            'principal' => true,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[5],
-            'url' => 'img/restaurantes/Disfrutar.jpg',
-            'alt' => 'Foto principal Disfrutar',
-            'principal' => true,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[6],
-            'url' => 'img/restaurantes/Ricard_Camarena.jpg',
-            'alt' => 'Foto principal Ricard Camarena',
-            'principal' => true,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[7],
-            'url' => 'img/restaurantes/Skina.jpg',
-            'alt' => 'Foto principal Skina',
-            'principal' => true,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[8],
-            'url' => 'img/restaurantes/casa-marcelo.jpg',
-            'alt' => 'Foto principal Casa Marcelo',
-            'principal' => true,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[9],
-            'url' => 'img/restaurantes/Casa_Gerardo.jpg',
-            'alt' => 'Foto principal Casa Gerardo',
-            'principal' => true,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[10],
-            'url' => 'img/restaurantes/nerua.jpg',
-            'alt' => 'Foto principal Nerua',
-            'principal' => true,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[11],
-            'url' => 'img/restaurantes/La-Salita.jpg',
-            'alt' => 'Foto principal La Botica',
-            'principal' => true,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[12],
-            'url' => 'img/restaurantes/Abantal.jpg',
-            'alt' => 'Foto principal Abantal',
-            'principal' => true,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[13],
-            'url' => 'img/restaurantes/El-Club-Allard.jpg',
-            'alt' => 'Foto principal El Club Allard',
-            'principal' => true,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[14],
-            'url' => 'img/restaurantes/diverxo.jpg',
-            'alt' => 'Foto principal DiverXO',
-            'principal' => true,
-            'orden' => 1,
-        ]);
-
-        // Imágenes adicionales para el slider de Akelarre
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[4], // Akelarre
-            'url' => 'img/restaurantes/Akelarre_1.jpg',
-            'alt' => 'Interior restaurante Akelarre',
-            'principal' => false,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[4], // Akelarre
-            'url' => 'img/restaurantes/Akelarre_2.jpg',
-            'alt' => 'Plato estrella Akelarre',
-            'principal' => false,
-            'orden' => 2,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[4], // Akelarre
-            'url' => 'img/restaurantes/Akelarre_3.jpg',
-            'alt' => 'Vistas desde Akelarre',
-            'principal' => false,
-            'orden' => 3,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[4], // Akelarre
-            'url' => 'img/restaurantes/Akelarre_4.jpg',
-            'alt' => 'Terraza Akelarre',
-            'principal' => false,
-            'orden' => 4,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[4], // Akelarre
-            'url' => 'img/restaurantes/Akelarre_5.jpg',
-            'alt' => 'Plato gourmet Akelarre',
-            'principal' => false,
-            'orden' => 5,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[4], // Akelarre
-            'url' => 'img/restaurantes/Akelarre_6.jpg',
-            'alt' => 'Cocina Akelarre',
-            'principal' => false,
-            'orden' => 6,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[4], // Akelarre
-            'url' => 'img/restaurantes/Akelarre_7.jpg',
-            'alt' => 'Detalle decoración Akelarre',
-            'principal' => false,
-            'orden' => 7,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[4], // Akelarre
-            'url' => 'img/restaurantes/Akelarre_8.jpg',
-            'alt' => 'Ambiente nocturno Akelarre',
-            'principal' => false,
-            'orden' => 8,
-        ]);
-
-        // Imágenes adicionales para el slider de Disfrutar
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[5], // Disfrutar
-            'url' => 'img/restaurantes/Disfrutar_1.jpg',
-            'alt' => 'Sala principal Disfrutar',
-            'principal' => false,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[5], // Disfrutar
-            'url' => 'img/restaurantes/Disfrutar_2.jpg',
-            'alt' => 'Creación culinaria Disfrutar',
-            'principal' => false,
-            'orden' => 2,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[5], // Disfrutar
-            'url' => 'img/restaurantes/Disfrutar_3.jpg',
-            'alt' => 'Cocina abierta Disfrutar',
-            'principal' => false,
-            'orden' => 3,
-        ]);
-
-        // Imágenes adicionales para el slider de Martín Berasategui
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[3], // Martín Berasategui
-            'url' => 'img/restaurantes/Martin_Berasategui_1.jpg',
-            'alt' => 'Comedor elegante Martín Berasategui',
-            'principal' => false,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[3], // Martín Berasategui
-            'url' => 'img/restaurantes/Martin_Berasategui_2.jpg',
-            'alt' => 'Plato gourmet Martín Berasategui',
-            'principal' => false,
-            'orden' => 2,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[3], // Martín Berasategui
-            'url' => 'img/restaurantes/Martin_Berasategui_3.jpg',
-            'alt' => 'Bodega Martín Berasategui',
-            'principal' => false,
-            'orden' => 3,
-        ]);
-
-        // Imágenes adicionales para el slider de Abantal
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[12], // Abantal
-            'url' => 'img/restaurantes/Abantal_1.jpg',
-            'alt' => 'Interior moderno Abantal',
-            'principal' => false,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[12], // Abantal
-            'url' => 'img/restaurantes/Abantal_2.jpg',
-            'alt' => 'Tapa innovadora Abantal',
-            'principal' => false,
-            'orden' => 2,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[12], // Abantal
-            'url' => 'img/restaurantes/Abantal_3.jpg',
-            'alt' => 'Menú degustación Abantal',
-            'principal' => false,
-            'orden' => 3,
-        ]);
-
-        // Imágenes adicionales para el slider de DiverXO
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[14], // DiverXO
-            'url' => 'img/restaurantes/DiverXO_1.jpg',
-            'alt' => 'Ambiente único DiverXO',
-            'principal' => false,
-            'orden' => 1,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[14], // DiverXO
-            'url' => 'img/restaurantes/DiverXO_2.jpg',
-            'alt' => 'Plato innovador DiverXO',
-            'principal' => false,
-            'orden' => 2,
-        ]);
-
-        ImagenRestaurante::create([
-            'restaurante_id' => $restauranteIds[14], // DiverXO
-            'url' => 'img/restaurantes/DiverXO_3.jpg',
-            'alt' => 'Cocina fusión DiverXO',
-            'principal' => false,
-            'orden' => 3,
-        ]);
+            // 1-2 imágenes adicionales
+            $numImagenes = rand(1, 2);
+            for ($i = 1; $i <= $numImagenes; $i++) {
+                $imagenPendienteIndex++;
+                $imagen = $imagenesPendientes[$imagenPendienteIndex % count($imagenesPendientes)];
+                ImagenRestaurante::create([
+                    'restaurante_id' => $restaurante->id,
+                    'url' => 'img/restaurantes/pendiente/' . $imagen,
+                    'alt' => $restaurante->nombre . ' - Imagen ' . $i,
+                    'principal' => false,
+                    'orden' => $i,
+                ]);
+            }
+            $imagenPendienteIndex++;
+        }
     }
 }

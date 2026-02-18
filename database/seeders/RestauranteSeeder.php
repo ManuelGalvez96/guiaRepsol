@@ -849,5 +849,103 @@ class RestauranteSeeder extends Seeder
             'valoracion_promedio' => 4.61,
             'activo' => true,
         ]);
+
+        // Restaurantes con estado pendiente (solicitudes de negocio)
+        Restaurante::create([
+            'nombre' => 'La Taberna del Puerto',
+            'descripcion' => 'Restaurante de pescados y mariscos frescos con vistas al puerto. Especialidad en arroces marineros y pescado salvaje de la lonja local. Ambiente familiar y acogedor.',
+            'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
+            'categoria_id' => 2,
+            'ubicacion_id' => 5,
+            'direccion' => 'Paseo Marítimo, 45',
+            'telefono' => '952234567',
+            'email' => 'info@tabernadelpuerto.es',
+            'web' => 'https://www.tabernadelpuerto.es',
+            'precio' => 38.00,
+            'soles' => 0,
+            'activo' => true,
+            'estado' => 'pendiente',
+        ]);
+
+        Restaurante::create([
+            'nombre' => 'Casa Manolo',
+            'descripcion' => 'Restaurante tradicional valenciano con más de 50 años de historia. Especialistas en paella valenciana auténtica y guisos caseros. Producto local de máxima calidad.',
+            'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
+            'categoria_id' => 2,
+            'ubicacion_id' => 4,
+            'direccion' => 'Carrer de la Pau, 28',
+            'telefono' => '963456789',
+            'email' => 'reservas@casamanolo.com',
+            'web' => null,
+            'precio' => 32.00,
+            'soles' => 0,
+            'activo' => true,
+            'estado' => 'pendiente',
+        ]);
+
+        Restaurante::create([
+            'nombre' => 'Sabores del Norte',
+            'descripcion' => 'Cocina asturiana moderna en pleno centro de Madrid. Cachopo premium, fabada gourmet y carnes rojas de Asturias. Bodega con más de 200 referencias.',
+            'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
+            'categoria_id' => 2,
+            'ubicacion_id' => 1,
+            'direccion' => 'Calle de Alcalá, 142',
+            'telefono' => '917654321',
+            'email' => 'contacto@saboresdelnorte.es',
+            'web' => 'https://www.saboresdelnorte.es',
+            'precio' => 48.00,
+            'soles' => 0,
+            'activo' => true,
+            'estado' => 'pendiente',
+        ]);
+
+        Restaurante::create([
+            'nombre' => 'El Rincón de la Abuela',
+            'descripcion' => 'Cocina tradicional española con recetas heredadas de generación en generación. Cocido madrileño, callos a la madrileña y postres caseros. Ambiente hogareño.',
+            'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
+            'categoria_id' => 2,
+            'ubicacion_id' => 1,
+            'direccion' => 'Calle de Atocha, 67',
+            'telefono' => '914567890',
+            'email' => 'info@rinconabuela.es',
+            'web' => null,
+            'precio' => 28.00,
+            'soles' => 0,
+            'activo' => true,
+            'estado' => 'pendiente',
+        ]);
+
+        // Restaurantes rechazados (para datos completos)
+        Restaurante::create([
+            'nombre' => 'Fast Food Express',
+            'descripcion' => 'Local de comida rápida con hamburguesas y pizzas. Servicio de entrega a domicilio disponible las 24 horas. Precios económicos.',
+            'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
+            'categoria_id' => 3,
+            'ubicacion_id' => 1,
+            'direccion' => 'Calle Gran Vía, 25',
+            'telefono' => '912345670',
+            'email' => 'pedidos@fastfoodexpress.es',
+            'web' => null,
+            'precio' => 12.00,
+            'soles' => 0,
+            'activo' => false,
+            'estado' => 'rechazado',
+        ]);
+
+        Restaurante::create([
+            'nombre' => 'La Tasca del Barrio',
+            'descripcion' => 'Bar de tapas y raciones con ambiente informal. Tapas variadas y bebidas a buen precio. Servicio rápido.',
+            'user_id' => $gerenteIds[$index++ % count($gerenteIds)] ?? $defaultGerenteId,
+            'categoria_id' => 2,
+            'ubicacion_id' => 3,
+            'direccion' => 'Carrer del Comerç, 15',
+            'telefono' => '933456700',
+            'email' => 'info@tascadelbarrio.es',
+            'web' => null,
+            'precio' => 18.00,
+            'soles' => 0,
+            'activo' => false,
+            'estado' => 'rechazado',
+        ]);
     }
 }

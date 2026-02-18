@@ -27,6 +27,7 @@ return new class extends Migration
             $table->decimal('valoracion_promedio', 3, 2)->default(0);
             $table->boolean('patrocinados')->default(false);
             $table->boolean('activo')->default(true);
+            $table->enum('estado', ['pendiente', 'aceptado', 'rechazado'])->default('aceptado');
             $table->timestamps();
         });
     }

@@ -1,7 +1,7 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box
+  box-sizing: border-box;
 }
 
 :root {
@@ -16,9 +16,9 @@
 body {
   font-family: 'Montserrat', sans-serif;
   color: var(--black);
+  overflow-x: hidden;
 }
 
-/* ===== TOP BAR ===== */
 .topbar {
   background: #fff;
 }
@@ -56,6 +56,7 @@ body {
   cursor: pointer;
 }
 
+
 .logo {
   height: 32px;
   width: auto;
@@ -69,14 +70,11 @@ body {
   cursor: pointer;
 }
 
-
-/* ===== BLUE SEPARATOR ===== */
 .blue-line {
   height: 6px;
   background: var(--blue-line);
 }
 
-/* ===== EVENT BAR ===== */
 .event-bar {
   background: var(--blue);
   color: #fff;
@@ -106,7 +104,6 @@ body {
   font-weight: 600;
 }
 
-/* ===== SUBNAV ===== */
 .subnav {
   background: var(--yellow);
 }
@@ -120,7 +117,6 @@ body {
   font-weight: 500;
 }
 
-/* ===== HERO ===== */
 .hero {
   max-width: 1440px;
   margin: 0 auto;
@@ -173,7 +169,6 @@ body {
   object-fit: cover;
 }
 
-/* ===== MOMENTOS ===== */
 .momentos {
   background: #fbf6e2;
   padding: 96px 0 120px;
@@ -244,9 +239,7 @@ body {
   left: 0;
   right: 0;
   padding: 32px 24px;
-  background: linear-gradient(to top,
-      rgba(0, 0, 0, 0.75),
-      rgba(0, 0, 0, 0));
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
   color: #fff;
 }
 
@@ -267,7 +260,7 @@ body {
   opacity: .9;
 }
 
-.enlace{
+.enlace {
   color: #000;
   display: inline-flex;
   align-items: center;
@@ -277,18 +270,16 @@ body {
   text-decoration: none;
 }
 
-/* RESPONSIVE */
 @media(max-width:1024px) {
   .momentos-grid {
-    grid-template-columns: 100%
+    grid-template-columns: 100%;
   }
 
   .momento-img {
-    height: 420px
+    height: 420px;
   }
 }
 
-/* ===== QUÉ SON LOS SOLETES ===== */
 .que-son {
   background: #fbf6e2;
   padding: 120px 0;
@@ -327,40 +318,22 @@ body {
   color: #444;
 }
 
-/* ===== GRID CATEGORÍAS (LAYOUT REAL) ===== */
 .categorias {
-  display: grid;
-  grid-template-columns: repeat(12, 95px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 72px 48px;
 }
 
-/* PRIMERA FILA → 4 iconos */
-.categoria:nth-child(1),
-.categoria:nth-child(2),
-.categoria:nth-child(3),
-.categoria:nth-child(4) {
-  grid-column: span 3;
-}
-
-/* SEGUNDA FILA → 3 iconos CENTRADOS */
-.categoria:nth-child(5) {
-  grid-column: 3 / span 3;
-}
-
-.categoria:nth-child(6) {
-  grid-column: 6 / span 3;
-}
-
-.categoria:nth-child(7) {
-  grid-column: 9 / span 3;
+.categoria {
+  flex: 0 0 250px;
+  text-align: center;
 }
 
 .icono {
   font-size: 64px;
-  /* prueba 64px – 68px según gusto */
 }
 
-/* ===== TUS SOLETES CERCANOS ===== */
 .cercanos {
   background: #fbf6e2;
   padding: 120px 0;
@@ -374,7 +347,6 @@ body {
   padding: 48px 48px 56px;
 }
 
-/* HEADER */
 .cercanos-header {
   display: flex;
   justify-content: space-between;
@@ -396,7 +368,6 @@ body {
   cursor: pointer;
 }
 
-/* FILTERS */
 .cercanos-filters {
   display: flex;
   gap: 12px;
@@ -419,7 +390,6 @@ body {
   border-color: #0b1c3d;
 }
 
-/* CARDS */
 .cercanos-cards {
   display: grid;
   grid-template-columns: repeat(4, 285px);
@@ -460,7 +430,6 @@ body {
   color: #777;
 }
 
-/* DOTS */
 .cercanos-dots {
   display: flex;
   justify-content: center;
@@ -479,7 +448,6 @@ body {
   background: #ffd200;
 }
 
-/* CTA */
 .cercanos-cta {
   text-align: center;
 }
@@ -495,7 +463,6 @@ body {
   cursor: pointer;
 }
 
-/* RESPONSIVE */
 @media(max-width:1024px) {
   .cercanos-cards {
     grid-template-columns: repeat(2, calc(50% - 12px));
@@ -508,7 +475,6 @@ body {
   }
 }
 
-/* ===== LO ÚLTIMO SOBRE SOLETES ===== */
 .ultimo {
   background: #fff;
   padding: 120px 0;
@@ -527,7 +493,6 @@ body {
   margin-bottom: 64px;
 }
 
-/* FEATURED */
 .ultimo-featured {
   display: grid;
   grid-template-columns: 655px 545px;
@@ -574,7 +539,6 @@ body {
   color: #0b1c3d;
 }
 
-/* GRID */
 .ultimo-grid {
   display: grid;
   grid-template-columns: repeat(4, 285px);
@@ -623,7 +587,6 @@ body {
   color: #0b1c3d;
 }
 
-/* CTA */
 .ultimo-cta {
   text-align: center;
 }
@@ -639,7 +602,6 @@ body {
   cursor: pointer;
 }
 
-/* RESPONSIVE */
 @media(max-width:1024px) {
   .ultimo-featured {
     grid-template-columns: 100%;
@@ -660,10 +622,10 @@ body {
   }
 }
 
-/* ===== APP SECTION ===== */
 .app-section {
   background: #fff;
   padding: 120px 0;
+  overflow: hidden;
 }
 
 .app-box {
@@ -678,7 +640,6 @@ body {
   gap: 64px;
 }
 
-/* TEXTO */
 .app-content h2 {
   font-size: 36px;
   font-weight: 700;
@@ -702,7 +663,6 @@ body {
   text-decoration: none;
 }
 
-/* MOCKUP */
 .app-mockup {
   position: relative;
   display: flex;
@@ -720,7 +680,6 @@ body {
   display: block;
 }
 
-/* FLOATING CARDS */
 .float-card {
   position: absolute;
   background: #fff;
@@ -752,7 +711,6 @@ body {
   right: -110px;
 }
 
-/* RESPONSIVE */
 @media(max-width:1024px) {
   .app-box {
     grid-template-columns: 100%;
@@ -778,7 +736,6 @@ body {
   }
 }
 
-/* ===== DESTACADO ===== */
 .destacado {
   background: #fff;
   padding: 120px 0;
@@ -811,7 +768,6 @@ body {
   border-radius: 4px;
 }
 
-/* GRID */
 .destacado-grid {
   display: grid;
   grid-template-columns: repeat(4, 285px);
@@ -832,7 +788,6 @@ body {
   font-weight: 600;
 }
 
-/* RESPONSIVE */
 @media(max-width:1024px) {
   .destacado-grid {
     grid-template-columns: repeat(2, calc(50% - 12px));
@@ -853,7 +808,6 @@ body {
   }
 }
 
-/* ===== SOLETES PARA COMBATIR EL FRÍO ===== */
 .frio {
   background: #fff;
   padding: 120px 0;
@@ -890,14 +844,12 @@ body {
   margin-bottom: 64px;
 }
 
-/* GRID */
 .frio-grid {
   display: grid;
   grid-template-columns: repeat(3, 380px);
   gap: 32px;
 }
 
-/* CARD */
 .frio-card {
   border-radius: 18px;
   overflow: hidden;
@@ -914,7 +866,6 @@ body {
   object-fit: cover;
 }
 
-/* ICONOS */
 .frio-icons {
   position: absolute;
   top: 16px;
@@ -926,16 +877,13 @@ body {
   z-index: 2;
 }
 
-/* OVERLAY */
 .frio-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   padding: 32px 24px;
-  background: linear-gradient(to top,
-      rgba(0, 0, 0, 0.8),
-      rgba(0, 0, 0, 0.1));
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.1));
   color: #fff;
   text-align: left;
 }
@@ -958,7 +906,6 @@ body {
   opacity: .9;
 }
 
-/* RESPONSIVE */
 @media(max-width:1024px) {
   .frio-grid {
     grid-template-columns: 100%;
@@ -969,7 +916,6 @@ body {
   }
 }
 
-/* ===== COMUNIDADES ===== */
 .comunidades {
   background: #fff;
   padding: 120px 0 140px;
@@ -1002,14 +948,12 @@ body {
   border-radius: 4px;
 }
 
-/* GRID */
 .comunidades-grid {
   display: grid;
   grid-template-columns: repeat(5, 228px);
   gap: 28px;
 }
 
-/* CARD */
 .comunidad img {
   width: 100%;
   height: 420px;
@@ -1024,7 +968,6 @@ body {
   font-weight: 600;
 }
 
-/* CTA */
 .comunidades-cta {
   margin-top: 72px;
   text-align: center;
@@ -1040,7 +983,6 @@ body {
   text-decoration: none;
 }
 
-/* RESPONSIVE */
 @media(max-width:1200px) {
   .comunidades-grid {
     grid-template-columns: repeat(3, 380px);
@@ -1063,13 +1005,11 @@ body {
   }
 }
 
-/* ===== FOOTER ===== */
 .footer {
   background: #0b1c3d;
   color: #fff;
 }
 
-/* NEWSLETTER */
 .footer-newsletter {
   padding: 64px 0;
   border-bottom: 1px solid rgba(255, 255, 255, .15);
@@ -1119,7 +1059,6 @@ body {
   cursor: pointer;
 }
 
-/* MAIN */
 .footer-main {
   padding: 80px 0;
   border-bottom: 1px solid rgba(255, 255, 255, .15);
@@ -1162,7 +1101,6 @@ body {
   opacity: 1;
 }
 
-/* BOTTOM */
 .footer-bottom {
   padding: 32px 0 24px;
 }
@@ -1202,9 +1140,7 @@ body {
   opacity: .75;
 }
 
-/* RESPONSIVE */
 @media(max-width:1024px) {
-
   .footer-newsletter-inner,
   .footer-main-inner,
   .footer-bottom-inner {
@@ -1222,7 +1158,6 @@ body {
   }
 }
 
-/* ===== RESPONSIVE GENERAL ===== */
 @media(max-width:992px) {
   .topbar-inner {
     padding: 0 20px;
@@ -1250,18 +1185,7 @@ body {
   }
 
   .categorias {
-    grid-template-columns: repeat(6, 190px);
     gap: 48px 24px;
-  }
-
-  .categoria:nth-child(1),
-  .categoria:nth-child(2),
-  .categoria:nth-child(3),
-  .categoria:nth-child(4),
-  .categoria:nth-child(5),
-  .categoria:nth-child(6),
-  .categoria:nth-child(7) {
-    grid-column: span 2;
   }
 
   .app-box {
@@ -1342,19 +1266,11 @@ body {
   }
 
   .categorias {
-    grid-template-columns: repeat(2, calc(50% - 10px));
     gap: 40px 20px;
-    justify-content: center;
   }
 
-  .categoria:nth-child(1),
-  .categoria:nth-child(2),
-  .categoria:nth-child(3),
-  .categoria:nth-child(4),
-  .categoria:nth-child(5),
-  .categoria:nth-child(6),
-  .categoria:nth-child(7) {
-    grid-column: span 1;
+  .categoria {
+    flex: 0 0 calc(50% - 20px);
   }
 
   .icono {

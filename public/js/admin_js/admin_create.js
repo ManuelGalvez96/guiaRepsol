@@ -2,12 +2,12 @@
 var csrfToken;
 var selectedFiles = []; // Array para mantener archivos seleccionados
 
-const prevOnloadCreate = window.onload;
-window.onload = function(event) {
-    if (typeof prevOnloadCreate === 'function') {
-        prevOnloadCreate(event);
-    }
+console.log('admin_create.js cargado. document.readyState:', document.readyState);
 
+// Intentar ejecutar cuando esté listo el documento
+function initializeCreateForm() {
+    console.log('=== initializeCreateForm() ===');
+    
     // Obtener token CSRF del atributo data-csrf del body
     csrfToken = document.body.getAttribute('data-csrf');
     if (!csrfToken) {
@@ -16,19 +16,50 @@ window.onload = function(event) {
             csrfToken = metaToken.getAttribute('content');
         }
     }
+    console.log('✓ CSRF Token obtenido:', !!csrfToken);
 
     const form = document.getElementById('createRestauranteForm');
+    console.log('✓ Formulario encontrado:', !!form);
+    
     if (form) {
         form.onsubmit = function (e) {
             e.preventDefault();
             crearRestaurante();
         }
     }
+}
+
+// Usar DOMContentLoaded si aún está disponible
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('admin_create.js - DOMContentLoaded');
+        setTimeout(function() {
+            initializeCreateForm();
+        }, 100);
+    });
+} else {
+    // Sheet ya cargado, llamar directamente
+    console.log('admin_create.js - Documento ya cargado, inicializando directamente');
+    setTimeout(function() {
+        initializeCreateForm();
+    }, 50);
+}
+
+// Fallback con window.onload para compatibilidad
+const prevOnloadCreate = window.onload;
+window.onload = function(event) {
+    if (typeof prevOnloadCreate === 'function') {
+        prevOnloadCreate(event);
+    }
+    console.log('admin_create.js - window.onload fallback');
+    initializeCreateForm();
 };
 
 
 
 function crearRestaurante() {
+    console.log('=== crearRestaurante() ===');
+    
     const form = document.getElementById('createRestauranteForm');
     const submitBtn = document.getElementById('submitBtn');
 

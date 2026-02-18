@@ -11,7 +11,6 @@ function initValidacionCrear() {
     const eWeb = document.getElementById("error-web");
     const ePrecio = document.getElementById("error-precio");
     const eSoles = document.getElementById("error-soles");
-    const eValoracion = document.getElementById("error-valoracion");
     const eImagenes = document.getElementById("error-imagenes");
 
     // Inputs del formulario
@@ -26,7 +25,6 @@ function initValidacionCrear() {
     const webInput = document.getElementById("web");
     const precioInput = document.getElementById("precio");
     const solesInput = document.getElementById("soles");
-    const valoracionInput = document.getElementById("valoracion_promedio");
     const imagenesInput = document.getElementById("imagenes");
     const botonEnviar = document.getElementById("submitBtn");
 
@@ -50,7 +48,6 @@ function initValidacionCrear() {
     webInput.onblur = comprobarWeb;
     precioInput.onblur = comprobarPrecio;
     solesInput.onblur = comprobarSoles;
-    valoracionInput.onblur = comprobarValoracion;
 
     imagenesInput.onclick = function () {
         comprobarImagenes();
@@ -100,10 +97,6 @@ function initValidacionCrear() {
         comprobarSoles();
     };
 
-    valoracionInput.oninput = function () {
-        comprobarValoracion();
-    };
-
 
     function comprobarBoton() {
         // Verificar que todos los spans de error estén vacíos
@@ -119,7 +112,6 @@ function initValidacionCrear() {
             eWeb.innerText === '' &&
             ePrecio.innerText === '' &&
             eSoles.innerText === '' &&
-            eValoracion.innerText === '' &&
             eImagenes.innerText === '';
 
         // Verificar que los campos obligatorios estén completos
@@ -311,23 +303,6 @@ function initValidacionCrear() {
             }
         } else {
             eSoles.innerText = '';
-        }
-        comprobarBoton();
-    }
-
-    function comprobarValoracion() {
-        const valoracion = valoracionInput.value.trim();
-
-        // La valoración es opcional
-        if (valoracion !== '') {
-            const valoracionNum = parseFloat(valoracion);
-            if (isNaN(valoracionNum) || valoracionNum < 0 || valoracionNum > 5) {
-                eValoracion.innerText = 'La valoración debe estar entre 0 y 5.';
-            } else {
-                eValoracion.innerText = '';
-            }
-        } else {
-            eValoracion.innerText = '';
         }
         comprobarBoton();
     }

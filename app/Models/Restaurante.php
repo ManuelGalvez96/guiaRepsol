@@ -26,7 +26,8 @@ class Restaurante extends Model
         'soles',
         'valoracion_promedio',
         'patrocinados',
-        'activo'
+        'activo',
+        'estado'
     ];
 
     protected $casts = [
