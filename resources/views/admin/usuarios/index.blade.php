@@ -29,10 +29,10 @@
                 <p style="color: #666; margin: 5px 0;">Total de usuarios: <strong id="total-usuarios">{{ $usuarios->total() }}</strong></p>
             </div>
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <a href="{{ route('admin.dashboard') }}" class="create-btn" style="background-color: #9b59b6;">Dashboard</a>
-                <a href="{{ route('admin.index') }}" class="create-btn" style="background-color: #3498db;">Gestión de Restaurantes</a>
-                <a href="{{ route('admin.solicitudes') }}" class="create-btn" style="background-color: #f39c12;">Solicitudes de negocio</a>
-                <button class="create-btn" onclick="abrirModalCrear()">➕ Nuevo Usuario</button>
+                <a href="{{ route('admin.dashboard') }}" class="create-btn">Dashboard</a>
+                <a href="{{ route('admin.index') }}" class="create-btn">Gestión de Restaurantes</a>
+                <a href="{{ route('admin.solicitudes') }}" class="create-btn">Solicitudes de negocio</a>
+                <button class="btn btn-primary" onclick="abrirModalCrear()">Nuevo Usuario</button>
             </div>
         </div>
 

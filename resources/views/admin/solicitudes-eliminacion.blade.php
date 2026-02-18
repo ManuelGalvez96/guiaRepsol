@@ -27,8 +27,8 @@
         <div class="top-section">
             <h1>🗑️ Solicitudes de Eliminación de Restaurantes</h1>
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <a href="{{ route('admin.dashboard') }}" class="create-btn" style="background-color: #95a5a6;">← Volver al Dashboard</a>
-                <a href="{{ route('admin.denuncias.index') }}" class="create-btn" style="background-color: #3498db;">Ver Reportes de Valoraciones</a>
+                <a href="{{ route('admin.dashboard') }}" class="create-btn">Volver al Dashboard</a>
+                <a href="{{ route('admin.denuncias.index') }}" class="create-btn">Ver Reportes de Valoraciones</a>
             </div>
         </div>
 

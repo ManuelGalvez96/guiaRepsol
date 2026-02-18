@@ -26,7 +26,7 @@
     <div class="container">
         <div class="top-section">
             <h1>📋 Revisar Reporte</h1>
-            <a href="{{ route('admin.denuncias.index') }}" class="create-btn" style="background-color: #95a5a6;">← Volver a Reportes</a>
+            <a href="{{ route('admin.denuncias.index') }}" class="create-btn">Volver a Reportes</a>
         </div>
 
         <!-- Información del reporte -->

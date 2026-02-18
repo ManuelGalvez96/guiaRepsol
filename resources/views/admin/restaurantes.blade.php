@@ -32,11 +32,10 @@
         <div class="top-section">
             <h1>Gestión de restaurantes</h1>
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <a href="{{ route('admin.dashboard') }}" class="create-btn" style="background-color: #9b59b6;">Dashboard</a>
-                <a href="{{ route('admin.solicitudes') }}" class="create-btn"
-                    style="background-color: #f39c12;">Solicitudes de negocio</a>
-                <a href="{{ route('admin.usuarios.index') }}" class="create-btn" style="background-color: #27ae60;">👥 Gestión de Usuarios</a>
-                <button type="button" class="create-btn" id="openCreateBtn">Crear Restaurante</button>
+                <a href="{{ route('admin.dashboard') }}" class="create-btn">Dashboard</a>
+                <a href="{{ route('admin.solicitudes') }}" class="create-btn">Solicitudes de negocio</a>
+                <a href="{{ route('admin.usuarios.index') }}" class="create-btn">Gestión de Usuarios</a>
+                <button type="button" class="btn btn-primary" id="openCreateBtn">Crear Restaurante</button>
             </div>
         </div>
 

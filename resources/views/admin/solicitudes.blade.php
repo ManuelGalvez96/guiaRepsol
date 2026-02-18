@@ -26,11 +26,9 @@
         <div class="top-section">
             <h1>Solicitudes de Negocio Pendientes</h1>
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <a href="{{ route('admin.dashboard') }}" class="create-btn"
-                    style="background-color: #9b59b6;">Dashboard</a>
-                <a href="{{ route('admin.index') }}" class="create-btn" style="background-color: #3498db;">Gestión de
-                    Restaurantes</a>
-                <a href="{{ route('admin.usuarios.index') }}" class="create-btn" style="background-color: #27ae60;">👥 Gestión de Usuarios</a>
+                <a href="{{ route('admin.dashboard') }}" class="create-btn">Dashboard</a>
+                <a href="{{ route('admin.index') }}" class="create-btn">Gestión de Restaurantes</a>
+                <a href="{{ route('admin.usuarios.index') }}" class="create-btn">Gestión de Usuarios</a>
             </div>
         </div>
 
